@@ -7,6 +7,7 @@ import { SidePanel } from "@/components/side-panel";
 import { SpaBackground } from "@/components/spa-background";
 import { LoginDialog } from "@/components/login-dialog";
 import { WeatherWidget } from "@/components/weather-widget";
+import spaHeaderImage from "@assets/spa-eastman_pavillon-pricipal_levee-du-soleil_face_credit-auqueb-4-scaled-e1736788112766_1753560070028.jpg";
 import { type CalendarEvent, type Settings } from "@shared/schema";
 import { syncIcalCalendar, updateIcalUrls } from "@/lib/ical-calendar";
 import { useToast } from "@/hooks/use-toast";
@@ -197,25 +198,38 @@ export default function Dashboard() {
       {/* Permanent Spa Eastman Background */}
       <SpaBackground />
       
-      {/* Header with Login in top left */}
+      {/* Header with Spa Image Background */}
       <div className="relative z-10">
-        <div className="p-6 bg-black/30 backdrop-blur-sm" style={{ backgroundColor: 'rgba(54, 69, 92, 0.4)' }}>
-          {/* Login button in top left corner */}
-          <div className="flex justify-between items-start mb-4">
-            <LoginDialog />
-            <WeatherWidget location={settings?.location || "Eastman"} />
-          </div>
+        <div 
+          className="relative p-6 overflow-hidden"
+          style={{
+            backgroundImage: `url(${spaHeaderImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            minHeight: '200px'
+          }}
+        >
+          {/* Dark overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
           
-          {/* Title and time */}
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-white">
+          {/* Content over image */}
+          <div className="relative z-10">
+            {/* Top row with login and weather */}
+            <div className="flex justify-between items-start mb-6">
+              <LoginDialog />
+              <WeatherWidget location={settings?.location || "Eastman"} />
+            </div>
+            
+            {/* Centered title and time */}
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">
                 {settings?.dashboardTitle || "Spa Eastman"}
               </h1>
-              <div className="flex items-center space-x-4 text-white/80 text-sm">
-                <span>{settings?.location || "Eastman"}</span>
+              <div className="flex items-center justify-center space-x-4 text-white/90 text-lg">
+                <span className="drop-shadow-md">{settings?.location || "Eastman"}</span>
                 <span>•</span>
-                <span className="text-xl font-semibold" data-live-time>
+                <span className="text-2xl font-semibold drop-shadow-md" data-live-time>
                   {new Date().toLocaleTimeString('fr-FR', {
                     hour: '2-digit',
                     minute: '2-digit',
