@@ -88,7 +88,7 @@ export function DashboardHeader({ title, backgroundImageUrl, location, use24Hour
   };
 
   return (
-    <header className="relative h-40 bg-gradient-to-r from-blue-900 to-purple-900 overflow-hidden">
+    <header className="relative h-48 bg-gradient-to-r from-blue-900 to-purple-900 overflow-hidden">
       {backgroundImageUrl && (
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-70"
