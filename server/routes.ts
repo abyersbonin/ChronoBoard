@@ -7,6 +7,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import ical from "node-ical";
+import { RRule } from "rrule";
 
 const upload = multer({ 
   dest: 'uploads/',
@@ -159,47 +160,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 console.log(`Found Qi Qong event: "${event.summary}" from ${event.start} to ${event.end}, recurring: ${!!event.rrule}, UID: ${event.uid}`);
               }
               
-              // Handle recurring events
+              // Always process single events first (including recurring event instances)
+              const startDate = new Date(event.start);
+              const endDate = new Date(event.end);
+              
+              // Include events that are currently happening or starting within the next week
+              if (endDate >= now && startDate <= oneWeekFromNow) {
+                const singleEvent = {
+                  id: event.uid || `${Date.now()}-${Math.random()}`,
+                  title: event.summary || 'Untitled Event',
+                  description: event.description || '',
+                  location: event.location || '',
+                  startTime: startDate,
+                  endTime: endDate,
+                  isAllDay: !event.start.getHours && !event.start.getMinutes,
+                  icalEventId: event.uid,
+                  calendarSource: fetchUrl,
+                };
+                
+                allEvents.push(singleEvent);
+              }
+              
+              // Additionally, handle recurring events to generate future instances
               if (event.rrule) {
                 console.log(`ENTERING RRULE PROCESSING for "${event.summary}"`);
                 try {
-                  // Debug the rrule object
-                  console.log(`Processing rrule for "${event.summary}":`, typeof event.rrule, event.rrule);
-                  
-                  // node-ical returns parsed rrule data, but we need to use RRule library to generate instances
-                  const { RRule } = await import('rrule');
-                  
-                  // Convert node-ical rrule to RRule library format
-                  const rruleOptions: any = {
-                    dtstart: new Date(event.start),
-                    until: event.rrule.until ? new Date(event.rrule.until) : new Date('2025-12-31'),
-                  };
-                  
-                  // Map frequency
-                  if (event.rrule.freq === 'WEEKLY') rruleOptions.freq = RRule.WEEKLY;
-                  else if (event.rrule.freq === 'DAILY') rruleOptions.freq = RRule.DAILY;
-                  else if (event.rrule.freq === 'MONTHLY') rruleOptions.freq = RRule.MONTHLY;
-                  else rruleOptions.freq = RRule.WEEKLY; // default
-                  
-                  // Map interval
-                  if (event.rrule.interval) rruleOptions.interval = event.rrule.interval;
-                  
-                  // Map byweekday
-                  if (event.rrule.byday) {
-                    const dayMap: { [key: string]: any } = {
-                      'SU': RRule.SU, 'MO': RRule.MO, 'TU': RRule.TU, 'WE': RRule.WE,
-                      'TH': RRule.TH, 'FR': RRule.FR, 'SA': RRule.SA
-                    };
-                    rruleOptions.byweekday = event.rrule.byday.map((day: string) => dayMap[day] || RRule.MO);
-                  }
-                  
-                  console.log(`Creating RRule with options:`, rruleOptions);
-                  const rule = new RRule(rruleOptions);
-                  const instances = rule.between(now, oneWeekFromNow, true);
+                  // node-ical already provides RRule objects, use them directly
+                  const instances = event.rrule.between(now, oneWeekFromNow, true);
+                  console.log(`Generated ${instances.length} instances for "${event.summary}"`);
                   
                   for (const instanceStart of instances) {
                     const originalDuration = new Date(event.end).getTime() - new Date(event.start).getTime();
                     const instanceEnd = new Date(instanceStart.getTime() + originalDuration);
+                    
+                    // Debug specific time slot
+                    if (instanceStart.getDate() === 27 && instanceStart.getMonth() === 6 && instanceStart.getHours() === 13) {
+                      console.log(`*** FOUND July 27 1PM recurring instance: "${event.summary}"`);
+                    }
                     
                     const eventInstance = {
                       id: `${event.uid}-${instanceStart.getTime()}` || `${Date.now()}-${Math.random()}`,
@@ -217,45 +214,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   }
                 } catch (rruleError) {
                   console.error('Error processing recurring event:', rruleError);
-                  // Fall back to single event if rrule processing fails
-                  const startDate = new Date(event.start);
-                  const endDate = new Date(event.end);
-                  
-                  if (endDate >= now && startDate <= oneWeekFromNow) {
-                    allEvents.push({
-                      id: event.uid || `${Date.now()}-${Math.random()}`,
-                      title: event.summary || 'Untitled Event',
-                      description: event.description || '',
-                      location: event.location || '',
-                      startTime: startDate,
-                      endTime: endDate,
-                      isAllDay: !event.start.getHours && !event.start.getMinutes,
-                      icalEventId: event.uid,
-                      calendarSource: fetchUrl,
-                    });
-                  }
-                }
-              } else {
-                // Handle single (non-recurring) events
-                const startDate = new Date(event.start);
-                const endDate = new Date(event.end);
-                
-                // Include events that are currently happening or starting within the next week
-                // Event is relevant if it ends after now AND starts before the end of next week
-                if (endDate >= now && startDate <= oneWeekFromNow) {
-                  const singleEvent = {
-                    id: event.uid || `${Date.now()}-${Math.random()}`,
-                    title: event.summary || 'Untitled Event',
-                    description: event.description || '',
-                    location: event.location || '',
-                    startTime: startDate,
-                    endTime: endDate,
-                    isAllDay: !event.start.getHours && !event.start.getMinutes,
-                    icalEventId: event.uid,
-                    calendarSource: fetchUrl,
-                  };
-                  
-                  allEvents.push(singleEvent);
                 }
               }
             }
