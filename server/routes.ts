@@ -228,19 +228,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Deduplicate events based on icalEventId and startTime
+      // Sort events by time first for better processing
+      allEvents.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+      
+      // Deduplicate events more aggressively
       const deduplicatedEvents = [];
-      const eventKeys = new Set();
+      const eventMap = new Map();
       
       for (const event of allEvents) {
-        // Create a unique key for deduplication
-        const eventKey = `${event.icalEventId}-${event.startTime.getTime()}`;
+        // Normalize title by removing extra spaces and converting to lowercase
+        const normalizedTitle = event.title.trim().toLowerCase().replace(/\s+/g, ' ');
         
-        if (!eventKeys.has(eventKey)) {
-          eventKeys.add(eventKey);
+        // Create a unique key for deduplication
+        const eventKey = `${normalizedTitle}-${event.startTime.getTime()}-${event.endTime.getTime()}`;
+        
+        if (!eventMap.has(eventKey)) {
+          eventMap.set(eventKey, event);
           deduplicatedEvents.push(event);
         } else {
-          console.log(`Skipping duplicate event: "${event.title}" at ${event.startTime.toISOString()}`);
+          console.log(`Skipping duplicate event: "${event.title}" at ${event.startTime.toISOString()} from ${event.calendarSource}`);
         }
       }
       

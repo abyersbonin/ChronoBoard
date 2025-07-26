@@ -8,6 +8,18 @@ This is a full-stack personal dashboard application built with React, Express, a
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes
+
+### Calendar Event Fixes (July 26, 2025)
+- Fixed recurring calendar events not displaying properly
+- Added proper handling for RRULE (recurring rule) processing 
+- Implemented deduplication logic to prevent duplicate events
+- Enhanced event parsing to handle daily recurring events (like 4pm daily events)
+- Fixed event ID generation for recurring instances to make them unique
+- Identified that some "duplicates" are actually legitimate recurring events at different times
+- Found real duplicate issues where same events appear multiple times at exact same time
+- Working on improved deduplication based on title, start time, and end time normalization
+
 ## System Architecture
 
 ### Frontend Architecture
