@@ -50,25 +50,19 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
 
   if (events.length === 0) {
     return (
-      <div className="backdrop-blur-sm rounded-xl p-6 border" style={{ 
-        backgroundColor: 'rgba(54, 69, 92, 0.25)', 
-        borderColor: 'rgba(214, 204, 194, 0.3)' 
-      }}>
-        <h2 className="text-xl font-semibold text-white mb-6">Événements à venir</h2>
+      <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
+        <h2 className="text-xl font-semibold text-gray-800 mb-6">Événements à venir</h2>
         <div className="text-center py-8">
-          <p className="text-white/70 mb-2">Aucun événement à venir</p>
-          <p className="text-white/60 text-sm">Les calendriers iCal se synchronisent automatiquement</p>
+          <p className="text-gray-600 mb-2">Aucun événement à venir</p>
+          <p className="text-gray-500 text-sm">Les calendriers iCal se synchronisent automatiquement</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="backdrop-blur-sm rounded-xl p-6 border" style={{ 
-      backgroundColor: 'rgba(54, 69, 92, 0.25)', 
-      borderColor: 'rgba(214, 204, 194, 0.3)' 
-    }}>
-      <h2 className="text-xl font-semibold text-white mb-6">Événements à venir</h2>
+    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
+      <h2 className="text-xl font-semibold text-gray-800 mb-6">Événements à venir</h2>
       
       <div className="space-y-6">
         {Object.entries(groupedEvents).map(([dateKey, dayEvents]) => {
@@ -79,7 +73,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
           return (
             <div key={dateKey}>
               <h3 className={`text-lg font-semibold mb-4 ${
-                isToday ? 'text-blue-300' : isTomorrow ? 'text-green-300' : 'text-yellow-300'
+                isToday ? 'text-blue-600' : isTomorrow ? 'text-green-600' : 'text-yellow-600'
               }`}>
                 {formatDate(date)}
               </h3>
@@ -87,24 +81,24 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                 {dayEvents.map((event) => (
                   <div
                     key={event.id}
-                    className="flex items-start space-x-4 p-4 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/15 transition-colors duration-200 border border-white/10"
+                    className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200 border border-gray-200"
                   >
                     <div className="text-center min-w-0 flex-shrink-0">
-                      <div className="text-xl font-bold text-white">
+                      <div className="text-xl font-bold text-gray-800">
                         {formatTime(event.startTime)}
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-lg font-semibold text-white mb-2">
+                      <h4 className="text-lg font-semibold text-gray-800 mb-2">
                         {event.title}
                       </h4>
                       {event.description && (
-                        <p className="text-white/80 text-sm mb-2 line-clamp-2">
+                        <p className="text-gray-600 text-sm mb-2 line-clamp-2">
                           {event.description}
                         </p>
                       )}
                       {event.location && (
-                        <div className="flex items-center text-white/70 text-sm">
+                        <div className="flex items-center text-gray-500 text-sm">
                           <MapPin className="mr-1 h-3 w-3" />
                           <span>{event.location}</span>
                         </div>
