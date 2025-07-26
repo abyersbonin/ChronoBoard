@@ -216,13 +216,13 @@ export default function Dashboard() {
           {/* Content over image */}
           <div className="relative z-10">
             {/* Login button at the very top */}
-            <div className="flex justify-between items-start mb-6">
+            <div className="flex justify-between items-start mb-2">
               <LoginDialog />
               <WeatherWidget location={settings?.location || "Eastman"} />
             </div>
             
-            {/* Logo */}
-            <div className="text-center mb-4">
+            {/* Logo at the very top */}
+            <div className="text-center mb-2">
               <img 
                 src="https://www.spa-eastman.com/wp-content/themes/spa-eastman/assets/images/logo-spa-1977-blanc-fr.svg" 
                 alt="Spa Eastman" 
