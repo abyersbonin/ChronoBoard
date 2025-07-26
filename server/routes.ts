@@ -463,15 +463,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/weather/:location", async (req, res) => {
     try {
       const { location } = req.params;
-      const apiKey = process.env.OPENWEATHER_API_KEY || process.env.WEATHER_API_KEY || "demo_key";
-      
-      if (apiKey === "demo_key") {
-        return res.status(400).json({ error: "Weather API key not configured" });
-      }
+      const apiKey = "bb8213b1aa75181da5c769bde25a25f9";
 
-      // Current weather
+      // Current weather with French language
       const currentResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`
+        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric&lang=fr`
       );
       
       if (!currentResponse.ok) {
@@ -480,9 +476,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const currentData = await currentResponse.json();
 
-      // 4-day forecast
+      // 4-day forecast with French language
       const forecastResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${apiKey}&units=metric`
+        `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric&lang=fr`
       );
 
       if (!forecastResponse.ok) {
@@ -499,11 +495,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const date = new Date(item.dt * 1000);
         const dateKey = date.toDateString();
         
-        if (!processedDates.has(dateKey) && dailyForecasts.length < 4) {
+        if (!processedDates.has(dateKey) && dailyForecasts.length < 3) {
+          const dayName = dailyForecasts.length === 0 ? 'Aujourd\'hui' : 
+                         dailyForecasts.length === 1 ? 'Demain' : 
+                         date.toLocaleDateString('fr-FR', { weekday: 'short' });
+          
           processedDates.add(dateKey);
           dailyForecasts.push({
             date: date.toISOString().split('T')[0],
-            day: date.toLocaleDateString('fr-FR', { weekday: 'short' }),
+            day: dayName,
             high: Math.round(item.main.temp_max),
             low: Math.round(item.main.temp_min),
             condition: item.weather[0].description,
@@ -529,72 +529,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Weather API endpoint
-  app.get("/api/weather/:location", async (req, res) => {
-    try {
-      const { location } = req.params;
-      const apiKey = "bb8213b1aa75181da5c769bde25a25f9";
-      
-      // Fetch current weather from OpenWeatherMap
-      const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric&lang=fr`;
-      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric&lang=fr`;
-      
-      const [currentResponse, forecastResponse] = await Promise.all([
-        fetch(currentWeatherUrl),
-        fetch(forecastUrl)
-      ]);
-      
-      if (!currentResponse.ok || !forecastResponse.ok) {
-        throw new Error('Weather API request failed');
-      }
-      
-      const currentData = await currentResponse.json();
-      const forecastData = await forecastResponse.json();
-      
-      // Process forecast data to get daily summaries
-      const dailyForecasts = [];
-      const processedDates = new Set();
-      
-      for (const item of forecastData.list.slice(0, 15)) {
-        const date = new Date(item.dt * 1000);
-        const dateKey = date.toDateString();
-        
-        if (!processedDates.has(dateKey) && dailyForecasts.length < 3) {
-          const dayName = dailyForecasts.length === 0 ? 'Aujourd\'hui' : 
-                         dailyForecasts.length === 1 ? 'Demain' : 
-                         date.toLocaleDateString('fr-FR', { weekday: 'short' });
-          
-          dailyForecasts.push({
-            date: date.toISOString(),
-            day: dayName,
-            high: Math.round(item.main.temp_max),
-            low: Math.round(item.main.temp_min),
-            condition: item.weather[0].description,
-            icon: item.weather[0].icon
-          });
-          
-          processedDates.add(dateKey);
-        }
-      }
-      
-      const weatherData = {
-        location: currentData.name,
-        current: {
-          temp: Math.round(currentData.main.temp),
-          condition: currentData.weather[0].description,
-          icon: currentData.weather[0].icon,
-          humidity: currentData.main.humidity,
-          windSpeed: currentData.wind.speed
-        },
-        forecast: dailyForecasts
-      };
-      
-      res.json(weatherData);
-    } catch (error) {
-      console.error('Weather API error:', error);
-      res.status(500).json({ error: "Failed to fetch weather data" });
-    }
-  });
+
 
   const httpServer = createServer(app);
   return httpServer;
