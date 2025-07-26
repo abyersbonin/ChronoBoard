@@ -58,31 +58,40 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
     );
   }
 
+  const getDayName = (dateStr: string, index: number) => {
+    if (index === 0) return "Aujourd'hui";
+    const days = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+    const date = new Date(dateStr);
+    return days[date.getDay()];
+  };
+
   return (
     <div className="backdrop-blur-sm rounded-xl p-4 border" style={{ 
-      backgroundColor: 'rgba(54, 69, 92, 0.25)', 
+      backgroundColor: 'rgba(54, 69, 92, 0.4)', 
       borderColor: 'rgba(214, 204, 194, 0.3)' 
     }}>
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="text-white/70 text-sm">{weather.location}</div>
-          <div className="text-white text-lg font-semibold">
-            {Math.round(weather.current.temp)}°C
-          </div>
-          <div className="text-white/60 text-xs">{weather.current.condition}</div>
-        </div>
-        <div className="text-white/80">
-          {getWeatherIcon(weather.current.condition)}
+      {/* Current weather - large display */}
+      <div className="flex items-center space-x-3 mb-4">
+        <div className="text-white text-4xl font-bold">{Math.round(weather.current.temp)}°</div>
+        <div className="text-white text-3xl">
+          {weather.current.icon || "☀️"}
         </div>
       </div>
       
+      {/* 4-day forecast */}
       {weather.forecast && weather.forecast.length > 0 && (
-        <div className="mt-3 grid grid-cols-3 gap-2">
-          {weather.forecast.slice(0, 3).map((day, index) => (
-            <div key={index} className="text-center">
-              <div className="text-white/60 text-xs">{day.day}</div>
-              <div className="text-white/80 text-xs">
-                {Math.round(day.high)}°/{Math.round(day.low)}°
+        <div className="flex justify-between space-x-2">
+          {weather.forecast.slice(0, 4).map((day, index) => (
+            <div key={index} className="text-center flex-1">
+              <div className="text-white/80 text-xs mb-1 font-medium">
+                {getDayName(day.date, index)}
+              </div>
+              <div className="text-lg mb-1 text-white">
+                {day.icon || "☀️"}
+              </div>
+              <div className="space-y-0">
+                <div className="font-semibold text-sm text-white">{Math.round(day.high)}°</div>
+                <div className="text-white/70 text-xs">{Math.round(day.low)}°</div>
               </div>
             </div>
           ))}
