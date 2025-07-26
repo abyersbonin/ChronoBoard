@@ -151,18 +151,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
             continue;
           }
 
-          console.log(`Processing ${Object.keys(parsedEvents).length} events from ${fetchUrl}`);
-          
           for (const [eventKey, event] of Object.entries(parsedEvents) as any[]) {
             if (event.type === 'VEVENT' && event.start && event.end) {
-              console.log(`Processing event: "${event.summary}" from ${event.start} to ${event.end}, recurring: ${!!event.rrule}`);
               
               // Handle recurring events
               if (event.rrule) {
                 try {
                   // Generate recurring event instances within our time window
                   const instances = event.rrule.between(now, oneWeekFromNow, true);
-                  console.log(`  Generated ${instances.length} instances for recurring event`);
                   
                   for (const instanceStart of instances) {
                     const originalDuration = new Date(event.end).getTime() - new Date(event.start).getTime();
@@ -176,11 +172,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
                       startTime: instanceStart,
                       endTime: instanceEnd,
                       isAllDay: !event.start.getHours && !event.start.getMinutes,
-                      icalEventId: event.uid,
+                      icalEventId: `${event.uid}-${instanceStart.getTime()}`, // Make recurring instances unique
                       calendarSource: fetchUrl,
                     };
                     
-                    console.log(`    Instance: "${eventInstance.title}" at ${instanceStart.toISOString()}`);
                     allEvents.push(eventInstance);
                   }
                 } catch (rruleError) {
@@ -223,7 +218,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
                     calendarSource: fetchUrl,
                   };
                   
-                  console.log(`  Single event: "${singleEvent.title}" at ${startDate.toISOString()}`);
                   allEvents.push(singleEvent);
                 }
               }
@@ -234,7 +228,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      const syncedEvents = await storage.syncCalendarEvents(userId, allEvents);
+      // Deduplicate events based on icalEventId and startTime
+      const deduplicatedEvents = [];
+      const eventKeys = new Set();
+      
+      for (const event of allEvents) {
+        // Create a unique key for deduplication
+        const eventKey = `${event.icalEventId}-${event.startTime.getTime()}`;
+        
+        if (!eventKeys.has(eventKey)) {
+          eventKeys.add(eventKey);
+          deduplicatedEvents.push(event);
+        } else {
+          console.log(`Skipping duplicate event: "${event.title}" at ${event.startTime.toISOString()}`);
+        }
+      }
+      
+      console.log(`Total events collected: ${allEvents.length}`);
+      console.log(`Deduplicated from ${allEvents.length} to ${deduplicatedEvents.length} events`);
+      
+      const syncedEvents = await storage.syncCalendarEvents(userId, deduplicatedEvents);
       res.json({ 
         success: true, 
         eventCount: syncedEvents.length,
