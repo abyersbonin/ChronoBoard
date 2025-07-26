@@ -153,6 +153,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           for (const [eventKey, event] of Object.entries(parsedEvents) as any[]) {
             if (event.type === 'VEVENT' && event.start && event.end) {
+              // Debug events at 9AM Toronto time (1PM UTC)
+              if (event.start) {
+                const eventStart = new Date(event.start);
+                if (eventStart.getHours() === 13 && eventStart.getDate() === 27 && eventStart.getMonth() === 6) {
+                  console.log(`Event at July 27 1PM UTC (9AM Toronto): "${event.summary}" UID: ${event.uid}`);
+                }
+              }
+              
+              // Debug specific event
+              if (event.summary && event.summary.toLowerCase().includes('qi') && event.summary.toLowerCase().includes('qong')) {
+                console.log(`Found Qi Qong event: "${event.summary}" from ${event.start} to ${event.end}, recurring: ${!!event.rrule}, UID: ${event.uid}`);
+              }
               
               // Handle recurring events
               if (event.rrule) {
