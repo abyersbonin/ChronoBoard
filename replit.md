@@ -29,6 +29,10 @@ Preferred communication style: Simple, everyday language.
 - ✓ Timezone handling properly converts Quebec time (America/Toronto) to UTC for event comparison
 - → User confirmed events are displaying correctly
 - → Successfully resolved calendar event display and ongoing event detection
+- ❌ **ISSUE DISCOVERED: Saturday July 26th cold therapy event missing due to iCal EXDATE exclusion**
+- → Event confirmed by user to exist (15:00-16:00) but blocked by EXDATE in iCal source
+- → Ongoing event detection works correctly - will show events automatically when they start
+- → **RECOMMENDATION: Migrate to Google Calendar API for more reliable recurring event handling**
 
 ## System Architecture
 
