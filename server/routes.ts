@@ -145,77 +145,152 @@ export async function registerRoutes(app: Express): Promise<Server> {
             continue;
           }
 
+          // Separate collections for different event types
+          const singleEvents = [];
+          const recurringEvents = [];
+          
+          // First pass: categorize all events
           for (const [eventKey, event] of Object.entries(parsedEvents) as any[]) {
             if (event.type === 'VEVENT' && event.start && event.end) {
               // Debug events at 9AM Toronto time (1PM UTC)
               if (event.start) {
                 const eventStart = new Date(event.start);
                 if (eventStart.getHours() === 13 && eventStart.getDate() === 27 && eventStart.getMonth() === 6) {
-                  console.log(`Event at July 27 1PM UTC (9AM Toronto): "${event.summary}" UID: ${event.uid}`);
+                  console.log(`Event at July 27 1PM UTC (9AM Toronto): "${event.summary}" UID: ${event.uid}, has recurrences: ${!!event.recurrences}`);
                 }
               }
               
               // Debug specific event
               if (event.summary && event.summary.toLowerCase().includes('qi') && event.summary.toLowerCase().includes('qong')) {
-                console.log(`Found Qi Qong event: "${event.summary}" from ${event.start} to ${event.end}, recurring: ${!!event.rrule}, UID: ${event.uid}`);
+                console.log(`Found Qi Qong event: "${event.summary}" from ${event.start} to ${event.end}, recurring: ${!!event.rrule}, recurrences: ${!!event.recurrences}, UID: ${event.uid}`);
+                if (event.recurrences) {
+                  console.log(`  Recurrence count: ${Object.keys(event.recurrences).length}`);
+                  for (const [recDate, recEvent] of Object.entries(event.recurrences)) {
+                    console.log(`  - Override at ${recDate}: "${recEvent.summary}"`);
+                  }
+                }
               }
               
-              // Always process single events first (including recurring event instances)
-              const startDate = new Date(event.start);
-              const endDate = new Date(event.end);
+              if (event.rrule) {
+                // This is a recurring event (may also have recurrence overrides)
+                recurringEvents.push(event);
+              } else {
+                // This is a single event
+                singleEvents.push(event);
+              }
+            }
+          }
+          
+          console.log(`Found ${singleEvents.length} single events, ${recurringEvents.length} recurring events`);
+          
+          // Second pass: process single events
+          for (const event of singleEvents) {
+            const startDate = new Date(event.start);
+            const endDate = new Date(event.end);
+            
+            if (endDate >= now && startDate <= oneWeekFromNow) {
+              const singleEvent = {
+                id: event.uid || `${Date.now()}-${Math.random()}`,
+                title: event.summary || 'Untitled Event',
+                description: event.description || '',
+                location: event.location || '',
+                startTime: startDate,
+                endTime: endDate,
+                isAllDay: !event.start.getHours && !event.start.getMinutes,
+                icalEventId: event.uid,
+                calendarSource: fetchUrl,
+                eventType: 'single'
+              };
               
-              // Include events that are currently happening or starting within the next week
-              if (endDate >= now && startDate <= oneWeekFromNow) {
-                const singleEvent = {
-                  id: event.uid || `${Date.now()}-${Math.random()}`,
+              allEvents.push(singleEvent);
+            }
+          }
+          
+          // Third pass: process recurring events and their overrides
+          for (const event of recurringEvents) {
+            console.log(`ENTERING RRULE PROCESSING for "${event.summary}"`);
+            try {
+              // Get excluded dates (EXDATE) for this recurring event
+              const excludedDates = new Set();
+              if (event.exdate) {
+                // Handle both single EXDATE and array of EXDATEs
+                const exdates = Array.isArray(event.exdate) ? event.exdate : [event.exdate];
+                for (const exdate of exdates) {
+                  excludedDates.add(new Date(exdate).getTime());
+                }
+                console.log(`Event "${event.summary}" has ${excludedDates.size} excluded dates`);
+              }
+              
+              // First, add any recurrence overrides (these take priority)
+              if (event.recurrences) {
+                console.log(`Processing ${Object.keys(event.recurrences).length} recurrence overrides for "${event.summary}"`);
+                for (const [recDate, recEvent] of Object.entries(event.recurrences)) {
+                  const overrideStart = new Date(recEvent.start);
+                  const overrideEnd = new Date(recEvent.end);
+                  
+                  if (overrideEnd >= now && overrideStart <= oneWeekFromNow) {
+                    // Debug override events
+                    if (overrideStart.getDate() === 27 && overrideStart.getMonth() === 6 && overrideStart.getHours() === 13) {
+                      console.log(`*** PROCESSING RECURRENCE OVERRIDE for July 27 1PM: "${recEvent.summary}"`);
+                    }
+                    
+                    const overrideEvent = {
+                      id: `${event.uid}-override-${overrideStart.getTime()}`,
+                      title: recEvent.summary || event.summary || 'Untitled Event',
+                      description: recEvent.description || event.description || '',
+                      location: recEvent.location || event.location || '',
+                      startTime: overrideStart,
+                      endTime: overrideEnd,
+                      isAllDay: !recEvent.start.getHours && !recEvent.start.getMinutes,
+                      icalEventId: `${event.uid}-override-${overrideStart.getTime()}`,
+                      calendarSource: fetchUrl,
+                      eventType: 'override'
+                    };
+                    
+                    allEvents.push(overrideEvent);
+                    
+                    // Also exclude this date from the recurring series
+                    excludedDates.add(new Date(recDate).getTime());
+                  }
+                }
+              }
+              
+              // Then generate regular recurring instances
+              const instances = event.rrule.between(now, oneWeekFromNow, true);
+              console.log(`Generated ${instances.length} instances for "${event.summary}"`);
+              
+              for (const instanceStart of instances) {
+                // Skip excluded dates and dates with overrides
+                if (excludedDates.has(instanceStart.getTime())) {
+                  console.log(`Skipping excluded/overridden date: ${instanceStart.toISOString()} for "${event.summary}"`);
+                  continue;
+                }
+                
+                const originalDuration = new Date(event.end).getTime() - new Date(event.start).getTime();
+                const instanceEnd = new Date(instanceStart.getTime() + originalDuration);
+                
+                // Debug specific time slot
+                if (instanceStart.getDate() === 27 && instanceStart.getMonth() === 6 && instanceStart.getHours() === 13) {
+                  console.log(`*** FOUND July 27 1PM recurring instance: "${event.summary}"`);
+                }
+                
+                const eventInstance = {
+                  id: `${event.uid}-${instanceStart.getTime()}`,
                   title: event.summary || 'Untitled Event',
                   description: event.description || '',
                   location: event.location || '',
-                  startTime: startDate,
-                  endTime: endDate,
+                  startTime: instanceStart,
+                  endTime: instanceEnd,
                   isAllDay: !event.start.getHours && !event.start.getMinutes,
-                  icalEventId: event.uid,
+                  icalEventId: `${event.uid}-${instanceStart.getTime()}`,
                   calendarSource: fetchUrl,
+                  eventType: 'recurring'
                 };
                 
-                allEvents.push(singleEvent);
+                allEvents.push(eventInstance);
               }
-              
-              // Additionally, handle recurring events to generate future instances
-              if (event.rrule) {
-                console.log(`ENTERING RRULE PROCESSING for "${event.summary}"`);
-                try {
-                  // node-ical already provides RRule objects, use them directly
-                  const instances = event.rrule.between(now, oneWeekFromNow, true);
-                  console.log(`Generated ${instances.length} instances for "${event.summary}"`);
-                  
-                  for (const instanceStart of instances) {
-                    const originalDuration = new Date(event.end).getTime() - new Date(event.start).getTime();
-                    const instanceEnd = new Date(instanceStart.getTime() + originalDuration);
-                    
-                    // Debug specific time slot
-                    if (instanceStart.getDate() === 27 && instanceStart.getMonth() === 6 && instanceStart.getHours() === 13) {
-                      console.log(`*** FOUND July 27 1PM recurring instance: "${event.summary}"`);
-                    }
-                    
-                    const eventInstance = {
-                      id: `${event.uid}-${instanceStart.getTime()}` || `${Date.now()}-${Math.random()}`,
-                      title: event.summary || 'Untitled Event',
-                      description: event.description || '',
-                      location: event.location || '',
-                      startTime: instanceStart,
-                      endTime: instanceEnd,
-                      isAllDay: !event.start.getHours && !event.start.getMinutes,
-                      icalEventId: `${event.uid}-${instanceStart.getTime()}`, // Make recurring instances unique
-                      calendarSource: fetchUrl,
-                    };
-                    
-                    allEvents.push(eventInstance);
-                  }
-                } catch (rruleError) {
-                  console.error('Error processing recurring event:', rruleError);
-                }
-              }
+            } catch (rruleError) {
+              console.error('Error processing recurring event:', rruleError);
             }
           }
         } catch (error) {
@@ -226,22 +301,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Sort events by time first for better processing
       allEvents.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
       
-      // Deduplicate events more aggressively
+      // Improved deduplication that prioritizes override events
       const deduplicatedEvents = [];
       const eventMap = new Map();
       
       for (const event of allEvents) {
-        // Normalize title by removing extra spaces and converting to lowercase
-        const normalizedTitle = event.title.trim().toLowerCase().replace(/\s+/g, ' ');
+        // Create a time-based key for events at the same time
+        const timeKey = `${event.startTime.getTime()}-${event.endTime.getTime()}`;
         
-        // Create a unique key for deduplication
-        const eventKey = `${normalizedTitle}-${event.startTime.getTime()}-${event.endTime.getTime()}`;
-        
-        if (!eventMap.has(eventKey)) {
-          eventMap.set(eventKey, event);
+        const existing = eventMap.get(timeKey);
+        if (!existing) {
+          eventMap.set(timeKey, event);
           deduplicatedEvents.push(event);
         } else {
-          console.log(`Skipping duplicate event: "${event.title}" at ${event.startTime.toISOString()} from ${event.calendarSource}`);
+          // Priority: override events > single events > recurring events
+          const shouldReplace = (
+            (event.eventType === 'override') ||
+            (event.eventType === 'single' && existing.eventType === 'recurring')
+          );
+          
+          if (shouldReplace) {
+            console.log(`Replacing "${existing.title}" with "${event.title}" at ${event.startTime.toISOString()}`);
+            // Remove the old event and add the new one
+            const index = deduplicatedEvents.findIndex(e => e.id === existing.id);
+            if (index >= 0) {
+              deduplicatedEvents[index] = event;
+              eventMap.set(timeKey, event);
+            }
+          } else {
+            console.log(`Skipping duplicate event: "${event.title}" at ${event.startTime.toISOString()} from ${event.calendarSource}`);
+          }
         }
       }
       

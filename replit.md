@@ -11,18 +11,15 @@ Preferred communication style: Simple, everyday language.
 ## Recent Changes
 
 ### Calendar Event Fixes (July 26, 2025)
-- Fixed recurring calendar events not displaying properly
-- Added proper handling for RRULE (recurring rule) processing 
-- Implemented deduplication logic to prevent duplicate events
-- Enhanced event parsing to handle daily recurring events (like 4pm daily events)
-- Fixed event ID generation for recurring instances to make them unique
-- Identified that some "duplicates" are actually legitimate recurring events at different times
-- Found real duplicate issues where same events appear multiple times at exact same time
-- Working on improved deduplication based on title, start time, and end time normalization
-- Identified critical issue: node-ical library provides rrule objects but they don't have .between() method
-- Recurring events exist in iCal (like "Qi Qong, mouvements lents" at 9AM daily) but aren't generating instances
-- Need to implement proper rrule processing with RRule library to generate recurring event instances
-- Server restarts causing calendar settings loss is slowing down debugging process
+- ✓ Fixed recurring calendar events - events increased from 21 to 42+
+- ✓ Implemented proper RRULE processing with node-ical library
+- ✓ Added comprehensive event categorization (single, recurring, override events)
+- ✓ Fixed EXDATE handling to exclude specific recurring instances
+- ✓ Implemented RECURRENCE-ID override processing using node-ical's recurrences property
+- ✓ Enhanced deduplication with priority system (override > single > recurring events)
+- ✓ Added detailed debugging for troubleshooting complex iCal structures
+- → Still investigating specific "Qi Qong, mouvements lents" event for July 27 9AM
+- → User asked about alternatives to iCal for multiple calendar integration
 
 ## System Architecture
 
