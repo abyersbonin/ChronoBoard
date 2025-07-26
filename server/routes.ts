@@ -415,37 +415,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
 
       
-      // EMERGENCY FIX: Add missing July 26th Saturday cold event (user confirmed it's currently ongoing)
-      const currentTime = new Date();
-      const july26_3pm = new Date('2025-07-26T19:00:00.000Z'); // 3 PM Quebec time (EDT)
-      const july26_4pm = new Date('2025-07-26T20:00:00.000Z'); // 4 PM Quebec time (EDT)
-      
-      // Add if it's July 26th and the event is missing (broader time window for testing)
-      const isJuly26 = currentTime.getDate() === 26 && currentTime.getMonth() === 6 && currentTime.getFullYear() === 2025;
-      if (isJuly26) {
-        const existingJuly26Cold = deduplicatedEvents.find(e => 
-          e.title.includes('pouvoirs extraordinaires du froid') && 
-          new Date(e.startTime).getTime() === july26_3pm.getTime()
-        );
-        
-        if (!existingJuly26Cold) {
-          const emergencyEvent = {
-            id: 'emergency-july-26-cold-event',
-            title: 'Les pouvoirs extraordinaires du froid (bilingual)',
-            description: 'Alexandre St-Onge, Praticien certifié thérapie par le froid. [Événement manquant restauré]',
-            location: 'Point de rencontre à la piscine intérieure',
-            startTime: july26_3pm,
-            endTime: july26_4pm,
-            isAllDay: false,
-            icalEventId: 'emergency-july-26-cold-event',
-            calendarSource: 'emergency-restore',
-            eventType: 'single'
-          };
-          
-          deduplicatedEvents.push(emergencyEvent);
-          console.log('🚨 EMERGENCY: Added missing ongoing July 26th cold event (user confirmed it exists)');
-        }
-      }
+
       
       const syncedEvents = await storage.syncCalendarEvents(userId, deduplicatedEvents);
       res.json({ 

@@ -19,14 +19,35 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
     refetchInterval: 10 * 60 * 1000, // Refetch every 10 minutes
   });
 
-  const getWeatherIcon = (condition: string) => {
+  const getWeatherIcon = (condition: string, iconCode?: string) => {
+    // Convert OpenWeatherMap icon codes to proper emojis
+    if (iconCode) {
+      const iconMap: { [key: string]: string } = {
+        '01d': '☀️', '01n': '🌙',
+        '02d': '⛅', '02n': '☁️',
+        '03d': '☁️', '03n': '☁️',
+        '04d': '☁️', '04n': '☁️',
+        '09d': '🌧️', '09n': '🌧️',
+        '10d': '🌦️', '10n': '🌧️',
+        '11d': '⛈️', '11n': '⛈️',
+        '13d': '❄️', '13n': '❄️',
+        '50d': '🌫️', '50n': '🌫️'
+      };
+      return iconMap[iconCode] || '☀️';
+    }
+    
+    // Fallback based on condition text
     const lowerCondition = condition.toLowerCase();
     if (lowerCondition.includes('rain') || lowerCondition.includes('shower')) {
-      return <CloudRain className="w-8 h-8" />;
+      return '🌧️';
     } else if (lowerCondition.includes('cloud')) {
-      return <Cloud className="w-8 h-8" />;
+      return '☁️';
+    } else if (lowerCondition.includes('snow')) {
+      return '❄️';
+    } else if (lowerCondition.includes('thunder')) {
+      return '⛈️';
     } else {
-      return <Sun className="w-8 h-8" />;
+      return '☀️';
     }
   };
 
@@ -74,8 +95,8 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       {/* Left side - Current temperature and weather icon */}
       <div className="flex items-center space-x-3">
         <div className="text-white text-5xl font-bold">{Math.round(weather.current.temp)}°</div>
-        <div className="text-white text-4xl">
-          {weather.current.icon || "☀️"}
+        <div className="text-4xl">
+          {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
       </div>
       
@@ -87,8 +108,8 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
               <div className="text-white text-sm font-medium mb-1">
                 {getDayName(day.date, index)}
               </div>
-              <div className="text-white text-2xl mb-1">
-                {day.icon || "☀️"}
+              <div className="text-2xl mb-1">
+                {getWeatherIcon(day.condition || '', day.icon)}
               </div>
               <div className="space-y-0">
                 <div className="text-white font-semibold">{Math.round(day.high)}°</div>
