@@ -44,7 +44,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(settings);
     } catch (error) {
       console.error('Settings error:', error);
-      res.status(400).json({ error: `Settings error: ${error.message}` });
+      res.status(400).json({ error: `Settings error: ${error instanceof Error ? error.message : 'Unknown error'}` });
     }
   });
 
@@ -151,26 +151,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
             continue;
           }
 
-          for (const event of Object.values(parsedEvents)) {
+          for (const event of Object.values(parsedEvents) as any[]) {
             if (event.type === 'VEVENT' && event.start && event.end) {
-              const startDate = new Date(event.start);
-              const endDate = new Date(event.end);
-              
-              // Include events that are currently happening or starting within the next week
-              // Event is relevant if it ends after now AND starts before the end of next week
-              if (endDate >= now && startDate <= oneWeekFromNow) {
-
-                allEvents.push({
-                  id: event.uid || `${Date.now()}-${Math.random()}`,
-                  title: event.summary || 'Untitled Event',
-                  description: event.description || '',
-                  location: event.location || '',
-                  startTime: startDate,
-                  endTime: endDate,
-                  isAllDay: !event.start.getHours && !event.start.getMinutes,
-                  icalEventId: event.uid,
-                  calendarSource: fetchUrl,
-                });
+              // Handle recurring events
+              if (event.rrule) {
+                try {
+                  // Generate recurring event instances within our time window
+                  const instances = event.rrule.between(now, oneWeekFromNow, true);
+                  
+                  for (const instanceStart of instances) {
+                    const originalDuration = new Date(event.end).getTime() - new Date(event.start).getTime();
+                    const instanceEnd = new Date(instanceStart.getTime() + originalDuration);
+                    
+                    allEvents.push({
+                      id: `${event.uid}-${instanceStart.getTime()}` || `${Date.now()}-${Math.random()}`,
+                      title: event.summary || 'Untitled Event',
+                      description: event.description || '',
+                      location: event.location || '',
+                      startTime: instanceStart,
+                      endTime: instanceEnd,
+                      isAllDay: !event.start.getHours && !event.start.getMinutes,
+                      icalEventId: event.uid,
+                      calendarSource: fetchUrl,
+                    });
+                  }
+                } catch (rruleError) {
+                  console.error('Error processing recurring event:', rruleError);
+                  // Fall back to single event if rrule processing fails
+                  const startDate = new Date(event.start);
+                  const endDate = new Date(event.end);
+                  
+                  if (endDate >= now && startDate <= oneWeekFromNow) {
+                    allEvents.push({
+                      id: event.uid || `${Date.now()}-${Math.random()}`,
+                      title: event.summary || 'Untitled Event',
+                      description: event.description || '',
+                      location: event.location || '',
+                      startTime: startDate,
+                      endTime: endDate,
+                      isAllDay: !event.start.getHours && !event.start.getMinutes,
+                      icalEventId: event.uid,
+                      calendarSource: fetchUrl,
+                    });
+                  }
+                }
+              } else {
+                // Handle single (non-recurring) events
+                const startDate = new Date(event.start);
+                const endDate = new Date(event.end);
+                
+                // Include events that are currently happening or starting within the next week
+                // Event is relevant if it ends after now AND starts before the end of next week
+                if (endDate >= now && startDate <= oneWeekFromNow) {
+                  allEvents.push({
+                    id: event.uid || `${Date.now()}-${Math.random()}`,
+                    title: event.summary || 'Untitled Event',
+                    description: event.description || '',
+                    location: event.location || '',
+                    startTime: startDate,
+                    endTime: endDate,
+                    isAllDay: !event.start.getHours && !event.start.getMinutes,
+                    icalEventId: event.uid,
+                    calendarSource: fetchUrl,
+                  });
+                }
               }
             }
           }
