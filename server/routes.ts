@@ -529,6 +529,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Weather API endpoint
+  app.get("/api/weather/:location", async (req, res) => {
+    try {
+      const { location } = req.params;
+      
+      // Mock weather data for demo (since API key isn't configured)
+      const mockWeatherData = {
+        location: location,
+        current: {
+          temp: 22,
+          condition: "Ensoleillé",
+          icon: "sun"
+        },
+        forecast: [
+          { date: new Date().toISOString(), day: "Aujourd'hui", high: 25, low: 18, condition: "Ensoleillé", icon: "sun" },
+          { date: new Date(Date.now() + 86400000).toISOString(), day: "Demain", high: 23, low: 16, condition: "Nuageux", icon: "cloud" },
+          { date: new Date(Date.now() + 172800000).toISOString(), day: "Après-demain", high: 21, low: 14, condition: "Pluvieux", icon: "rain" }
+        ]
+      };
+      
+      res.json(mockWeatherData);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch weather data" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

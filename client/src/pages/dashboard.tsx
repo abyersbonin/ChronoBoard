@@ -6,6 +6,7 @@ import { UpcomingEvents } from "@/components/upcoming-events";
 import { SidePanel } from "@/components/side-panel";
 import { SpaBackground } from "@/components/spa-background";
 import { LoginDialog } from "@/components/login-dialog";
+import { WeatherWidget } from "@/components/weather-widget";
 import { type CalendarEvent, type Settings } from "@shared/schema";
 import { syncIcalCalendar, updateIcalUrls } from "@/lib/ical-calendar";
 import { useToast } from "@/hooks/use-toast";
@@ -113,6 +114,24 @@ export default function Dashboard() {
   });
 
   // Find current event
+  // Live time update for header
+  useEffect(() => {
+    const timer = setInterval(() => {
+      // Force re-render every second for live time
+      const timeElement = document.querySelector('[data-live-time]');
+      if (timeElement) {
+        timeElement.textContent = new Date().toLocaleTimeString('fr-FR', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Find current event
   useEffect(() => {
     if (events.length === 0) {
       setCurrentEvent(null);
@@ -185,18 +204,29 @@ export default function Dashboard() {
             <h1 className="text-3xl font-bold text-white">
               {settings?.dashboardTitle || "Spa Eastman"}
             </h1>
-            <p className="text-white/80 text-sm">
-              {settings?.location || "Eastman"} • Dashboard des événements
-            </p>
+            <div className="flex items-center space-x-4 text-white/80 text-sm">
+              <span>{settings?.location || "Eastman"}</span>
+              <span>•</span>
+              <span className="text-xl font-semibold" data-live-time>
+                {new Date().toLocaleTimeString('fr-FR', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit'
+                })}
+              </span>
+            </div>
           </div>
-          <LoginDialog />
+          <div className="flex items-center space-x-4">
+            <WeatherWidget location={settings?.location || "Eastman"} />
+            <LoginDialog />
+          </div>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="relative z-10 container mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
+        <div className={`grid gap-8 ${isLoggedIn ? 'lg:grid-cols-3' : 'lg:grid-cols-1'}`}>
+          <div className={isLoggedIn ? 'lg:col-span-2' : 'lg:col-span-1'}>
             <CurrentEvent event={currentEvent} />
             <UpcomingEvents events={upcomingEvents} />
           </div>
