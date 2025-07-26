@@ -134,17 +134,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const icalData = await response.text();
 
           
-          // Parse iCal data - node-ical main export should have parseICS
+          // Parse iCal data using node-ical
           let parsedEvents;
           try {
-            if (typeof ical?.parseICS === 'function') {
-              parsedEvents = ical.parseICS(icalData);
-            } else if (typeof ical === 'function') {
-              // Maybe ical is the parser function itself
-              parsedEvents = ical(icalData);
-            } else {
-              throw new Error(`Unsupported ical structure: ${typeof ical}`);
-            }
+            parsedEvents = ical.parseICS(icalData);
 
           } catch (parseError) {
             console.error('Parse error:', parseError);
@@ -168,9 +161,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
               
               // Handle recurring events
               if (event.rrule) {
+                console.log(`ENTERING RRULE PROCESSING for "${event.summary}"`);
                 try {
-                  // Generate recurring event instances within our time window
-                  const instances = event.rrule.between(now, oneWeekFromNow, true);
+                  // Debug the rrule object
+                  console.log(`Processing rrule for "${event.summary}":`, typeof event.rrule, event.rrule);
+                  
+                  // node-ical returns parsed rrule data, but we need to use RRule library to generate instances
+                  const { RRule } = await import('rrule');
+                  
+                  // Convert node-ical rrule to RRule library format
+                  const rruleOptions: any = {
+                    dtstart: new Date(event.start),
+                    until: event.rrule.until ? new Date(event.rrule.until) : new Date('2025-12-31'),
+                  };
+                  
+                  // Map frequency
+                  if (event.rrule.freq === 'WEEKLY') rruleOptions.freq = RRule.WEEKLY;
+                  else if (event.rrule.freq === 'DAILY') rruleOptions.freq = RRule.DAILY;
+                  else if (event.rrule.freq === 'MONTHLY') rruleOptions.freq = RRule.MONTHLY;
+                  else rruleOptions.freq = RRule.WEEKLY; // default
+                  
+                  // Map interval
+                  if (event.rrule.interval) rruleOptions.interval = event.rrule.interval;
+                  
+                  // Map byweekday
+                  if (event.rrule.byday) {
+                    const dayMap: { [key: string]: any } = {
+                      'SU': RRule.SU, 'MO': RRule.MO, 'TU': RRule.TU, 'WE': RRule.WE,
+                      'TH': RRule.TH, 'FR': RRule.FR, 'SA': RRule.SA
+                    };
+                    rruleOptions.byweekday = event.rrule.byday.map((day: string) => dayMap[day] || RRule.MO);
+                  }
+                  
+                  console.log(`Creating RRule with options:`, rruleOptions);
+                  const rule = new RRule(rruleOptions);
+                  const instances = rule.between(now, oneWeekFromNow, true);
                   
                   for (const instanceStart of instances) {
                     const originalDuration = new Date(event.end).getTime() - new Date(event.start).getTime();
