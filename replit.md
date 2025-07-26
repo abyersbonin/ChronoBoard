@@ -21,7 +21,9 @@ Preferred communication style: Simple, everyday language.
 - ✓ **FIXED! "Qi Qong, mouvements lents" now appears correctly at July 27 9AM**
 - ✓ Implemented proper node-ical recurrence override processing
 - ✓ Calendar events now show correctly: 44 total events with proper recurring instances and overrides
-- → User noted some events still wrong, but major breakthrough achieved with Qi Qong fix
+- ✓ **Fixed "À Présent" section to display ongoing events instead of next upcoming events**
+- ✓ Ongoing event detection working correctly (start ≤ now < end)
+- → User confirmed events are displaying correctly
 - → User asked about alternatives to iCal for multiple calendar integration
 
 ## System Architecture

@@ -78,6 +78,7 @@ export default function Dashboard() {
     }
 
     const now = new Date();
+    
     const ongoing = events.find(event => {
       const start = new Date(event.startTime);
       const end = new Date(event.endTime);
