@@ -111,6 +111,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const now = new Date();
       const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
+
       // Fetch and parse each iCal URL
       for (const icalUrl of settings.icalUrls) {
         try {
@@ -131,8 +132,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
 
           const icalData = await response.text();
-          console.log('Raw iCal data length:', icalData.length);
-          console.log('iCal library:', typeof ical, Object.keys(ical || {}));
+
           
           // Parse iCal data - node-ical main export should have parseICS
           let parsedEvents;
@@ -145,7 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             } else {
               throw new Error(`Unsupported ical structure: ${typeof ical}`);
             }
-            console.log('Successfully parsed', Object.keys(parsedEvents || {}).length, 'events');
+
           } catch (parseError) {
             console.error('Parse error:', parseError);
             continue;
@@ -156,8 +156,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
               const startDate = new Date(event.start);
               const endDate = new Date(event.end);
               
-              // Only include events within our date range
-              if (startDate >= now && startDate <= oneWeekFromNow) {
+              // Include events that are currently happening or starting within the next week
+              // Event is relevant if it ends after now AND starts before the end of next week
+              if (endDate >= now && startDate <= oneWeekFromNow) {
+
                 allEvents.push({
                   id: event.uid || `${Date.now()}-${Math.random()}`,
                   title: event.summary || 'Untitled Event',

@@ -30,11 +30,8 @@ export default function Dashboard() {
   const { data: events = [], isLoading: eventsLoading, refetch: refetchEvents } = useQuery({
     queryKey: ['/api/calendar-events', DEFAULT_USER_ID],
     queryFn: async () => {
-      const now = new Date();
-      const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-      const response = await fetch(
-        `/api/calendar-events/${DEFAULT_USER_ID}?start=${now.toISOString()}&end=${oneWeekFromNow.toISOString()}`
-      );
+      // Fetch all events without date filtering to get current and upcoming events
+      const response = await fetch(`/api/calendar-events/${DEFAULT_USER_ID}`);
       if (!response.ok) throw new Error('Failed to fetch events');
       return response.json() as Promise<CalendarEvent[]>;
     },
