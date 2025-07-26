@@ -1,5 +1,8 @@
 import { type User, type InsertUser, type InsertAdmin, type Settings, type InsertSettings, type CalendarEvent, type InsertCalendarEvent } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
+import { users, settings, calendarEvents } from "@shared/schema";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -140,4 +143,113 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db.insert(users).values(insertUser).returning();
+    return user;
+  }
+
+  async validateAdmin(username: string, password: string): Promise<boolean> {
+    return username === "admin" && password === "admin";
+  }
+
+  async getSettings(userId: string): Promise<Settings | undefined> {
+    const [setting] = await db.select().from(settings).where(eq(settings.userId, userId));
+    return setting || undefined;
+  }
+
+  async updateSettings(userId: string, newSettings: Partial<InsertSettings>): Promise<Settings> {
+    const existing = await this.getSettings(userId);
+    
+    if (existing) {
+      const [updated] = await db
+        .update(settings)
+        .set(newSettings)
+        .where(eq(settings.userId, userId))
+        .returning();
+      return updated;
+    } else {
+      const [created] = await db
+        .insert(settings)
+        .values({
+          userId,
+          dashboardTitle: "Personal Dashboard",
+          headerImageUrl: null,
+          autoRefresh: true,
+          use24Hour: true,
+          icalUrls: [],
+          location: "Montreal",
+          ...newSettings,
+        })
+        .returning();
+      return created;
+    }
+  }
+
+  async getCalendarEvents(userId: string, startDate?: Date, endDate?: Date): Promise<CalendarEvent[]> {
+    const events = await db.select().from(calendarEvents);
+    return events.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+  }
+
+  async createCalendarEvent(userId: string, insertEvent: InsertCalendarEvent): Promise<CalendarEvent> {
+    const eventData = {
+      ...insertEvent,
+      location: insertEvent.location || null,
+      description: insertEvent.description || null,
+      isAllDay: insertEvent.isAllDay || false,
+      icalEventId: insertEvent.icalEventId || null,
+      calendarSource: insertEvent.calendarSource || null,
+      lastSynced: new Date(),
+    };
+    
+    const [event] = await db
+      .insert(calendarEvents)
+      .values(eventData)
+      .returning();
+    return event;
+  }
+
+  async updateCalendarEvent(eventId: string, updateEvent: Partial<InsertCalendarEvent>): Promise<CalendarEvent | undefined> {
+    const [updated] = await db
+      .update(calendarEvents)
+      .set({
+        ...updateEvent,
+        lastSynced: new Date(),
+      })
+      .where(eq(calendarEvents.id, eventId))
+      .returning();
+    return updated || undefined;
+  }
+
+  async deleteCalendarEvent(eventId: string): Promise<boolean> {
+    const result = await db.delete(calendarEvents).where(eq(calendarEvents.id, eventId));
+    return result.rowCount > 0;
+  }
+
+  async syncCalendarEvents(userId: string, events: InsertCalendarEvent[]): Promise<CalendarEvent[]> {
+    // Clear existing events for this sync
+    await db.delete(calendarEvents).where(eq(calendarEvents.icalEventId, ''));
+    
+    // Add new events
+    const syncedEvents: CalendarEvent[] = [];
+    for (const eventData of events) {
+      const event = await this.createCalendarEvent(userId, eventData);
+      syncedEvents.push(event);
+    }
+
+    return syncedEvents;
+  }
+}
+
+// Check if we have database access, use database storage if available
+export const storage = process.env.DATABASE_URL ? new DatabaseStorage() : new MemStorage();
