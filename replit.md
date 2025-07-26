@@ -25,6 +25,8 @@ Preferred communication style: Simple, everyday language.
 - ✓ Ongoing event detection working correctly (start ≤ now < end)
 - ✓ **Successfully demonstrated À Présent functionality with ongoing "Les pouvoirs extraordinaires du froid" event**
 - ✓ Event properly shows from 3:00-4:00 PM when ongoing at current time (3:23 PM)
+- ✓ **Fixed timezone issue for Quebec (EDT) - ongoing events now detected correctly at 3:30 PM**
+- ✓ Timezone handling properly converts Quebec time (America/Toronto) to UTC for event comparison
 - → User confirmed events are displaying correctly
 - → Successfully resolved calendar event display and ongoing event detection
 
