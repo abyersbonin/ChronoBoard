@@ -151,19 +151,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
             continue;
           }
 
-          for (const event of Object.values(parsedEvents) as any[]) {
+          console.log(`Processing ${Object.keys(parsedEvents).length} events from ${fetchUrl}`);
+          
+          for (const [eventKey, event] of Object.entries(parsedEvents) as any[]) {
             if (event.type === 'VEVENT' && event.start && event.end) {
+              console.log(`Processing event: "${event.summary}" from ${event.start} to ${event.end}, recurring: ${!!event.rrule}`);
+              
               // Handle recurring events
               if (event.rrule) {
                 try {
                   // Generate recurring event instances within our time window
                   const instances = event.rrule.between(now, oneWeekFromNow, true);
+                  console.log(`  Generated ${instances.length} instances for recurring event`);
                   
                   for (const instanceStart of instances) {
                     const originalDuration = new Date(event.end).getTime() - new Date(event.start).getTime();
                     const instanceEnd = new Date(instanceStart.getTime() + originalDuration);
                     
-                    allEvents.push({
+                    const eventInstance = {
                       id: `${event.uid}-${instanceStart.getTime()}` || `${Date.now()}-${Math.random()}`,
                       title: event.summary || 'Untitled Event',
                       description: event.description || '',
@@ -173,7 +178,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
                       isAllDay: !event.start.getHours && !event.start.getMinutes,
                       icalEventId: event.uid,
                       calendarSource: fetchUrl,
-                    });
+                    };
+                    
+                    console.log(`    Instance: "${eventInstance.title}" at ${instanceStart.toISOString()}`);
+                    allEvents.push(eventInstance);
                   }
                 } catch (rruleError) {
                   console.error('Error processing recurring event:', rruleError);
@@ -203,7 +211,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 // Include events that are currently happening or starting within the next week
                 // Event is relevant if it ends after now AND starts before the end of next week
                 if (endDate >= now && startDate <= oneWeekFromNow) {
-                  allEvents.push({
+                  const singleEvent = {
                     id: event.uid || `${Date.now()}-${Math.random()}`,
                     title: event.summary || 'Untitled Event',
                     description: event.description || '',
@@ -213,7 +221,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
                     isAllDay: !event.start.getHours && !event.start.getMinutes,
                     icalEventId: event.uid,
                     calendarSource: fetchUrl,
-                  });
+                  };
+                  
+                  console.log(`  Single event: "${singleEvent.title}" at ${startDate.toISOString()}`);
+                  allEvents.push(singleEvent);
                 }
               }
             }
