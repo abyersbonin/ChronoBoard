@@ -1,10 +1,11 @@
-import { type User, type InsertUser, type Settings, type InsertSettings, type CalendarEvent, type InsertCalendarEvent } from "@shared/schema";
+import { type User, type InsertUser, type InsertAdmin, type Settings, type InsertSettings, type CalendarEvent, type InsertCalendarEvent } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  validateAdmin(username: string, password: string): Promise<boolean>;
   
   getSettings(userId: string): Promise<Settings | undefined>;
   updateSettings(userId: string, settings: Partial<InsertSettings>): Promise<Settings>;
@@ -25,6 +26,9 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.settings = new Map();
     this.calendarEvents = new Map();
+    
+    // Initialize default admin user
+    this.createUser({ username: "admin", password: "admin" });
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -42,6 +46,11 @@ export class MemStorage implements IStorage {
     const user: User = { ...insertUser, id };
     this.users.set(id, user);
     return user;
+  }
+
+  async validateAdmin(username: string, password: string): Promise<boolean> {
+    // Simple validation - in production, passwords should be hashed
+    return username === "admin" && password === "admin";
   }
 
   async getSettings(userId: string): Promise<Settings | undefined> {

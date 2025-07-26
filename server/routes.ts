@@ -8,6 +8,7 @@ import path from "path";
 import fs from "fs";
 import ical from "node-ical";
 import { RRule } from "rrule";
+import session from "express-session";
 
 const upload = multer({ 
   dest: 'uploads/',
@@ -20,9 +21,63 @@ const upload = multer({
   }
 });
 
+// Extend Express session type to include admin authentication
+declare module 'express-session' {
+  interface SessionData {
+    isAdminLoggedIn: boolean;
+  }
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Settings endpoints
-  app.get("/api/settings/:userId", async (req, res) => {
+  // Session middleware setup
+  app.use(session({
+    secret: 'spa-eastman-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+  }));
+
+  // Admin authentication middleware
+  const requireAdmin = (req: any, res: any, next: any) => {
+    if (req.session.isAdminLoggedIn) {
+      next();
+    } else {
+      res.status(401).json({ error: 'Admin authentication required' });
+    }
+  };
+
+  // Authentication routes
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      const isValid = await storage.validateAdmin(username, password);
+      
+      if (isValid) {
+        req.session.isAdminLoggedIn = true;
+        res.json({ success: true, message: 'Login successful' });
+      } else {
+        res.status(401).json({ error: 'Invalid credentials' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'Login failed' });
+    }
+  });
+
+  app.post("/api/auth/logout", (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        res.status(500).json({ error: 'Logout failed' });
+      } else {
+        res.json({ success: true, message: 'Logout successful' });
+      }
+    });
+  });
+
+  app.get("/api/auth/status", (req, res) => {
+    res.json({ isLoggedIn: !!req.session.isAdminLoggedIn });
+  });
+  // Settings endpoints - protected by admin auth
+  app.get("/api/settings/:userId", requireAdmin, async (req, res) => {
     try {
       const { userId } = req.params;
       let settings = await storage.getSettings(userId);
@@ -35,7 +90,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/settings/:userId", async (req, res) => {
+  app.put("/api/settings/:userId", requireAdmin, async (req, res) => {
     try {
       const { userId } = req.params;
       console.log('Settings update request:', req.body);
@@ -98,8 +153,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // iCal Calendar sync
-  app.post("/api/sync-ical-calendar/:userId", async (req, res) => {
+  // iCal Calendar sync - protected by admin auth
+  app.post("/api/sync-ical-calendar/:userId", requireAdmin, async (req, res) => {
     try {
       const { userId } = req.params;
       const settings = await storage.getSettings(userId);

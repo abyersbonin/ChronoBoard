@@ -53,6 +53,14 @@ export type InsertSettings = z.infer<typeof insertSettingsSchema>;
 export type CalendarEvent = typeof calendarEvents.$inferSelect;
 export type InsertCalendarEvent = z.infer<typeof insertCalendarEventSchema>;
 
+// Admin authentication schema
+export const insertAdminSchema = createInsertSchema(users).pick({
+  username: true,
+  password: true,
+});
+
+export type InsertAdmin = z.infer<typeof insertAdminSchema>;
+
 export type WeatherData = {
   location: string;
   current: {

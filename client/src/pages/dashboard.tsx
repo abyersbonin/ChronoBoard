@@ -4,9 +4,12 @@ import { DashboardHeader } from "@/components/dashboard-header";
 import { CurrentEvent } from "@/components/current-event";
 import { UpcomingEvents } from "@/components/upcoming-events";
 import { SidePanel } from "@/components/side-panel";
+import { SpaBackground } from "@/components/spa-background";
+import { LoginDialog } from "@/components/login-dialog";
 import { type CalendarEvent, type Settings } from "@shared/schema";
 import { syncIcalCalendar, updateIcalUrls } from "@/lib/ical-calendar";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 
 const DEFAULT_USER_ID = "default-user";
@@ -15,13 +18,29 @@ export default function Dashboard() {
   const [currentEvent, setCurrentEvent] = useState<CalendarEvent | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { isLoggedIn, isLoading: authLoading } = useAuth();
 
-  // Fetch settings
+  // Fetch settings - only if admin is logged in
   const { data: settings, isLoading: settingsLoading } = useQuery({
     queryKey: ['/api/settings', DEFAULT_USER_ID],
     queryFn: async () => {
       const response = await fetch(`/api/settings/${DEFAULT_USER_ID}`);
-      if (!response.ok) throw new Error('Failed to fetch settings');
+      if (!response.ok) {
+        if (response.status === 401) {
+          // Return default settings for unauthorized users
+          return {
+            id: DEFAULT_USER_ID,
+            userId: DEFAULT_USER_ID,
+            dashboardTitle: "Spa Eastman",
+            headerImageUrl: null,
+            autoRefresh: true,
+            use24Hour: true,
+            icalUrls: [],
+            location: "Eastman"
+          };
+        }
+        throw new Error('Failed to fetch settings');
+      }
       return response.json() as Promise<Settings>;
     },
   });
@@ -38,20 +57,35 @@ export default function Dashboard() {
     refetchInterval: settings?.autoRefresh ? 5 * 60 * 1000 : false, // 5 minutes if auto-refresh enabled
   });
 
-  // Update settings mutation
+  // Update settings mutation - only if admin is logged in
   const updateSettingsMutation = useMutation({
     mutationFn: async (newSettings: Partial<Settings>) => {
+      if (!isLoggedIn) {
+        throw new Error('Admin authentication required');
+      }
       const response = await apiRequest('PUT', `/api/settings/${DEFAULT_USER_ID}`, newSettings);
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/settings', DEFAULT_USER_ID] });
     },
+    onError: (error: any) => {
+      if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+        toast({
+          title: "Accès refusé",
+          description: "Veuillez vous connecter en tant qu'administrateur.",
+          variant: "destructive",
+        });
+      }
+    },
   });
 
-  // iCal Calendar sync mutation
+  // iCal Calendar sync mutation - only if admin is logged in
   const syncCalendarMutation = useMutation({
     mutationFn: async () => {
+      if (!isLoggedIn) {
+        throw new Error('Admin authentication required');
+      }
       return syncIcalCalendar(DEFAULT_USER_ID);
     },
     onSuccess: (data) => {
@@ -61,12 +95,20 @@ export default function Dashboard() {
         description: `${data.eventCount} événements synchronisés.`,
       });
     },
-    onError: () => {
-      toast({
-        title: "Erreur de synchronisation",
-        description: "Impossible de synchroniser les calendriers iCal.",
-        variant: "destructive",
-      });
+    onError: (error: any) => {
+      if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+        toast({
+          title: "Accès refusé",
+          description: "Veuillez vous connecter en tant qu'administrateur pour synchroniser les calendriers.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erreur de synchronisation",
+          description: "Impossible de synchroniser les calendriers iCal.",
+          variant: "destructive",
+        });
+      }
     },
   });
 
@@ -132,31 +174,45 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-dashboard-dark text-white font-sans">
-      <DashboardHeader
-        title={settings?.dashboardTitle || "Personal Dashboard"}
-        backgroundImageUrl={settings?.headerImageUrl || undefined}
-        location={settings?.location || "Montreal"}
-        use24Hour={settings?.use24Hour || false}
-        onImageUpload={handleImageUpload}
-      />
+    <div className="min-h-screen text-white font-sans relative">
+      {/* Permanent Spa Eastman Background */}
+      <SpaBackground />
+      
+      {/* Header with Login */}
+      <div className="relative z-10">
+        <div className="flex justify-between items-center p-6 bg-black/30 backdrop-blur-sm" style={{ backgroundColor: 'rgba(54, 69, 92, 0.4)' }}>
+          <div>
+            <h1 className="text-3xl font-bold text-white">
+              {settings?.dashboardTitle || "Spa Eastman"}
+            </h1>
+            <p className="text-white/80 text-sm">
+              {settings?.location || "Eastman"} • Dashboard des événements
+            </p>
+          </div>
+          <LoginDialog />
+        </div>
+      </div>
 
-      <div className="container mx-auto px-6 py-8">
+      {/* Main Content */}
+      <div className="relative z-10 container mx-auto px-6 py-8">
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <CurrentEvent event={currentEvent} />
             <UpcomingEvents events={upcomingEvents} />
           </div>
 
-          <SidePanel
-            onSyncCalendar={handleSyncCalendar}
-            isCalendarConnected={!!(settings?.icalUrls && settings.icalUrls.length > 0)}
-            lastSync={undefined} // Could be stored in settings if needed
-            autoRefresh={settings?.autoRefresh || false}
-            use24Hour={settings?.use24Hour || false}
-            onToggleAutoRefresh={handleToggleAutoRefresh}
-            onToggle24Hour={handleToggle24Hour}
-          />
+          {/* Show side panel only for logged-in admins */}
+          {isLoggedIn && (
+            <SidePanel
+              onSyncCalendar={handleSyncCalendar}
+              isCalendarConnected={!!(settings?.icalUrls && settings.icalUrls.length > 0)}
+              lastSync={undefined} // Could be stored in settings if needed
+              autoRefresh={settings?.autoRefresh || false}
+              use24Hour={settings?.use24Hour || false}
+              onToggleAutoRefresh={handleToggleAutoRefresh}
+              onToggle24Hour={handleToggle24Hour}
+            />
+          )}
         </div>
       </div>
     </div>
