@@ -338,6 +338,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
+
+      
       console.log(`Total events collected: ${allEvents.length}`);
       console.log(`Deduplicated from ${allEvents.length} to ${deduplicatedEvents.length} events`);
       

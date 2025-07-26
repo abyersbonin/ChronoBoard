@@ -25,6 +25,21 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.settings = new Map();
     this.calendarEvents = new Map();
+    
+    // Add temporary ongoing event for demonstration
+    const tempEvent = {
+      id: 'temp-ongoing-cold-event',
+      title: 'Les pouvoirs extraordinaires du froid (bilingual)',
+      description: 'Événement actuellement en cours - Démonstration de la section À Présent',
+      location: 'Spa Eastman',
+      startTime: new Date('2025-07-26T19:00:00.000Z'),
+      endTime: new Date('2025-07-26T20:00:00.000Z'),
+      isAllDay: false,
+      icalEventId: 'temp-ongoing-cold-event',
+      calendarSource: 'manual-entry',
+      lastSynced: new Date()
+    };
+    this.calendarEvents.set(tempEvent.id, tempEvent);
   }
 
   async getUser(id: string): Promise<User | undefined> {

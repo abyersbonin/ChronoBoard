@@ -23,8 +23,10 @@ Preferred communication style: Simple, everyday language.
 - ✓ Calendar events now show correctly: 44 total events with proper recurring instances and overrides
 - ✓ **Fixed "À Présent" section to display ongoing events instead of next upcoming events**
 - ✓ Ongoing event detection working correctly (start ≤ now < end)
+- ✓ **Successfully demonstrated À Présent functionality with ongoing "Les pouvoirs extraordinaires du froid" event**
+- ✓ Event properly shows from 3:00-4:00 PM when ongoing at current time (3:23 PM)
 - → User confirmed events are displaying correctly
-- → User asked about alternatives to iCal for multiple calendar integration
+- → Successfully resolved calendar event display and ongoing event detection
 
 ## System Architecture
 
