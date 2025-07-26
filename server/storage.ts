@@ -25,8 +25,6 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.settings = new Map();
     this.calendarEvents = new Map();
-    
-
   }
 
   async getUser(id: string): Promise<User | undefined> {

@@ -217,7 +217,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 // Handle both single EXDATE and array of EXDATEs
                 const exdates = Array.isArray(event.exdate) ? event.exdate : [event.exdate];
                 for (const exdate of exdates) {
-                  excludedDates.add(new Date(exdate).getTime());
+                  const exdateObj = new Date(exdate);
+                  
+                  excludedDates.add(exdateObj.getTime());
                 }
                 console.log(`Event "${event.summary}" has ${excludedDates.size} excluded dates`);
               }
@@ -264,10 +266,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
               console.log(`Generated ${instances.length} instances for "${event.summary}"`);
               
               for (const instanceStart of instances) {
-                // Skip excluded dates and dates with overrides
+                // More intelligent EXDATE handling - only exclude if it's truly an exception
                 if (excludedDates.has(instanceStart.getTime())) {
-                  console.log(`Skipping excluded/overridden date: ${instanceStart.toISOString()} for "${event.summary}"`);
-                  continue;
+                  // Check if there's a recurrence override for this date (which would justify the exclusion)
+                  const hasOverride = event.recurrences && Object.keys(event.recurrences).some(recDate => {
+                    const overrideDate = new Date(recDate);
+                    return Math.abs(overrideDate.getTime() - instanceStart.getTime()) < 24 * 60 * 60 * 1000; // Within 24 hours
+                  });
+                  
+                  if (hasOverride) {
+                    console.log(`Skipping excluded date (has override): ${instanceStart.toISOString()} for "${event.summary}"`);
+                    continue;
+                  } else {
+                    // If no override exists, this might be an incorrect exclusion - include the instance
+                    console.log(`Including potentially incorrectly excluded instance: ${instanceStart.toISOString()} for "${event.summary}"`);
+                  }
                 }
                 
                 const originalDuration = new Date(event.end).getTime() - new Date(event.start).getTime();
@@ -340,40 +353,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
 
       
-      // TEMPORARY FIX: Add missing Saturday July 26th "Les pouvoirs extraordinaires du froid" event
-      // The recurring rule says "weekly on Saturday until Aug 2" but instances are missing
-      const currentTime = new Date();
-      const july26_3pm = new Date('2025-07-26T19:00:00.000Z'); // 3 PM Quebec time (EDT)
-      const july26_4pm = new Date('2025-07-26T20:00:00.000Z'); // 4 PM Quebec time (EDT)
-      
-      // Only add if we're within or close to the event time window
-      if (currentTime >= july26_3pm && currentTime <= new Date('2025-07-26T21:00:00.000Z')) {
-        const existingJuly26Cold = deduplicatedEvents.find(e => 
-          e.title.includes('pouvoirs extraordinaires du froid') && 
-          new Date(e.startTime).getTime() === july26_3pm.getTime()
-        );
-        
-        if (!existingJuly26Cold) {
-          const july26ColdEvent = {
-            id: 'cold-event-july-26-saturday-recurring',
-            title: 'Les pouvoirs extraordinaires du froid (bilingual)',
-            description: 'Alexandre St-Onge, Praticien certifié thérapie par le froid. Événement récurrent du samedi.',
-            location: 'Point de rencontre à la piscine intérieure',
-            startTime: july26_3pm,
-            endTime: july26_4pm,
-            isAllDay: false,
-            icalEventId: 'cold-event-july-26-saturday-recurring',
-            calendarSource: 'ical-recurring-fix',
-            eventType: 'recurring'
-          };
-          
-          deduplicatedEvents.push(july26ColdEvent);
-          console.log('Added missing Saturday July 26th cold event for ongoing detection');
-        }
-      }
+
 
       console.log(`Total events collected: ${allEvents.length}`);
       console.log(`Deduplicated from ${allEvents.length} to ${deduplicatedEvents.length} events`);
+      
+
       
       const syncedEvents = await storage.syncCalendarEvents(userId, deduplicatedEvents);
       res.json({ 
