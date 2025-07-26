@@ -215,14 +215,8 @@ export default function Dashboard() {
           
           {/* Content over image */}
           <div className="relative z-10">
-            {/* Login and weather at the top */}
-            <div className="flex justify-between items-start mb-6">
-              <LoginDialog />
-              <WeatherWidget location={settings?.location || "Eastman"} />
-            </div>
-            
-            {/* Centered logo */}
-            <div className="text-center mb-4">
+            {/* Logo at the very top */}
+            <div className="text-center mb-6">
               <img 
                 src="https://www.spa-eastman.com/wp-content/themes/spa-eastman/assets/images/logo-spa-1977-blanc-fr.svg" 
                 alt="Spa Eastman" 
@@ -231,7 +225,13 @@ export default function Dashboard() {
               />
             </div>
             
-            {/* Centered time under logo */}
+            {/* Login and weather row */}
+            <div className="flex justify-between items-start mb-4">
+              <LoginDialog />
+              <WeatherWidget location={settings?.location || "Eastman"} />
+            </div>
+            
+            {/* Centered time at bottom */}
             <div className="text-center">
               <div className="flex items-center justify-center space-x-4 text-white/90 text-lg">
                 <span className="drop-shadow-md">{settings?.location || "Eastman"}</span>
