@@ -533,24 +533,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/weather/:location", async (req, res) => {
     try {
       const { location } = req.params;
+      const apiKey = "bb8213b1aa75181da5c769bde25a25f9";
       
-      // Mock weather data for demo (since API key isn't configured)
-      const mockWeatherData = {
-        location: location,
+      // Fetch current weather from OpenWeatherMap
+      const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric&lang=fr`;
+      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric&lang=fr`;
+      
+      const [currentResponse, forecastResponse] = await Promise.all([
+        fetch(currentWeatherUrl),
+        fetch(forecastUrl)
+      ]);
+      
+      if (!currentResponse.ok || !forecastResponse.ok) {
+        throw new Error('Weather API request failed');
+      }
+      
+      const currentData = await currentResponse.json();
+      const forecastData = await forecastResponse.json();
+      
+      // Process forecast data to get daily summaries
+      const dailyForecasts = [];
+      const processedDates = new Set();
+      
+      for (const item of forecastData.list.slice(0, 15)) {
+        const date = new Date(item.dt * 1000);
+        const dateKey = date.toDateString();
+        
+        if (!processedDates.has(dateKey) && dailyForecasts.length < 3) {
+          const dayName = dailyForecasts.length === 0 ? 'Aujourd\'hui' : 
+                         dailyForecasts.length === 1 ? 'Demain' : 
+                         date.toLocaleDateString('fr-FR', { weekday: 'short' });
+          
+          dailyForecasts.push({
+            date: date.toISOString(),
+            day: dayName,
+            high: Math.round(item.main.temp_max),
+            low: Math.round(item.main.temp_min),
+            condition: item.weather[0].description,
+            icon: item.weather[0].icon
+          });
+          
+          processedDates.add(dateKey);
+        }
+      }
+      
+      const weatherData = {
+        location: currentData.name,
         current: {
-          temp: 22,
-          condition: "Ensoleillé",
-          icon: "sun"
+          temp: Math.round(currentData.main.temp),
+          condition: currentData.weather[0].description,
+          icon: currentData.weather[0].icon,
+          humidity: currentData.main.humidity,
+          windSpeed: currentData.wind.speed
         },
-        forecast: [
-          { date: new Date().toISOString(), day: "Aujourd'hui", high: 25, low: 18, condition: "Ensoleillé", icon: "sun" },
-          { date: new Date(Date.now() + 86400000).toISOString(), day: "Demain", high: 23, low: 16, condition: "Nuageux", icon: "cloud" },
-          { date: new Date(Date.now() + 172800000).toISOString(), day: "Après-demain", high: 21, low: 14, condition: "Pluvieux", icon: "rain" }
-        ]
+        forecast: dailyForecasts
       };
       
-      res.json(mockWeatherData);
+      res.json(weatherData);
     } catch (error) {
+      console.error('Weather API error:', error);
       res.status(500).json({ error: "Failed to fetch weather data" });
     }
   });
