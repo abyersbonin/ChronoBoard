@@ -197,28 +197,33 @@ export default function Dashboard() {
       {/* Permanent Spa Eastman Background */}
       <SpaBackground />
       
-      {/* Header with Login */}
+      {/* Header with Login in top left */}
       <div className="relative z-10">
-        <div className="flex justify-between items-center p-6 bg-black/30 backdrop-blur-sm" style={{ backgroundColor: 'rgba(54, 69, 92, 0.4)' }}>
-          <div>
-            <h1 className="text-3xl font-bold text-white">
-              {settings?.dashboardTitle || "Spa Eastman"}
-            </h1>
-            <div className="flex items-center space-x-4 text-white/80 text-sm">
-              <span>{settings?.location || "Eastman"}</span>
-              <span>•</span>
-              <span className="text-xl font-semibold" data-live-time>
-                {new Date().toLocaleTimeString('fr-FR', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit'
-                })}
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <WeatherWidget location={settings?.location || "Eastman"} />
+        <div className="p-6 bg-black/30 backdrop-blur-sm" style={{ backgroundColor: 'rgba(54, 69, 92, 0.4)' }}>
+          {/* Login button in top left corner */}
+          <div className="flex justify-between items-start mb-4">
             <LoginDialog />
+            <WeatherWidget location={settings?.location || "Eastman"} />
+          </div>
+          
+          {/* Title and time */}
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold text-white">
+                {settings?.dashboardTitle || "Spa Eastman"}
+              </h1>
+              <div className="flex items-center space-x-4 text-white/80 text-sm">
+                <span>{settings?.location || "Eastman"}</span>
+                <span>•</span>
+                <span className="text-xl font-semibold" data-live-time>
+                  {new Date().toLocaleTimeString('fr-FR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                  })}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
