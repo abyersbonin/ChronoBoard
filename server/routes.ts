@@ -166,7 +166,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 if (event.recurrences) {
                   console.log(`  Recurrence count: ${Object.keys(event.recurrences).length}`);
                   for (const [recDate, recEvent] of Object.entries(event.recurrences)) {
-                    console.log(`  - Override at ${recDate}: "${recEvent.summary}"`);
+                    const recEventTyped = recEvent as any;
+                    console.log(`  - Override at ${recDate}: "${recEventTyped.summary}"`);
                   }
                 }
               }
@@ -225,23 +226,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
               if (event.recurrences) {
                 console.log(`Processing ${Object.keys(event.recurrences).length} recurrence overrides for "${event.summary}"`);
                 for (const [recDate, recEvent] of Object.entries(event.recurrences)) {
-                  const overrideStart = new Date(recEvent.start);
-                  const overrideEnd = new Date(recEvent.end);
+                  const recEventTyped = recEvent as any; // node-ical recurrence event
+                  const overrideStart = new Date(recEventTyped.start);
+                  const overrideEnd = new Date(recEventTyped.end);
+                  
+                  console.log(`  Override: recDate="${recDate}", actualStart="${overrideStart.toISOString()}", summary="${recEventTyped.summary}"`);
                   
                   if (overrideEnd >= now && overrideStart <= oneWeekFromNow) {
                     // Debug override events
                     if (overrideStart.getDate() === 27 && overrideStart.getMonth() === 6 && overrideStart.getHours() === 13) {
-                      console.log(`*** PROCESSING RECURRENCE OVERRIDE for July 27 1PM: "${recEvent.summary}"`);
+                      console.log(`*** PROCESSING RECURRENCE OVERRIDE for July 27 1PM: "${recEventTyped.summary}"`);
                     }
                     
                     const overrideEvent = {
                       id: `${event.uid}-override-${overrideStart.getTime()}`,
-                      title: recEvent.summary || event.summary || 'Untitled Event',
-                      description: recEvent.description || event.description || '',
-                      location: recEvent.location || event.location || '',
+                      title: recEventTyped.summary || event.summary || 'Untitled Event',
+                      description: recEventTyped.description || event.description || '',
+                      location: recEventTyped.location || event.location || '',
                       startTime: overrideStart,
                       endTime: overrideEnd,
-                      isAllDay: !recEvent.start.getHours && !recEvent.start.getMinutes,
+                      isAllDay: !recEventTyped.start.getHours && !recEventTyped.start.getMinutes,
                       icalEventId: `${event.uid}-override-${overrideStart.getTime()}`,
                       calendarSource: fetchUrl,
                       eventType: 'override'
@@ -249,7 +253,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                     
                     allEvents.push(overrideEvent);
                     
-                    // Also exclude this date from the recurring series
+                    // Exclude the original recurrence date, not the override date
                     excludedDates.add(new Date(recDate).getTime());
                   }
                 }
@@ -302,7 +306,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       allEvents.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
       
       // Improved deduplication that prioritizes override events
-      const deduplicatedEvents = [];
+      const deduplicatedEvents: any[] = [];
       const eventMap = new Map();
       
       for (const event of allEvents) {
