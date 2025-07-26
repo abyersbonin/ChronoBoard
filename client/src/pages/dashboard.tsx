@@ -140,13 +140,23 @@ export default function Dashboard() {
     }
 
     const now = new Date();
+    console.log('Current time:', now.toISOString());
+    console.log('Current Quebec time:', now.toLocaleString('fr-CA', { timeZone: 'America/Toronto' }));
     
     const ongoing = events.find(event => {
       const start = new Date(event.startTime);
       const end = new Date(event.endTime);
-      return start <= now && end > now;
+      const isOngoing = start <= now && end > now;
+      
+      console.log(`Event: ${event.title}`);
+      console.log(`  Start: ${start.toISOString()} (Quebec: ${start.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })})`);
+      console.log(`  End: ${end.toISOString()} (Quebec: ${end.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })})`);
+      console.log(`  Is ongoing: ${isOngoing}`);
+      
+      return isOngoing;
     });
 
+    console.log('Found ongoing event:', ongoing?.title || 'None');
     setCurrentEvent(ongoing || null);
   }, [events]);
 
