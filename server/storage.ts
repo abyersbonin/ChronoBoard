@@ -57,8 +57,7 @@ export class MemStorage implements IStorage {
       headerImageUrl: null,
       autoRefresh: true,
       use24Hour: true,
-      googleCalendarToken: null,
-      weatherApiKey: null,
+      icalUrls: [],
       location: "Montreal",
       ...existing,
       ...newSettings,
@@ -116,7 +115,7 @@ export class MemStorage implements IStorage {
     // Clear existing events for this sync
     const existingEvents = await this.getCalendarEvents(userId);
     for (const event of existingEvents) {
-      if (event.googleEventId) {
+      if (event.icalEventId) {
         this.calendarEvents.delete(event.id);
       }
     }

@@ -1,12 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { DashboardHeader } from "@/components/dashboard-header";
-import { WeatherStrip } from "@/components/weather-strip";
 import { CurrentEvent } from "@/components/current-event";
 import { UpcomingEvents } from "@/components/upcoming-events";
 import { SidePanel } from "@/components/side-panel";
 import { type CalendarEvent, type Settings } from "@shared/schema";
-import { signInToGoogle } from "@/lib/google-calendar";
+import { syncIcalCalendar, updateIcalUrls } from "@/lib/ical-calendar";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -53,11 +52,10 @@ export default function Dashboard() {
     },
   });
 
-  // Google Calendar sync mutation
+  // iCal Calendar sync mutation
   const syncCalendarMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest('POST', `/api/sync-google-calendar/${DEFAULT_USER_ID}`, {});
-      return response.json();
+      return syncIcalCalendar(DEFAULT_USER_ID);
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['/api/calendar-events', DEFAULT_USER_ID] });
@@ -69,7 +67,7 @@ export default function Dashboard() {
     onError: () => {
       toast({
         title: "Erreur de synchronisation",
-        description: "Veuillez connecter votre compte Google Calendar.",
+        description: "Impossible de synchroniser les calendriers iCal.",
         variant: "destructive",
       });
     },
@@ -99,28 +97,20 @@ export default function Dashboard() {
     return start > now;
   });
 
-  const handleConnectGoogleCalendar = async () => {
-    try {
-      const accessToken = await signInToGoogle();
-      await updateSettingsMutation.mutateAsync({ 
-        googleCalendarToken: accessToken 
-      });
-      await syncCalendarMutation.mutateAsync();
-    } catch (error) {
-      toast({
-        title: "Erreur de connexion",
-        description: "Impossible de se connecter à Google Calendar.",
-        variant: "destructive",
-      });
-    }
-  };
-
   const handleSyncCalendar = async () => {
-    if (!settings?.googleCalendarToken) {
-      await handleConnectGoogleCalendar();
-    } else {
-      await syncCalendarMutation.mutateAsync();
+    if (!settings?.icalUrls || settings.icalUrls.length === 0) {
+      // Initialize with the provided iCal URLs
+      const icalUrls = [
+        "https://calendar.google.com/calendar/ical/spaeastman%40gmail.com/public/basic.ics",
+        "https://calendar.google.com/calendar/ical/8d3d8be71aeb3eb924d665432be0d7dc1279067af9cff69349b6162da0ede4a7%40group.calendar.google.com/public/basic.ics",
+        "https://calendar.google.com/calendar/ical/9402bc300e03b7e49456423cdcb12942bd7a9b4eceb5607401ea5a1b2dff92ae%40group.calendar.google.com/public/basic.ics",
+        "https://calendar.google.com/calendar/embed?src=c3e052beb9103bf681ce6afe95c864b38f044dfe2f757333eecef723cd03607a%40group.calendar.google.com&ctz=America%2FToronto",
+        "https://calendar.google.com/calendar/embed?src=4dfbddf3ad676641adfc936d8909d34e9f95c878f5e84519fd265f7f833f1da6%40group.calendar.google.com&ctz=America%2FToronto"
+      ];
+      
+      await updateSettingsMutation.mutateAsync({ icalUrls });
     }
+    await syncCalendarMutation.mutateAsync();
   };
 
   const handleImageUpload = async (imageUrl: string) => {
@@ -148,12 +138,12 @@ export default function Dashboard() {
       <DashboardHeader
         title={settings?.dashboardTitle || "Personal Dashboard"}
         backgroundImageUrl={settings?.headerImageUrl || undefined}
+        location={settings?.location || "Montreal"}
+        use24Hour={settings?.use24Hour || false}
         onImageUpload={handleImageUpload}
       />
 
       <div className="container mx-auto px-6 py-8">
-        <WeatherStrip location={settings?.location || "Montreal"} />
-
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <CurrentEvent event={currentEvent} />
@@ -162,7 +152,7 @@ export default function Dashboard() {
 
           <SidePanel
             onSyncCalendar={handleSyncCalendar}
-            isCalendarConnected={!!settings?.googleCalendarToken}
+            isCalendarConnected={!!(settings?.icalUrls && settings.icalUrls.length > 0)}
             lastSync={undefined} // Could be stored in settings if needed
             autoRefresh={settings?.autoRefresh || false}
             use24Hour={settings?.use24Hour || false}

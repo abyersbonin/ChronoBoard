@@ -16,8 +16,7 @@ export const settings = pgTable("settings", {
   headerImageUrl: text("header_image_url"),
   autoRefresh: boolean("auto_refresh").default(true),
   use24Hour: boolean("use_24_hour").default(true),
-  googleCalendarToken: text("google_calendar_token"),
-  weatherApiKey: text("weather_api_key"),
+  icalUrls: text("ical_urls").array().default(sql`'{}'::text[]`),
   location: text("location").default("Montreal"),
 });
 
@@ -29,7 +28,8 @@ export const calendarEvents = pgTable("calendar_events", {
   startTime: timestamp("start_time").notNull(),
   endTime: timestamp("end_time").notNull(),
   isAllDay: boolean("is_all_day").default(false),
-  googleEventId: text("google_event_id"),
+  icalEventId: text("ical_event_id"),
+  calendarSource: text("calendar_source"),
   lastSynced: timestamp("last_synced").defaultNow(),
 });
 

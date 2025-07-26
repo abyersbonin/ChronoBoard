@@ -23,32 +23,7 @@ export function SidePanel({
   onToggleAutoRefresh,
   onToggle24Hour,
 }: SidePanelProps) {
-  const [currentTime, setCurrentTime] = useState(new Date());
   const { toast } = useToast();
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('fr-FR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: !use24Hour
-    });
-  };
-
-  const formatDateTime = (date: Date) => {
-    return date.toLocaleDateString('fr-FR', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
 
   const formatLastSync = (syncTime?: string) => {
     if (!syncTime) return 'Jamais';
@@ -85,21 +60,12 @@ export function SidePanel({
 
   return (
     <div className="lg:col-span-1">
-      {/* Time Display */}
-      <div className="bg-dashboard-card rounded-xl p-6 border border-gray-700 mb-6 text-center">
-        <div className="text-5xl font-bold text-blue-400 mb-2">
-          {formatTime(currentTime)}
-        </div>
-        <div className="text-gray-400">
-          {formatDateTime(currentTime)}
-        </div>
-      </div>
 
-      {/* Google Calendar Integration Status */}
+      {/* iCal Calendar Integration Status */}
       <div className="bg-dashboard-card rounded-xl p-6 border border-gray-700 mb-6">
         <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
           <Calendar className="mr-2 h-5 w-5" />
-          Google Calendar
+          Calendriers iCal
         </h3>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">

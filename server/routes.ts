@@ -6,6 +6,7 @@ import { insertSettingsSchema, insertCalendarEventSchema, type WeatherData } fro
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import * as ical from "node-ical";
 
 const upload = multer({ 
   dest: 'uploads/',
@@ -93,56 +94,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Google Calendar sync
-  app.post("/api/sync-google-calendar/:userId", async (req, res) => {
+  // iCal Calendar sync
+  app.post("/api/sync-ical-calendar/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
       const settings = await storage.getSettings(userId);
       
-      if (!settings?.googleCalendarToken) {
-        return res.status(400).json({ error: "Google Calendar not connected" });
+      if (!settings?.icalUrls || settings.icalUrls.length === 0) {
+        return res.status(400).json({ error: "No iCal URLs configured" });
       }
 
-      // Call Google Calendar API
-      const googleCalendarApi = `https://www.googleapis.com/calendar/v3/calendars/primary/events`;
+      const allEvents: any[] = [];
       const now = new Date();
       const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-      
-      const response = await fetch(`${googleCalendarApi}?timeMin=${now.toISOString()}&timeMax=${oneWeekFromNow.toISOString()}&singleEvents=true&orderBy=startTime`, {
-        headers: {
-          'Authorization': `Bearer ${settings.googleCalendarToken}`,
-          'Accept': 'application/json',
-        },
-      });
 
-      if (!response.ok) {
-        throw new Error(`Google Calendar API error: ${response.status}`);
+      // Fetch and parse each iCal URL
+      for (const icalUrl of settings.icalUrls) {
+        try {
+          let fetchUrl = icalUrl;
+          // Convert Google Calendar embed URLs to iCal format
+          if (icalUrl.includes('calendar.google.com/calendar/embed')) {
+            const srcMatch = icalUrl.match(/src=([^&]+)/);
+            if (srcMatch) {
+              const calendarId = decodeURIComponent(srcMatch[1]);
+              fetchUrl = `https://calendar.google.com/calendar/ical/${encodeURIComponent(calendarId)}/public/basic.ics`;
+            }
+          }
+
+          const response = await fetch(fetchUrl);
+          if (!response.ok) {
+            console.error(`Failed to fetch iCal from ${fetchUrl}: ${response.status}`);
+            continue;
+          }
+
+          const icalData = await response.text();
+          const parsedEvents = ical.sync.parseICS(icalData);
+
+          for (const event of Object.values(parsedEvents)) {
+            if (event.type === 'VEVENT' && event.start && event.end) {
+              const startDate = new Date(event.start);
+              const endDate = new Date(event.end);
+              
+              // Only include events within our date range
+              if (startDate >= now && startDate <= oneWeekFromNow) {
+                allEvents.push({
+                  id: event.uid || `${Date.now()}-${Math.random()}`,
+                  title: event.summary || 'Untitled Event',
+                  description: event.description || '',
+                  location: event.location || '',
+                  startTime: startDate,
+                  endTime: endDate,
+                  isAllDay: !event.start.getHours && !event.start.getMinutes,
+                  icalEventId: event.uid,
+                  calendarSource: fetchUrl,
+                });
+              }
+            }
+          }
+        } catch (error) {
+          console.error(`Error processing iCal URL ${icalUrl}:`, error);
+        }
       }
 
-      const data = await response.json();
-      const googleEvents = data.items || [];
-
-      // Convert Google Calendar events to our format
-      const events = googleEvents.map((gEvent: any) => ({
-        id: gEvent.id,
-        title: gEvent.summary || 'Untitled Event',
-        description: gEvent.description || '',
-        location: gEvent.location || '',
-        startTime: new Date(gEvent.start.dateTime || gEvent.start.date),
-        endTime: new Date(gEvent.end.dateTime || gEvent.end.date),
-        isAllDay: !gEvent.start.dateTime,
-        googleEventId: gEvent.id,
-      }));
-
-      const syncedEvents = await storage.syncCalendarEvents(userId, events);
+      const syncedEvents = await storage.syncCalendarEvents(userId, allEvents);
       res.json({ 
         success: true, 
         eventCount: syncedEvents.length,
         lastSync: new Date().toISOString()
       });
     } catch (error) {
-      console.error('Google Calendar sync error:', error);
-      res.status(500).json({ error: "Failed to sync with Google Calendar" });
+      console.error('iCal sync error:', error);
+      res.status(500).json({ error: "Failed to sync with iCal calendars" });
     }
   });
 
