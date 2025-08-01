@@ -1,6 +1,6 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { MapPin, Clock, Calendar, X } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
+import { useEffect } from "react";
 
 interface EventDetailsDialogProps {
   event: CalendarEvent | null;
@@ -9,7 +9,26 @@ interface EventDetailsDialogProps {
 }
 
 export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDialogProps) {
-  if (!event) return null;
+  if (!event || !open) return null;
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onOpenChange(false);
+      }
+    };
+    
+    if (open) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+    
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [open, onOpenChange]);
 
   const formatTime = (date: Date) => {
     return new Date(date).toLocaleTimeString('fr-FR', {
@@ -28,29 +47,36 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md mx-auto !bg-white backdrop-blur-sm border border-gray-300 relative z-[60] shadow-2xl">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        onClick={() => onOpenChange(false)}
+      />
+      
+      {/* Modal Content */}
+      <div className="relative z-[101] w-full max-w-md mx-4 bg-white rounded-lg shadow-2xl border border-gray-300 p-6">
+        {/* Close Button */}
         <button
           onClick={() => onOpenChange(false)}
-          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground z-[61]"
+          className="absolute right-4 top-4 p-1 rounded-sm opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-opacity"
         >
-          <X className="h-4 w-4" />
+          <X className="h-4 w-4 text-gray-600" />
           <span className="sr-only">Close</span>
         </button>
         
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-gray-800 mb-4 pr-8">
+        {/* Header */}
+        <div className="mb-6 pr-8">
+          <h2 className="text-xl font-bold text-gray-800">
             {event.title}
-          </DialogTitle>
-          <DialogDescription className="sr-only">
-            Event details for {event.title}
-          </DialogDescription>
-        </DialogHeader>
+          </h2>
+        </div>
         
+        {/* Content */}
         <div className="space-y-4">
           {/* Date and Time */}
           <div className="flex items-center space-x-3 text-gray-700">
-            <Calendar className="h-5 w-5 text-blue-600" />
+            <Calendar className="h-5 w-5 text-blue-600 flex-shrink-0" />
             <div>
               <div className="font-medium">{formatDate(event.startTime)}</div>
               <div className="text-sm text-gray-600">
@@ -62,7 +88,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
           {/* Location */}
           {event.location && (
             <div className="flex items-center space-x-3 text-gray-700">
-              <MapPin className="h-5 w-5 text-green-600" />
+              <MapPin className="h-5 w-5 text-green-600 flex-shrink-0" />
               <span>{event.location}</span>
             </div>
           )}
@@ -77,7 +103,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
             </div>
           )}
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 }
