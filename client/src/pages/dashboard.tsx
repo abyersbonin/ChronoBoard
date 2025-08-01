@@ -243,8 +243,25 @@ export default function Dashboard() {
             />
           </div>
           
-          {/* Weather forecast at the bottom spanning full width */}
-          <div className="absolute bottom-6 left-0 right-0 px-6">
+          {/* QR Code section on the left */}
+          <div className="absolute bottom-6 left-6">
+            <div className="text-center">
+              <div className="text-white text-sm mb-2 drop-shadow-md">
+                Tableau de bord complet
+              </div>
+              <div className="text-white text-2xl mb-2">↓</div>
+              <div className="bg-white p-3 rounded-lg">
+                <img 
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://dakboard.com/screen/uuid/67c08e6d-141948-8496-db3f400f4013" 
+                  alt="QR Code"
+                  className="w-20 h-20"
+                />
+              </div>
+            </div>
+          </div>
+          
+          {/* Weather forecast on the right */}
+          <div className="absolute bottom-6 right-6">
             <WeatherWidget location={settings?.location || "Eastman"} />
           </div>
         </div>

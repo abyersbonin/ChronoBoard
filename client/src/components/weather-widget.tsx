@@ -53,9 +53,9 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center space-x-6">
+      <div className="flex space-x-3">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="backdrop-blur-sm rounded-xl p-3 border text-center min-w-[100px]" style={{ 
+          <div key={i} className="backdrop-blur-sm rounded-xl p-3 border text-center min-w-[80px]" style={{ 
             backgroundColor: 'rgba(54, 69, 92, 0.3)', 
             borderColor: 'rgba(214, 204, 194, 0.4)' 
           }}>
@@ -72,15 +72,13 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
 
   if (error || !weather) {
     return (
-      <div className="flex justify-center">
-        <div className="backdrop-blur-sm rounded-xl p-3 border text-center" style={{ 
-          backgroundColor: 'rgba(54, 69, 92, 0.3)', 
-          borderColor: 'rgba(214, 204, 194, 0.4)' 
-        }}>
-          <div className="flex items-center justify-center text-white/70">
-            <Thermometer className="w-4 h-4 mr-2" />
-            <span className="text-sm">Météo indisponible</span>
-          </div>
+      <div className="backdrop-blur-sm rounded-xl p-3 border text-center" style={{ 
+        backgroundColor: 'rgba(54, 69, 92, 0.3)', 
+        borderColor: 'rgba(214, 204, 194, 0.4)' 
+      }}>
+        <div className="flex items-center justify-center text-white/70">
+          <Thermometer className="w-4 h-4 mr-2" />
+          <span className="text-sm">Météo indisponible</span>
         </div>
       </div>
     );
@@ -94,9 +92,9 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   };
 
   return (
-    <div className="flex justify-center space-x-6">
+    <div className="flex space-x-3">
       {/* Today's weather */}
-      <div className="backdrop-blur-sm rounded-xl p-3 border text-center min-w-[100px]" style={{ 
+      <div className="backdrop-blur-sm rounded-xl p-3 border text-center min-w-[80px]" style={{ 
         backgroundColor: 'rgba(54, 69, 92, 0.3)', 
         borderColor: 'rgba(214, 204, 194, 0.4)' 
       }}>
@@ -114,7 +112,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
 
       {/* Next 3 days forecast */}
       {weather.forecast.slice(1, 4).map((day, index) => (
-        <div key={index} className="backdrop-blur-sm rounded-xl p-3 border text-center min-w-[100px]" style={{ 
+        <div key={index} className="backdrop-blur-sm rounded-xl p-3 border text-center min-w-[80px]" style={{ 
           backgroundColor: 'rgba(54, 69, 92, 0.3)', 
           borderColor: 'rgba(214, 204, 194, 0.4)' 
         }}>
