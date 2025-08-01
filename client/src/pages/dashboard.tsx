@@ -229,24 +229,27 @@ export default function Dashboard() {
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
           
           {/* Content over image */}
-          <div className="relative z-10 h-full flex flex-col justify-between">
-            {/* Top section - Logo at the very top */}
-            <div className="flex justify-center pt-2 mb-4">
+          <div className="relative z-10 h-full flex flex-col">
+            {/* Login button positioned absolute top-left */}
+            <div className="absolute left-0 top-0 z-20">
+              <LoginDialog />
+            </div>
+
+            {/* Logo at the very top center */}
+            <div className="flex justify-center pt-0 mb-8">
               <img 
                 src="https://www.spa-eastman.com/wp-content/themes/spa-eastman/assets/images/logo-spa-1977-blanc-fr.svg" 
                 alt="Spa Eastman" 
-                className="h-24 drop-shadow-lg"
+                className="h-20 drop-shadow-lg"
                 style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))' }}
               />
             </div>
-
-            {/* Login button positioned absolute top-left */}
-            <div className="absolute left-0 top-4">
-              <LoginDialog />
-            </div>
             
-            {/* Bottom section - Weather forecast full width */}
-            <div className="w-full pb-4">
+            {/* Spacer to push weather to bottom */}
+            <div className="flex-1"></div>
+            
+            {/* Weather forecast spanning full container width at bottom */}
+            <div className="w-full pb-4 -mx-8">
               <WeatherWidget location={settings?.location || "Eastman"} />
             </div>
           </div>
