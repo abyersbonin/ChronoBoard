@@ -122,7 +122,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         zIndex: 100
       }}
     >
-      {/* Today's weather - complete left */}
+      {/* Current weather */}
       <div style={{ 
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
         borderRadius: '8px',
@@ -154,12 +154,12 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         </div>
       </div>
 
-      {/* Next 3 days forecast */}
-      {weather.forecast.slice(1, 4).map((day, index) => (
+      {/* Today's forecast, Tomorrow, Day after */}
+      {weather.forecast.slice(0, 3).map((day, index) => (
         <div key={index} style={{
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
           borderRadius: '8px',
-          width: '100px',
+          width: '120px',
           height: '100px',
           textAlign: 'center',
           display: 'flex',
@@ -175,26 +175,26 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
             fontWeight: '500',
             textTransform: 'capitalize',
             lineHeight: '1',
-            marginBottom: '6px'
+            marginBottom: '8px'
           }}>
-            {day.day}
+            {getDayName(day.date, index)}
           </div>
           <div style={{ 
-            fontSize: '28px', 
+            fontSize: '32px', 
             lineHeight: '1',
             color: 'white',
-            marginBottom: '6px'
+            marginBottom: '8px'
           }}>
             {getWeatherIcon(day.condition || '', day.icon)}
           </div>
           <div style={{ 
-            fontSize: '12px', 
+            fontSize: '13px', 
             fontFamily: 'Montserrat, sans-serif', 
             color: 'white',
             fontWeight: '500',
             lineHeight: '1.2'
           }}>
-            <div style={{ marginBottom: '1px' }}>{Math.round(day.high)}°</div>
+            <div style={{ marginBottom: '2px' }}>{Math.round(day.high)}°</div>
             <div style={{ color: '#93c5fd' }}>{Math.round(day.low)}°</div>
           </div>
         </div>
