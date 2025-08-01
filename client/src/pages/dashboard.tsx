@@ -216,42 +216,36 @@ export default function Dashboard() {
       {/* Header with Spa Image Background */}
       <div className="relative z-10">
         <div 
-          className="relative p-8 overflow-hidden"
+          className="relative overflow-hidden"
           style={{
             backgroundImage: `url(${spaHeaderImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center 55%',
             backgroundRepeat: 'no-repeat',
-            minHeight: '350px'
+            height: '350px'
           }}
         >
           {/* Dark overlay for better text readability */}
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
           
-          {/* Content over image */}
-          <div className="relative z-10 h-full flex flex-col">
-            {/* Login button positioned absolute top-left */}
-            <div className="absolute left-0 top-0 z-20">
-              <LoginDialog />
-            </div>
+          {/* Login button positioned absolute top-left */}
+          <div className="absolute left-6 top-6 z-20">
+            <LoginDialog />
+          </div>
 
-            {/* Logo at the very top center */}
-            <div className="flex justify-center pt-0 mb-8">
-              <img 
-                src="https://www.spa-eastman.com/wp-content/themes/spa-eastman/assets/images/logo-spa-1977-blanc-fr.svg" 
-                alt="Spa Eastman" 
-                className="h-20 drop-shadow-lg"
-                style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))' }}
-              />
-            </div>
-            
-            {/* Spacer to push weather to bottom */}
-            <div className="flex-1"></div>
-            
-            {/* Weather forecast spanning full container width at bottom */}
-            <div className="w-full pb-4 -mx-8">
-              <WeatherWidget location={settings?.location || "Eastman"} />
-            </div>
+          {/* Logo at the very top center */}
+          <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-10">
+            <img 
+              src="https://www.spa-eastman.com/wp-content/themes/spa-eastman/assets/images/logo-spa-1977-blanc-fr.svg" 
+              alt="Spa Eastman" 
+              className="h-20 drop-shadow-lg"
+              style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))' }}
+            />
+          </div>
+          
+          {/* Weather forecast at the bottom spanning full width */}
+          <div className="absolute bottom-6 left-0 right-0 px-6">
+            <WeatherWidget location={settings?.location || "Eastman"} />
           </div>
         </div>
       </div>
