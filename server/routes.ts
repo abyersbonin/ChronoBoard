@@ -484,9 +484,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const dateKey = date.toDateString();
         
         if (!processedDates.has(dateKey) && dailyForecasts.length < 3) {
-          const dayName = dailyForecasts.length === 0 ? 'Aujourd\'hui' : 
-                         dailyForecasts.length === 1 ? 'Demain' : 
-                         date.toLocaleDateString('fr-FR', { weekday: 'short' });
+          const dayName: string = dailyForecasts.length === 0 ? 'Aujourd\'hui' : 
+                                 dailyForecasts.length === 1 ? 'Demain' : 
+                                 date.toLocaleDateString('fr-FR', { weekday: 'short' });
           
           processedDates.add(dateKey);
           dailyForecasts.push({

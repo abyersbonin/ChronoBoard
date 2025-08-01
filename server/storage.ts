@@ -101,6 +101,11 @@ export class MemStorage implements IStorage {
     const event: CalendarEvent = {
       ...insertEvent,
       id,
+      location: insertEvent.location || null,
+      description: insertEvent.description || null,
+      isAllDay: insertEvent.isAllDay || false,
+      icalEventId: insertEvent.icalEventId || null,
+      calendarSource: insertEvent.calendarSource || null,
       lastSynced: new Date(),
     };
     this.calendarEvents.set(id, event);
@@ -125,12 +130,8 @@ export class MemStorage implements IStorage {
   }
 
   async clearCalendarEvents(userId: string): Promise<void> {
-    const eventsToDelete = Array.from(this.calendarEvents.values())
-      .filter(event => event.userId === userId);
-    
-    for (const event of eventsToDelete) {
-      this.calendarEvents.delete(event.id);
-    }
+    // Clear all events - memory storage doesn't track userId for events  
+    this.calendarEvents.clear();
   }
 
   async syncCalendarEvents(userId: string, events: InsertCalendarEvent[]): Promise<CalendarEvent[]> {
@@ -243,7 +244,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteCalendarEvent(eventId: string): Promise<boolean> {
     const result = await db.delete(calendarEvents).where(eq(calendarEvents.id, eventId));
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 
   async clearCalendarEvents(userId: string): Promise<void> {
