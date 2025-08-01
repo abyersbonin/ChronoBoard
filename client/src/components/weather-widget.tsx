@@ -58,7 +58,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         style={{
           backgroundColor: 'rgba(54, 69, 92, 0.8)',
           borderColor: 'rgba(214, 204, 194, 0.6)',
-          height: '8.4vh',
+          height: '7vh',
           width: '72vw',
           left: '27vw',
           top: '25.7vh',
@@ -85,7 +85,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         style={{
           backgroundColor: 'rgba(54, 69, 92, 0.3)',
           borderColor: 'rgba(214, 204, 194, 0.4)',
-          height: '8.4vh',
+          height: '7vh',
           width: '72vw',
           left: '27vw',
           top: '25.7vh',
@@ -116,7 +116,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         backgroundColor: 'rgba(128, 128, 128, 0.4)',
         border: '1px solid rgba(255, 255, 255, 0.3)',
         borderRadius: '6px',
-        height: '8.4vh',
+        height: '7vh',
         width: '72vw',
         left: '27vw',
         top: '25.7vh',
