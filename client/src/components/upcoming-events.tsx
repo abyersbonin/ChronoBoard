@@ -1,11 +1,20 @@
 import { MapPin } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
+import { EventDetailsDialog } from "./event-details-dialog";
+import { useState } from "react";
 
 interface UpcomingEventsProps {
   events: CalendarEvent[];
 }
 
 export function UpcomingEvents({ events }: UpcomingEventsProps) {
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [showEventDetails, setShowEventDetails] = useState(false);
+
+  const handleEventClick = (event: CalendarEvent) => {
+    setSelectedEvent(event);
+    setShowEventDetails(true);
+  };
   const formatTime = (date: Date) => {
     return new Date(date).toLocaleTimeString('fr-FR', {
       hour: '2-digit',
@@ -61,56 +70,60 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
   }
 
   return (
-    <div className="bg-gray-100/60 backdrop-blur-sm rounded-xl p-6 border border-gray-300/50 shadow-lg">
-      <h2 className="text-xl font-semibold text-gray-800 mb-6">Événements à venir</h2>
-      
-      <div className="space-y-6">
-        {Object.entries(groupedEvents).map(([dateKey, dayEvents]) => {
-          const date = new Date(dateKey);
-          const isToday = date.toDateString() === new Date().toDateString();
-          const isTomorrow = date.toDateString() === new Date(Date.now() + 24*60*60*1000).toDateString();
-          
-          return (
-            <div key={dateKey}>
-              <h3 className={`text-lg font-semibold mb-4 ${
-                isToday ? 'text-blue-600' : isTomorrow ? 'text-green-600' : 'text-yellow-600'
-              }`}>
-                {formatDate(date)}
-              </h3>
-              <div className="space-y-4">
-                {dayEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    className="flex items-start space-x-4 p-4 bg-gray-200/40 rounded-lg hover:bg-gray-200/60 transition-colors duration-200 border border-gray-300/40"
-                  >
-                    <div className="text-center min-w-0 flex-shrink-0">
-                      <div className="text-xl font-bold text-gray-800">
-                        {formatTime(event.startTime)}
+    <>
+      <div className="bg-gray-100/60 backdrop-blur-sm rounded-xl p-6 border border-gray-300/50 shadow-lg">
+        <h2 className="text-xl font-semibold text-gray-800 mb-6">Événements à venir</h2>
+        
+        <div className="space-y-6">
+          {Object.entries(groupedEvents).map(([dateKey, dayEvents]) => {
+            const date = new Date(dateKey);
+            const isToday = date.toDateString() === new Date().toDateString();
+            const isTomorrow = date.toDateString() === new Date(Date.now() + 24*60*60*1000).toDateString();
+            
+            return (
+              <div key={dateKey}>
+                <h3 className={`text-lg font-semibold mb-4 ${
+                  isToday ? 'text-blue-600' : isTomorrow ? 'text-green-600' : 'text-yellow-600'
+                }`}>
+                  {formatDate(date)}
+                </h3>
+                <div className="space-y-4">
+                  {dayEvents.map((event) => (
+                    <div
+                      key={event.id}
+                      className="flex items-start space-x-4 p-4 bg-gray-200/40 rounded-lg hover:bg-gray-200/60 transition-colors duration-200 border border-gray-300/40 cursor-pointer"
+                      onClick={() => handleEventClick(event)}
+                    >
+                      <div className="text-center min-w-0 flex-shrink-0">
+                        <div className="text-xl font-bold text-gray-800">
+                          {formatTime(event.startTime)}
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                          {event.title}
+                        </h4>
+                        {event.location && (
+                          <div className="flex items-center text-gray-500 text-sm">
+                            <MapPin className="mr-1 h-3 w-3" />
+                            <span>{event.location}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-lg font-semibold text-gray-800 mb-2">
-                        {event.title}
-                      </h4>
-                      {event.description && (
-                        <p className="text-gray-600 text-sm mb-2 line-clamp-2">
-                          {event.description}
-                        </p>
-                      )}
-                      {event.location && (
-                        <div className="flex items-center text-gray-500 text-sm">
-                          <MapPin className="mr-1 h-3 w-3" />
-                          <span>{event.location}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-    </div>
+
+      <EventDetailsDialog 
+        event={selectedEvent}
+        open={showEventDetails}
+        onOpenChange={setShowEventDetails}
+      />
+    </>
   );
 }
