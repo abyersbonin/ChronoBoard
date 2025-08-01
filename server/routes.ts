@@ -443,9 +443,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { location } = req.params;
       const apiKey = "bb8213b1aa75181da5c769bde25a25f9";
 
-      // Current weather with French language
+      // Current weather with French language - ensure we get Eastman, Quebec, Canada
+      const locationQuery = location.toLowerCase() === 'eastman' ? 'Eastman,QC,CA' : location;
       const currentResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric&lang=fr`
+        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(locationQuery)}&appid=${apiKey}&units=metric&lang=fr`
       );
       
       if (!currentResponse.ok) {
@@ -456,7 +457,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // 4-day forecast with French language
       const forecastResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(location)}&appid=${apiKey}&units=metric&lang=fr`
+        `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(locationQuery)}&appid=${apiKey}&units=metric&lang=fr`
       );
 
       if (!forecastResponse.ok) {
