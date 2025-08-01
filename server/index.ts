@@ -1,8 +1,19 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { validateEnvironment, setupGracefulShutdown, getOptimalPort } from "./deployment";
 
 const app = express();
+
+// Add health check endpoint for deployment monitoring
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -37,14 +48,33 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  const server = await registerRoutes(app);
+  try {
+    // Validate environment in production
+    if (process.env.NODE_ENV === 'production') {
+      if (!validateEnvironment()) {
+        log('Environment validation failed, exiting...');
+        process.exit(1);
+      }
+    }
+    
+    const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
+    // Log error details for debugging
+    log(`Error ${status}: ${message}`);
+    if (process.env.NODE_ENV === 'development') {
+      log(`Stack: ${err.stack}`);
+    }
+
     res.status(status).json({ message });
-    throw err;
+    
+    // Don't throw in production as it would crash the server
+    if (process.env.NODE_ENV === 'development') {
+      throw err;
+    }
   });
 
   // importantly only setup vite in development and after
@@ -56,16 +86,30 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  // Get optimal port for the environment
+  const port = getOptimalPort();
+  
+  // Add error handling for server startup
+  server.on('error', (error: any) => {
+    if (error.code === 'EADDRINUSE') {
+      log(`Port ${port} is already in use. Trying to bind to a different port...`);
+    } else {
+      log(`Server error: ${error.message}`);
+    }
+    process.exit(1);
   });
+
+  server.listen(port, "0.0.0.0", () => {
+    log(`🚀 Server running on port ${port}`);
+    log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    log(`Host: 0.0.0.0`);
+    log(`Health check: /health`);
+    
+    // Set up graceful shutdown handling
+    setupGracefulShutdown(server);
+  });
+  } catch (error) {
+    log(`Failed to start server: ${error}`);
+    process.exit(1);
+  }
 })();
