@@ -113,14 +113,14 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   return (
     <div 
       style={{
-        position: 'fixed',
+        position: 'absolute',
         left: '50%',
         top: '25.7vh',
         transform: 'translateX(-50%)',
         fontFamily: 'Montserrat, sans-serif',
         display: 'flex',
         gap: '8px',
-        zIndex: 50
+        zIndex: 10
       }}
     >
       {/* Current weather */}
