@@ -113,48 +113,46 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
     <div 
       style={{
         position: 'absolute',
-        backgroundColor: 'rgba(128, 128, 128, 0.4)',
-        border: '1px solid rgba(255, 255, 255, 0.3)',
-        borderRadius: '6px',
-        height: '8.4vh',
-        width: '65vw',
-        left: '30vw',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        border: '2px dashed #00bfff',
+        borderRadius: '8px',
+        height: '120px',
+        width: '600px',
+        left: '50%',
         top: '25.7vh',
+        transform: 'translateX(-50%)',
         fontFamily: 'Montserrat, sans-serif',
         display: 'flex',
         zIndex: 100,
         overflow: 'hidden'
       }}
     >
-      {/* Today's weather */}
+      {/* Today's weather - larger section */}
       <div style={{ 
-        flex: 1, 
+        width: '150px',
         textAlign: 'center', 
         display: 'flex', 
         flexDirection: 'column', 
-        justifyContent: 'space-between', 
-        padding: '4px 8px',
-        minWidth: 0
+        justifyContent: 'center', 
+        alignItems: 'center',
+        padding: '16px',
+        borderRight: '1px solid rgba(255, 255, 255, 0.3)'
       }}>
         <div style={{ 
-          fontSize: '14px', 
+          fontSize: '48px', 
           fontFamily: 'Montserrat, sans-serif', 
           color: 'white', 
-          fontWeight: '500',
-          lineHeight: '1'
+          fontWeight: 'bold',
+          lineHeight: '1',
+          marginBottom: '8px'
         }}>
-          Aujourd'hui
+          {Math.round(weather.current.temp)}°
         </div>
         <div style={{ 
-          fontSize: '16px', 
-          fontFamily: 'Montserrat, sans-serif', 
-          color: '#fbbf24', 
-          fontWeight: 'bold',
-          lineHeight: '1'
+          fontSize: '48px', 
+          lineHeight: '1',
+          color: 'white'
         }}>
-          {Math.round(weather.current.temp)}°C
-        </div>
-        <div style={{ fontSize: '20px', lineHeight: '1' }}>
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
       </div>
@@ -166,32 +164,39 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
           textAlign: 'center',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
-          padding: '4px 8px',
-          borderLeft: '1px solid rgba(255, 255, 255, 0.3)',
-          minWidth: 0
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '16px 8px',
+          borderRight: index < 2 ? '1px solid rgba(255, 255, 255, 0.3)' : 'none'
         }}>
           <div style={{ 
-            fontSize: '14px', 
+            fontSize: '16px', 
             fontFamily: 'Montserrat, sans-serif', 
             color: 'white', 
             fontWeight: '500',
             textTransform: 'capitalize',
-            lineHeight: '1'
+            lineHeight: '1',
+            marginBottom: '12px'
           }}>
             {day.day}
           </div>
           <div style={{ 
-            fontSize: '16px', 
+            fontSize: '32px', 
+            lineHeight: '1',
+            color: 'white',
+            marginBottom: '12px'
+          }}>
+            {getWeatherIcon(day.condition || '', day.icon)}
+          </div>
+          <div style={{ 
+            fontSize: '14px', 
             fontFamily: 'Montserrat, sans-serif', 
-            fontWeight: '600',
+            color: 'white',
+            fontWeight: '500',
             lineHeight: '1'
           }}>
-            <span style={{ color: '#fb923c' }}>{Math.round(day.high)}°</span>
-            <span style={{ color: '#93c5fd', fontSize: '14px', marginLeft: '4px' }}>{Math.round(day.low)}°</span>
-          </div>
-          <div style={{ fontSize: '20px', lineHeight: '1' }}>
-            {getWeatherIcon(day.condition || '', day.icon)}
+            <div style={{ marginBottom: '2px' }}>{Math.round(day.high)}°</div>
+            <div style={{ color: '#93c5fd' }}>{Math.round(day.low)}°</div>
           </div>
         </div>
       ))}
