@@ -9,9 +9,7 @@ interface EventDetailsDialogProps {
 }
 
 export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDialogProps) {
-  if (!event || !open) return null;
-
-  // Handle escape key and body scroll
+  // Handle escape key and body scroll - runs even when dialog is closed
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -24,21 +22,23 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       document.body.style.overflow = 'hidden';
     } else {
       // Ensure scroll is restored when dialog closes
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
     }
     
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
     };
   }, [open, onOpenChange]);
 
-  // Additional cleanup when component unmounts or dialog closes
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
     };
   }, []);
+
+  if (!event || !open) return null;
 
   const formatTime = (date: Date) => {
     return new Date(date).toLocaleTimeString('fr-FR', {
@@ -61,14 +61,26 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        onClick={() => onOpenChange(false)}
+        onClick={() => {
+          onOpenChange(false);
+          // Force scroll restoration on backdrop click
+          setTimeout(() => {
+            document.body.style.overflow = '';
+          }, 10);
+        }}
       />
       
       {/* Modal Content */}
       <div className="relative z-[101] w-full max-w-md mx-4 bg-white rounded-lg shadow-2xl border border-gray-300 p-6">
         {/* Close Button */}
         <button
-          onClick={() => onOpenChange(false)}
+          onClick={() => {
+            onOpenChange(false);
+            // Force scroll restoration on close button click
+            setTimeout(() => {
+              document.body.style.overflow = '';
+            }, 10);
+          }}
           className="absolute right-4 top-4 p-1 rounded-sm opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-opacity"
         >
           <X className="h-4 w-4 text-gray-600" />
