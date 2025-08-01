@@ -54,7 +54,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   if (isLoading) {
     return (
       <div 
-        className="absolute backdrop-blur-sm rounded-xl border flex"
+        className="fixed backdrop-blur-sm rounded-xl border flex z-[100]"
         style={{
           backgroundColor: 'rgba(54, 69, 92, 0.3)',
           borderColor: 'rgba(214, 204, 194, 0.4)',
@@ -81,7 +81,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   if (error || !weather) {
     return (
       <div 
-        className="absolute backdrop-blur-sm rounded-xl border flex items-center justify-center"
+        className="fixed backdrop-blur-sm rounded-xl border flex items-center justify-center z-[100]"
         style={{
           backgroundColor: 'rgba(54, 69, 92, 0.3)',
           borderColor: 'rgba(214, 204, 194, 0.4)',
@@ -111,7 +111,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
 
   return (
     <div 
-      className="absolute backdrop-blur-sm rounded-xl border flex"
+      className="fixed backdrop-blur-sm rounded-xl border flex z-[100]"
       style={{
         backgroundColor: 'rgba(54, 69, 92, 0.3)',
         borderColor: 'rgba(214, 204, 194, 0.4)',
