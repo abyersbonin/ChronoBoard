@@ -223,15 +223,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 }
               }
               
-              // Debug specific event
-              if (event.summary && event.summary.toLowerCase().includes('qi') && event.summary.toLowerCase().includes('qong')) {
-                console.log(`Found Qi Qong event: "${event.summary}" from ${event.start} to ${event.end}, recurring: ${!!event.rrule}, recurrences: ${!!event.recurrences}, UID: ${event.uid}`);
-                if (event.recurrences) {
-                  console.log(`  Recurrence count: ${Object.keys(event.recurrences).length}`);
-                  for (const [recDate, recEvent] of Object.entries(event.recurrences)) {
-                    const recEventTyped = recEvent as any;
-                    console.log(`  - Override at ${recDate}: "${recEventTyped.summary}"`);
-                  }
+              // Debug Marche nordique specifically
+              if (event.summary && event.summary.toLowerCase().includes('marche') && event.summary.toLowerCase().includes('nordique')) {
+                console.log(`*** Found Marche nordique event: "${event.summary}" from ${event.start} to ${event.end}, recurring: ${!!event.rrule}, recurrences: ${!!event.recurrences}, UID: ${event.uid}`);
+                console.log(`*** Raw event data:`, JSON.stringify(event, null, 2));
+                if (event.exdate) {
+                  console.log(`*** Raw EXDATE data:`, event.exdate);
                 }
               }
               
@@ -274,17 +271,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
           for (const event of recurringEvents) {
             console.log(`ENTERING RRULE PROCESSING for "${event.summary}"`);
             try {
-              // Get excluded dates (EXDATE) for this recurring event
+              // Get excluded dates (EXDATE) for this recurring event with proper timezone handling
               const excludedDates = new Set();
               if (event.exdate) {
+                console.log(`Event "${event.summary}" has EXDATE:`, event.exdate);
                 // Handle both single EXDATE and array of EXDATEs
                 const exdates = Array.isArray(event.exdate) ? event.exdate : [event.exdate];
                 for (const exdate of exdates) {
-                  const exdateObj = new Date(exdate);
+                  let exdateObj = new Date(exdate);
                   
+                  // Special handling for timezone-aware EXDATE values
+                  // If the exdate appears to be in a different timezone than UTC, handle it properly
+                  if (exdate && typeof exdate === 'object' && exdate.tz) {
+                    // node-ical provides timezone info in the tz property
+                    console.log(`  EXDATE with timezone: ${exdate} (tz: ${exdate.tz})`);
+                  }
+                  
+                  console.log(`  EXDATE: ${exdate} -> ${exdateObj.toISOString()} (timestamp: ${exdateObj.getTime()})`);
+                  
+                  // Add both the exact timestamp and a tolerance range for timezone handling
                   excludedDates.add(exdateObj.getTime());
+                  
+                  // Add a tolerance range of ±4 hours to handle timezone conversion issues
+                  const tolerance = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
+                  for (let offset = -tolerance; offset <= tolerance; offset += 60 * 60 * 1000) { // 1-hour increments
+                    excludedDates.add(exdateObj.getTime() + offset);
+                  }
                 }
-                console.log(`Event "${event.summary}" has ${excludedDates.size} excluded dates`);
+                console.log(`Event "${event.summary}" has ${excludedDates.size} excluded date entries (including timezone tolerance)`);
               }
               
               // First, add any recurrence overrides (these take priority)
@@ -329,21 +343,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
               console.log(`Generated ${instances.length} instances for "${event.summary}"`);
               
               for (const instanceStart of instances) {
-                // More intelligent EXDATE handling - only exclude if it's truly an exception
+                // Proper EXDATE handling - always exclude dates that are in EXDATE
+                console.log(`  Checking instance: ${instanceStart.toISOString()} (timestamp: ${instanceStart.getTime()}) for "${event.summary}"`);
                 if (excludedDates.has(instanceStart.getTime())) {
-                  // Check if there's a recurrence override for this date (which would justify the exclusion)
-                  const hasOverride = event.recurrences && Object.keys(event.recurrences).some(recDate => {
-                    const overrideDate = new Date(recDate);
-                    return Math.abs(overrideDate.getTime() - instanceStart.getTime()) < 24 * 60 * 60 * 1000; // Within 24 hours
-                  });
-                  
-                  if (hasOverride) {
-                    console.log(`Skipping excluded date (has override): ${instanceStart.toISOString()} for "${event.summary}"`);
-                    continue;
-                  } else {
-                    // If no override exists, this might be an incorrect exclusion - include the instance
-                    console.log(`Including potentially incorrectly excluded instance: ${instanceStart.toISOString()} for "${event.summary}"`);
-                  }
+                  console.log(`  ✓ Skipping excluded date (EXDATE): ${instanceStart.toISOString()} for "${event.summary}"`);
+                  continue;
+                } else {
+                  console.log(`  → Including instance: ${instanceStart.toISOString()} for "${event.summary}"`);
                 }
                 
                 const originalDuration = new Date(event.end).getTime() - new Date(event.start).getTime();
