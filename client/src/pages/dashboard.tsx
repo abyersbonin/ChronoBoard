@@ -251,7 +251,7 @@ export default function Dashboard() {
                 <div className="text-white text-sm drop-shadow-md">
                   Consulter sur votre<br />appareil mobile
                 </div>
-                <div className="text-white text-5xl transform rotate-25 mb-1 ml-4">
+                <div className="text-white text-5xl transform rotate-45 mb-1 ml-4">
                   ↷
                 </div>
               </div>
