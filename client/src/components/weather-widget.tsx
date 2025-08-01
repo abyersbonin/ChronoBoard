@@ -53,27 +53,34 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
 
   if (isLoading) {
     return (
-      <div className="backdrop-blur-sm rounded-xl p-4 border" style={{ 
-        backgroundColor: 'rgba(54, 69, 92, 0.25)', 
-        borderColor: 'rgba(214, 204, 194, 0.3)' 
-      }}>
-        <div className="animate-pulse">
-          <div className="h-4 bg-white/20 rounded mb-2"></div>
-          <div className="h-6 bg-white/20 rounded"></div>
-        </div>
+      <div className="w-full flex justify-center space-x-4">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="backdrop-blur-sm rounded-xl p-4 border min-w-[120px] text-center" style={{ 
+            backgroundColor: 'rgba(54, 69, 92, 0.25)', 
+            borderColor: 'rgba(214, 204, 194, 0.3)' 
+          }}>
+            <div className="animate-pulse">
+              <div className="h-3 bg-white/20 rounded mb-2"></div>
+              <div className="h-6 bg-white/20 rounded mb-2"></div>
+              <div className="h-4 bg-white/20 rounded"></div>
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
 
   if (error || !weather) {
     return (
-      <div className="backdrop-blur-sm rounded-xl p-4 border" style={{ 
-        backgroundColor: 'rgba(54, 69, 92, 0.25)', 
-        borderColor: 'rgba(214, 204, 194, 0.3)' 
-      }}>
-        <div className="flex items-center text-white/70">
-          <Thermometer className="w-5 h-5 mr-2" />
-          <span className="text-sm">Météo indisponible</span>
+      <div className="w-full flex justify-center">
+        <div className="backdrop-blur-sm rounded-xl p-4 border" style={{ 
+          backgroundColor: 'rgba(54, 69, 92, 0.25)', 
+          borderColor: 'rgba(214, 204, 194, 0.3)' 
+        }}>
+          <div className="flex items-center text-white/70">
+            <Thermometer className="w-5 h-5 mr-2" />
+            <span className="text-sm">Météo indisponible</span>
+          </div>
         </div>
       </div>
     );
@@ -87,38 +94,43 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   };
 
   return (
-    <div className="backdrop-blur-sm rounded-lg p-4 border flex items-center space-x-6" style={{ 
-      backgroundColor: 'rgba(54, 69, 92, 0.4)', 
-      borderColor: 'rgba(214, 204, 194, 0.3)',
-      minWidth: '400px'
-    }}>
-      {/* Left side - Current temperature and weather icon */}
-      <div className="flex items-center space-x-3">
-        <div className="text-white text-5xl font-bold">{Math.round(weather.current.temp)}°</div>
-        <div className="text-4xl">
+    <div className="w-full flex justify-center space-x-6">
+      {/* Today's weather */}
+      <div className="backdrop-blur-sm rounded-xl p-4 border text-center min-w-[120px]" style={{ 
+        backgroundColor: 'rgba(54, 69, 92, 0.25)', 
+        borderColor: 'rgba(214, 204, 194, 0.3)' 
+      }}>
+        <div className="text-xs text-gray-300 mb-1">Aujourd'hui</div>
+        <div className="text-xl font-bold text-yellow-400 mb-1">
+          {Math.round(weather.current.temp)}°
+        </div>
+        <div className="text-lg mb-1">
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
-      </div>
-      
-      {/* Right side - 4-day forecast in horizontal layout */}
-      {weather.forecast && weather.forecast.length > 0 && (
-        <div className="flex space-x-6 flex-1">
-          {weather.forecast.slice(0, 4).map((day, index) => (
-            <div key={index} className="text-center">
-              <div className="text-white text-sm font-medium mb-1">
-                {getDayName(day.date, index)}
-              </div>
-              <div className="text-2xl mb-1">
-                {getWeatherIcon(day.condition || '', day.icon)}
-              </div>
-              <div className="space-y-0">
-                <div className="text-white font-semibold">{Math.round(day.high)}°</div>
-                <div className="text-white/70 text-sm">{Math.round(day.low)}°</div>
-              </div>
-            </div>
-          ))}
+        <div className="text-[10px] text-gray-400 capitalize leading-tight">
+          {weather.current.condition}
         </div>
-      )}
+      </div>
+
+      {/* Next 3 days forecast */}
+      {weather.forecast.slice(1, 4).map((day, index) => (
+        <div key={index} className="backdrop-blur-sm rounded-xl p-4 border text-center min-w-[120px]" style={{ 
+          backgroundColor: 'rgba(54, 69, 92, 0.25)', 
+          borderColor: 'rgba(214, 204, 194, 0.3)' 
+        }}>
+          <div className="text-xs text-gray-300 mb-1 capitalize">{day.day}</div>
+          <div className="text-lg font-semibold mb-1">
+            <span className="text-orange-400">{Math.round(day.high)}°</span>
+            <span className="text-blue-300 text-xs ml-1">{Math.round(day.low)}°</span>
+          </div>
+          <div className="text-base mb-1">
+            {getWeatherIcon(day.condition || '', day.icon)}
+          </div>
+          <div className="text-[10px] text-gray-400 capitalize leading-tight">
+            {day.condition}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

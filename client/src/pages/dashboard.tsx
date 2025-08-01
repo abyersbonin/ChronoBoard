@@ -229,43 +229,25 @@ export default function Dashboard() {
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
           
           {/* Content over image */}
-          <div className="relative z-10">
-            {/* Header with login left, logo center, weather right */}
-            <div className="relative mb-4">
-              {/* Login button on the left */}
-              <div className="absolute left-0 top-0">
-                <LoginDialog />
-              </div>
-              
-              {/* Centered logo */}
-              <div className="text-center">
-                <img 
-                  src="https://www.spa-eastman.com/wp-content/themes/spa-eastman/assets/images/logo-spa-1977-blanc-fr.svg" 
-                  alt="Spa Eastman" 
-                  className="mx-auto h-28 drop-shadow-lg"
-                  style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))' }}
-                />
-              </div>
-              
-              {/* Weather on the right */}
-              <div className="absolute right-0 top-0">
-                <WeatherWidget location={settings?.location || "Eastman"} />
-              </div>
+          <div className="relative z-10 h-full flex flex-col justify-between">
+            {/* Top section - Logo at the very top */}
+            <div className="flex justify-center pt-2 mb-4">
+              <img 
+                src="https://www.spa-eastman.com/wp-content/themes/spa-eastman/assets/images/logo-spa-1977-blanc-fr.svg" 
+                alt="Spa Eastman" 
+                className="h-24 drop-shadow-lg"
+                style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))' }}
+              />
+            </div>
+
+            {/* Login button positioned absolute top-left */}
+            <div className="absolute left-0 top-4">
+              <LoginDialog />
             </div>
             
-            {/* Time directly under logo */}
-            <div className="text-center mt-8">
-              <div className="flex items-center justify-center space-x-4 text-white/90 text-xl">
-                <span className="drop-shadow-md">{settings?.location || "Eastman"}</span>
-                <span>•</span>
-                <span className="text-4xl font-semibold drop-shadow-md" data-live-time>
-                  {new Date().toLocaleTimeString('fr-FR', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                  })}
-                </span>
-              </div>
+            {/* Bottom section - Weather forecast full width */}
+            <div className="w-full pb-4">
+              <WeatherWidget location={settings?.location || "Eastman"} />
             </div>
           </div>
         </div>
