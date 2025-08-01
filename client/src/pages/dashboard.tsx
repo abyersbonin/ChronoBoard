@@ -247,13 +247,13 @@ export default function Dashboard() {
           <div className="absolute bottom-6 left-6">
             <div className="relative">
               {/* Text positioned above and to the right */}
-              <div className="absolute -top-12 left-16 text-white text-sm drop-shadow-md whitespace-nowrap">
+              <div className="absolute -top-16 left-20 text-white text-sm drop-shadow-md whitespace-nowrap">
                 Consulter sur votre<br />appareil mobile
               </div>
               
               {/* Curved arrow pointing to QR code */}
-              <div className="absolute -top-6 left-12 text-white text-4xl transform rotate-45">
-                ↷
+              <div className="absolute -top-8 left-16 text-white text-3xl transform rotate-12">
+                ↘
               </div>
               
               {/* QR Code */}
