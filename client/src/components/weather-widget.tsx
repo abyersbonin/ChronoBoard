@@ -105,17 +105,19 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   const getDayName = (dateStr: string, index: number) => {
     const days = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
     const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    const dayAfter = new Date(today);
-    dayAfter.setDate(today.getDate() + 2);
+    const forecastDate = new Date(dateStr);
     
-    if (index === 0) return "Aujourd'hui";
-    if (index === 1) return days[tomorrow.getDay()]; // Tomorrow's day name
-    if (index === 2) return days[dayAfter.getDay()]; // Day after tomorrow's day name
+    // Compare dates (ignore time)
+    const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const forecastDateOnly = new Date(forecastDate.getFullYear(), forecastDate.getMonth(), forecastDate.getDate());
     
-    const date = new Date(dateStr);
-    return days[date.getDay()];
+    const dayDiff = Math.round((forecastDateOnly.getTime() - todayDateOnly.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (dayDiff === 0) return "Aujourd'hui";
+    if (dayDiff === 1) return "Demain";
+    
+    // For any other day, return the day name
+    return days[forecastDate.getDay()];
   };
 
   return (
