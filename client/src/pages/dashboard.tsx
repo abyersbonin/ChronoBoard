@@ -146,15 +146,37 @@ export default function Dashboard() {
     console.log('Current Quebec time:', now.toLocaleString('fr-CA', { timeZone: 'America/Toronto' }));
     console.log('Total events received:', events.length);
     
+    // Check only today's events for ongoing status
+    const todayEvents = events.filter(event => {
+      const eventDate = new Date(event.startTime);
+      const todayStr = now.toISOString().split('T')[0];
+      const eventDateStr = eventDate.toISOString().split('T')[0];
+      return eventDateStr === todayStr;
+    });
+
+    console.log(`Today's events (${todayEvents.length} found):`);
+    todayEvents.forEach(event => {
+      const start = new Date(event.startTime);
+      const end = new Date(event.endTime);
+      console.log(`  ${event.title}: ${start.toLocaleTimeString('fr-CA', { timeZone: 'America/Toronto' })} - ${end.toLocaleTimeString('fr-CA', { timeZone: 'America/Toronto' })}`);
+    });
+
     const ongoing = events.find(event => {
       const start = new Date(event.startTime);
       const end = new Date(event.endTime);
       const isOngoing = start <= now && end > now;
       
-      console.log(`Checking event: ${event.title}`);
-      console.log(`  Start: ${start.toISOString()} (Quebec: ${start.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })})`);
-      console.log(`  End: ${end.toISOString()} (Quebec: ${end.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })})`);
-      console.log(`  Is ongoing: ${isOngoing} (${start <= now ? 'started' : 'not started'}, ${end > now ? 'not ended' : 'ended'})`);
+      // Only log events that are close to current time (today)
+      const eventDate = new Date(event.startTime);
+      const todayStr = now.toISOString().split('T')[0];
+      const eventDateStr = eventDate.toISOString().split('T')[0];
+      
+      if (eventDateStr === todayStr) {
+        console.log(`Checking event: ${event.title}`);
+        console.log(`  Start: ${start.toISOString()} (Quebec: ${start.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })})`);
+        console.log(`  End: ${end.toISOString()} (Quebec: ${end.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })})`);
+        console.log(`  Is ongoing: ${isOngoing} (${start <= now ? 'started' : 'not started'}, ${end > now ? 'not ended' : 'ended'})`);
+      }
       
       return isOngoing;
     });
