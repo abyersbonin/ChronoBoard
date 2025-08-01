@@ -163,12 +163,16 @@ export default function Dashboard() {
     setCurrentEvent(ongoing || null);
   }, [events]);
 
-  // Get upcoming events (not including current)
+  // Get upcoming events for the next 3 full days (not including current)
   const upcomingEvents = events.filter(event => {
     const start = new Date(event.startTime);
     const now = new Date();
-    return start > now;
-  });
+    const threeDaysFromNow = new Date(now);
+    threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
+    threeDaysFromNow.setHours(23, 59, 59, 999); // End of the third day
+    
+    return start > now && start <= threeDaysFromNow;
+  }).sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
   const handleSyncCalendar = async () => {
     if (!settings?.icalUrls || settings.icalUrls.length === 0) {
