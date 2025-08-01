@@ -244,20 +244,20 @@ export default function Dashboard() {
           </div>
           
           {/* QR Code section on the left */}
-          <div className="absolute bottom-6 left-20">
-            <div className="relative">
-              {/* Text positioned above */}
-              <div className="absolute -top-16 -left-2 text-white text-sm drop-shadow-md whitespace-nowrap">
-                Consulter sur votre<br />appareil mobile
+          <div className="absolute bottom-6 left-16">
+            <div className="flex flex-col items-start space-y-2">
+              {/* Text positioned above with arrow */}
+              <div className="flex items-end space-x-3">
+                <div className="text-white text-sm drop-shadow-md">
+                  Consulter sur votre<br />appareil mobile
+                </div>
+                <div className="text-white text-5xl transform -rotate-12 mb-1">
+                  ↷
+                </div>
               </div>
               
-              {/* Curved arrow pointing to QR code */}
-              <div className="absolute -top-8 left-8 text-white text-4xl transform rotate-45">
-                ↷
-              </div>
-              
-              {/* QR Code */}
-              <div className="bg-white p-3 rounded-lg shadow-lg">
+              {/* QR Code aligned below */}
+              <div className="bg-white p-3 rounded-lg shadow-lg ml-8">
                 <img 
                   src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://dakboard.com/screen/uuid/67c08e6d-141948-8496-db3f400f4013" 
                   alt="QR Code"
