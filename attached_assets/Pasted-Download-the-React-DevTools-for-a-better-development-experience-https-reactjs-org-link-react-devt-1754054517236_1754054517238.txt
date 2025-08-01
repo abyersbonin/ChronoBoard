@@ -1,0 +1,664 @@
+Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+/api/settings/default-user:1  Failed to load resource: the server responded with a status of 401 (Unauthorized)Understand this error
+index.ts-7f325e85.js:1 [Long Running Recorder] Content script initialised
+index.ts-7f325e85.js:3 [Long Running Recorder] Recorder disabled
+dashboard.tsx:174 Filtering event: Les pouvoirs extraordinaires du froid (bilingual)
+dashboard.tsx:175   Event start: 2025-07-26T19:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.957Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Démystifier l'utilisation des huiles essentielles
+dashboard.tsx:175   Event start: 2025-07-26T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.957Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Les huiles essentielles apaisantes du système nerveux
+dashboard.tsx:175   Event start: 2025-07-27T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Qi Qong, mouvements lents (bilingual)
+dashboard.tsx:175   Event start: 2025-07-27T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Conférence: Ralentir pour savourer ma vie
+dashboard.tsx:175   Event start: 2025-07-27T14:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Qi qong en eau chaude (bilingual)
+dashboard.tsx:175   Event start: 2025-07-27T15:30:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Visite des jardins
+dashboard.tsx:175   Event start: 2025-07-27T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Les bases de l'alimentation anti-inflammatoire
+dashboard.tsx:175   Event start: 2025-07-28T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event:  Danse - Exercice - créativité (bilingual)
+dashboard.tsx:175   Event start: 2025-07-28T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Conférence: La fasciathérapie, méthode Danis-Bois
+dashboard.tsx:175   Event start: 2025-07-28T14:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Hatha yoga doux (bilingual)
+dashboard.tsx:175   Event start: 2025-07-28T15:30:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Comprendre et améliorer son sommeil
+dashboard.tsx:175   Event start: 2025-07-28T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Les rêves nous parlent de nous
+dashboard.tsx:175   Event start: 2025-07-29T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Essentrics (Bilingual)
+dashboard.tsx:175   Event start: 2025-07-29T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event:  Les réflexes archaïques : bien-être global et exercices exploratoires
+dashboard.tsx:175   Event start: 2025-07-29T14:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.958Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Aqua Forme (bilingual)
+dashboard.tsx:175   Event start: 2025-07-29T15:30:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.959Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event:  Essentrics Découverte (bilingual)
+dashboard.tsx:175   Event start: 2025-07-29T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.959Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Essentrics, mouvement du soir, sons et méditation
+dashboard.tsx:175   Event start: 2025-07-30T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.959Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Essentrics - réveil du corps (bilingual)
+dashboard.tsx:175   Event start: 2025-07-30T11:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.959Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event:  Essentrics (Bilingual)
+dashboard.tsx:175   Event start: 2025-07-30T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.959Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Conférence: Si peu pour tant... L'importance des oligo-éléments & des minéraux pour la santé
+dashboard.tsx:175   Event start: 2025-07-30T14:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.959Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Aqua-forme (bilingual)
+dashboard.tsx:175   Event start: 2025-07-30T15:30:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.959Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Qu'est-ce que le Shinrin Yoku?
+dashboard.tsx:175   Event start: 2025-07-30T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.959Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Anxiété et auto-régulation
+dashboard.tsx:175   Event start: 2025-07-31T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.959Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Essentrics - réveil du corps (bilingual)
+dashboard.tsx:175   Event start: 2025-07-31T11:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.959Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event:  Essentrics (Bilingual)
+dashboard.tsx:175   Event start: 2025-07-31T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.959Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Yoga vibratoire
+dashboard.tsx:175   Event start: 2025-07-31T14:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.960Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Les pouvoirs extraordinaires du froid (bilingual)
+dashboard.tsx:175   Event start: 2025-07-31T19:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.960Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Donnez-moi deux minutes – Comment prendre soin de soi en 120 secondes
+dashboard.tsx:175   Event start: 2025-07-31T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.960Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event:  De la réservation au retour à la maison : bien préparer sa retraite de ressourcement
+dashboard.tsx:175   Event start: 2025-08-01T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.960Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Yoga matinal (Bilingual)
+dashboard.tsx:175   Event start: 2025-08-01T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.960Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Nos malaises nous parlent
+dashboard.tsx:175   Event start: 2025-08-01T14:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.960Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:174 Filtering event: Aqua forme (bilingual)
+dashboard.tsx:175   Event start: 2025-08-01T15:30:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.960Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:174 Filtering event: Marche nordique
+dashboard.tsx:175   Event start: 2025-08-01T19:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.960Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:174 Filtering event: L'influence positive des lettres et des chiffres et la numérologie
+dashboard.tsx:175   Event start: 2025-08-01T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.960Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:174 Filtering event:  L'influence de la numérologie sur les dimensions relationnelles
+dashboard.tsx:175   Event start: 2025-08-02T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.960Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:174 Filtering event: Les 5 Tibétains pour augmenter la vitalité (bilingual)
+dashboard.tsx:175   Event start: 2025-08-02T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.960Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:174 Filtering event: Les pouvoirs extraordinaires du froid (bilingual)
+dashboard.tsx:175   Event start: 2025-08-02T19:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:48.960Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:145 Current time UTC: 2025-08-01T13:20:48.969Z
+dashboard.tsx:146 Current Quebec time: 2025-08-01 09 h 20 min 48 s
+dashboard.tsx:147 Total events received: 38
+dashboard.tsx:154 Checking event: Les pouvoirs extraordinaires du froid (bilingual)
+dashboard.tsx:155   Start: 2025-07-26T19:00:00.000Z (Quebec: 2025-07-26 15 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-26T20:00:00.000Z (Quebec: 2025-07-26 16 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Démystifier l'utilisation des huiles essentielles
+dashboard.tsx:155   Start: 2025-07-26T21:00:00.000Z (Quebec: 2025-07-26 17 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-26T22:00:00.000Z (Quebec: 2025-07-26 18 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Les huiles essentielles apaisantes du système nerveux
+dashboard.tsx:155   Start: 2025-07-27T00:00:00.000Z (Quebec: 2025-07-26 20 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-27T01:00:00.000Z (Quebec: 2025-07-26 21 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Qi Qong, mouvements lents (bilingual)
+dashboard.tsx:155   Start: 2025-07-27T13:00:00.000Z (Quebec: 2025-07-27 09 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-27T14:00:00.000Z (Quebec: 2025-07-27 10 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Conférence: Ralentir pour savourer ma vie
+dashboard.tsx:155   Start: 2025-07-27T14:15:00.000Z (Quebec: 2025-07-27 10 h 15 min 00 s)
+dashboard.tsx:156   End: 2025-07-27T15:15:00.000Z (Quebec: 2025-07-27 11 h 15 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Qi qong en eau chaude (bilingual)
+dashboard.tsx:155   Start: 2025-07-27T15:30:00.000Z (Quebec: 2025-07-27 11 h 30 min 00 s)
+dashboard.tsx:156   End: 2025-07-27T16:30:00.000Z (Quebec: 2025-07-27 12 h 30 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Visite des jardins
+dashboard.tsx:155   Start: 2025-07-27T21:00:00.000Z (Quebec: 2025-07-27 17 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-27T22:00:00.000Z (Quebec: 2025-07-27 18 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Les bases de l'alimentation anti-inflammatoire
+dashboard.tsx:155   Start: 2025-07-28T00:00:00.000Z (Quebec: 2025-07-27 20 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-28T01:00:00.000Z (Quebec: 2025-07-27 21 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event:  Danse - Exercice - créativité (bilingual)
+dashboard.tsx:155   Start: 2025-07-28T13:00:00.000Z (Quebec: 2025-07-28 09 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-28T14:00:00.000Z (Quebec: 2025-07-28 10 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Conférence: La fasciathérapie, méthode Danis-Bois
+dashboard.tsx:155   Start: 2025-07-28T14:15:00.000Z (Quebec: 2025-07-28 10 h 15 min 00 s)
+dashboard.tsx:156   End: 2025-07-28T15:15:00.000Z (Quebec: 2025-07-28 11 h 15 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Hatha yoga doux (bilingual)
+dashboard.tsx:155   Start: 2025-07-28T15:30:00.000Z (Quebec: 2025-07-28 11 h 30 min 00 s)
+dashboard.tsx:156   End: 2025-07-28T16:30:00.000Z (Quebec: 2025-07-28 12 h 30 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Comprendre et améliorer son sommeil
+dashboard.tsx:155   Start: 2025-07-28T21:00:00.000Z (Quebec: 2025-07-28 17 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-28T22:00:00.000Z (Quebec: 2025-07-28 18 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Les rêves nous parlent de nous
+dashboard.tsx:155   Start: 2025-07-29T00:00:00.000Z (Quebec: 2025-07-28 20 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-29T01:00:00.000Z (Quebec: 2025-07-28 21 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Essentrics (Bilingual)
+dashboard.tsx:155   Start: 2025-07-29T13:00:00.000Z (Quebec: 2025-07-29 09 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-29T14:00:00.000Z (Quebec: 2025-07-29 10 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event:  Les réflexes archaïques : bien-être global et exercices exploratoires
+dashboard.tsx:155   Start: 2025-07-29T14:15:00.000Z (Quebec: 2025-07-29 10 h 15 min 00 s)
+dashboard.tsx:156   End: 2025-07-29T15:15:00.000Z (Quebec: 2025-07-29 11 h 15 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Aqua Forme (bilingual)
+dashboard.tsx:155   Start: 2025-07-29T15:30:00.000Z (Quebec: 2025-07-29 11 h 30 min 00 s)
+dashboard.tsx:156   End: 2025-07-29T16:30:00.000Z (Quebec: 2025-07-29 12 h 30 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event:  Essentrics Découverte (bilingual)
+dashboard.tsx:155   Start: 2025-07-29T21:00:00.000Z (Quebec: 2025-07-29 17 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-29T22:00:00.000Z (Quebec: 2025-07-29 18 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Essentrics, mouvement du soir, sons et méditation
+dashboard.tsx:155   Start: 2025-07-30T00:00:00.000Z (Quebec: 2025-07-29 20 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-30T01:00:00.000Z (Quebec: 2025-07-29 21 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Essentrics - réveil du corps (bilingual)
+dashboard.tsx:155   Start: 2025-07-30T11:15:00.000Z (Quebec: 2025-07-30 07 h 15 min 00 s)
+dashboard.tsx:156   End: 2025-07-30T12:00:00.000Z (Quebec: 2025-07-30 08 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event:  Essentrics (Bilingual)
+dashboard.tsx:155   Start: 2025-07-30T13:00:00.000Z (Quebec: 2025-07-30 09 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-30T14:00:00.000Z (Quebec: 2025-07-30 10 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Conférence: Si peu pour tant... L'importance des oligo-éléments & des minéraux pour la santé
+dashboard.tsx:155   Start: 2025-07-30T14:15:00.000Z (Quebec: 2025-07-30 10 h 15 min 00 s)
+dashboard.tsx:156   End: 2025-07-30T15:15:00.000Z (Quebec: 2025-07-30 11 h 15 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Aqua-forme (bilingual)
+dashboard.tsx:155   Start: 2025-07-30T15:30:00.000Z (Quebec: 2025-07-30 11 h 30 min 00 s)
+dashboard.tsx:156   End: 2025-07-30T16:30:00.000Z (Quebec: 2025-07-30 12 h 30 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Qu'est-ce que le Shinrin Yoku?
+dashboard.tsx:155   Start: 2025-07-30T21:00:00.000Z (Quebec: 2025-07-30 17 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-30T22:00:00.000Z (Quebec: 2025-07-30 18 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Anxiété et auto-régulation
+dashboard.tsx:155   Start: 2025-07-31T00:00:00.000Z (Quebec: 2025-07-30 20 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-31T01:00:00.000Z (Quebec: 2025-07-30 21 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Essentrics - réveil du corps (bilingual)
+dashboard.tsx:155   Start: 2025-07-31T11:15:00.000Z (Quebec: 2025-07-31 07 h 15 min 00 s)
+dashboard.tsx:156   End: 2025-07-31T12:00:00.000Z (Quebec: 2025-07-31 08 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event:  Essentrics (Bilingual)
+dashboard.tsx:155   Start: 2025-07-31T13:00:00.000Z (Quebec: 2025-07-31 09 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-31T14:00:00.000Z (Quebec: 2025-07-31 10 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Yoga vibratoire
+dashboard.tsx:155   Start: 2025-07-31T14:15:00.000Z (Quebec: 2025-07-31 10 h 15 min 00 s)
+dashboard.tsx:156   End: 2025-07-31T15:15:00.000Z (Quebec: 2025-07-31 11 h 15 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Les pouvoirs extraordinaires du froid (bilingual)
+dashboard.tsx:155   Start: 2025-07-31T19:00:00.000Z (Quebec: 2025-07-31 15 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-31T20:00:00.000Z (Quebec: 2025-07-31 16 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Donnez-moi deux minutes – Comment prendre soin de soi en 120 secondes
+dashboard.tsx:155   Start: 2025-07-31T21:00:00.000Z (Quebec: 2025-07-31 17 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-07-31T22:00:00.000Z (Quebec: 2025-07-31 18 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event:  De la réservation au retour à la maison : bien préparer sa retraite de ressourcement
+dashboard.tsx:155   Start: 2025-08-01T00:00:00.000Z (Quebec: 2025-07-31 20 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-08-01T01:00:00.000Z (Quebec: 2025-07-31 21 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: false (started, ended)
+dashboard.tsx:154 Checking event: Yoga matinal (Bilingual)
+dashboard.tsx:155   Start: 2025-08-01T13:00:00.000Z (Quebec: 2025-08-01 09 h 00 min 00 s)
+dashboard.tsx:156   End: 2025-08-01T14:00:00.000Z (Quebec: 2025-08-01 10 h 00 min 00 s)
+dashboard.tsx:157   Is ongoing: true (started, not ended)
+dashboard.tsx:162 Found ongoing event: Yoga matinal (Bilingual)
+dashboard.tsx:174 Filtering event: Les pouvoirs extraordinaires du froid (bilingual)
+dashboard.tsx:175   Event start: 2025-07-26T19:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.002Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Démystifier l'utilisation des huiles essentielles
+dashboard.tsx:175   Event start: 2025-07-26T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.002Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Les huiles essentielles apaisantes du système nerveux
+dashboard.tsx:175   Event start: 2025-07-27T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.002Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Qi Qong, mouvements lents (bilingual)
+dashboard.tsx:175   Event start: 2025-07-27T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.002Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Conférence: Ralentir pour savourer ma vie
+dashboard.tsx:175   Event start: 2025-07-27T14:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.003Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Qi qong en eau chaude (bilingual)
+dashboard.tsx:175   Event start: 2025-07-27T15:30:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.003Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Visite des jardins
+dashboard.tsx:175   Event start: 2025-07-27T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.003Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Les bases de l'alimentation anti-inflammatoire
+dashboard.tsx:175   Event start: 2025-07-28T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.003Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event:  Danse - Exercice - créativité (bilingual)
+dashboard.tsx:175   Event start: 2025-07-28T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.003Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Conférence: La fasciathérapie, méthode Danis-Bois
+dashboard.tsx:175   Event start: 2025-07-28T14:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.003Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Hatha yoga doux (bilingual)
+dashboard.tsx:175   Event start: 2025-07-28T15:30:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.003Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Comprendre et améliorer son sommeil
+dashboard.tsx:175   Event start: 2025-07-28T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.003Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Les rêves nous parlent de nous
+dashboard.tsx:175   Event start: 2025-07-29T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.003Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Essentrics (Bilingual)
+dashboard.tsx:175   Event start: 2025-07-29T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.003Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event:  Les réflexes archaïques : bien-être global et exercices exploratoires
+dashboard.tsx:175   Event start: 2025-07-29T14:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.004Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Aqua Forme (bilingual)
+dashboard.tsx:175   Event start: 2025-07-29T15:30:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.004Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event:  Essentrics Découverte (bilingual)
+dashboard.tsx:175   Event start: 2025-07-29T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.004Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Essentrics, mouvement du soir, sons et méditation
+dashboard.tsx:175   Event start: 2025-07-30T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.004Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Essentrics - réveil du corps (bilingual)
+dashboard.tsx:175   Event start: 2025-07-30T11:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.004Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event:  Essentrics (Bilingual)
+dashboard.tsx:175   Event start: 2025-07-30T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.004Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Conférence: Si peu pour tant... L'importance des oligo-éléments & des minéraux pour la santé
+dashboard.tsx:175   Event start: 2025-07-30T14:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.005Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Aqua-forme (bilingual)
+dashboard.tsx:175   Event start: 2025-07-30T15:30:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.005Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Qu'est-ce que le Shinrin Yoku?
+dashboard.tsx:175   Event start: 2025-07-30T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.005Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Anxiété et auto-régulation
+dashboard.tsx:175   Event start: 2025-07-31T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.005Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Essentrics - réveil du corps (bilingual)
+dashboard.tsx:175   Event start: 2025-07-31T11:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.005Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event:  Essentrics (Bilingual)
+dashboard.tsx:175   Event start: 2025-07-31T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.005Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Yoga vibratoire
+dashboard.tsx:175   Event start: 2025-07-31T14:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.005Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Les pouvoirs extraordinaires du froid (bilingual)
+dashboard.tsx:175   Event start: 2025-07-31T19:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.005Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Donnez-moi deux minutes – Comment prendre soin de soi en 120 secondes
+dashboard.tsx:175   Event start: 2025-07-31T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.006Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event:  De la réservation au retour à la maison : bien préparer sa retraite de ressourcement
+dashboard.tsx:175   Event start: 2025-08-01T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.006Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Yoga matinal (Bilingual)
+dashboard.tsx:175   Event start: 2025-08-01T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.006Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: false
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: false
+dashboard.tsx:174 Filtering event: Nos malaises nous parlent
+dashboard.tsx:175   Event start: 2025-08-01T14:15:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.006Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:174 Filtering event: Aqua forme (bilingual)
+dashboard.tsx:175   Event start: 2025-08-01T15:30:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.006Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:174 Filtering event: Marche nordique
+dashboard.tsx:175   Event start: 2025-08-01T19:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.006Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:174 Filtering event: L'influence positive des lettres et des chiffres et la numérologie
+dashboard.tsx:175   Event start: 2025-08-01T21:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.006Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:174 Filtering event:  L'influence de la numérologie sur les dimensions relationnelles
+dashboard.tsx:175   Event start: 2025-08-02T00:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.006Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:174 Filtering event: Les 5 Tibétains pour augmenter la vitalité (bilingual)
+dashboard.tsx:175   Event start: 2025-08-02T13:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.006Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true
+dashboard.tsx:174 Filtering event: Les pouvoirs extraordinaires du froid (bilingual)
+dashboard.tsx:175   Event start: 2025-08-02T19:00:00.000Z
+dashboard.tsx:176   Now: 2025-08-01T13:20:49.006Z
+dashboard.tsx:177   Three days from now: 2025-08-05T03:59:59.999Z
+dashboard.tsx:178   Event is future: true
+dashboard.tsx:179   Event is within range: true
+dashboard.tsx:180   Include event: true

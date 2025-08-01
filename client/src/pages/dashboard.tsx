@@ -171,14 +171,6 @@ export default function Dashboard() {
     threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
     threeDaysFromNow.setHours(23, 59, 59, 999); // End of the third day
     
-    console.log(`Filtering event: ${event.title}`);
-    console.log(`  Event start: ${start.toISOString()}`);
-    console.log(`  Now: ${now.toISOString()}`);
-    console.log(`  Three days from now: ${threeDaysFromNow.toISOString()}`);
-    console.log(`  Event is future: ${start > now}`);
-    console.log(`  Event is within range: ${start <= threeDaysFromNow}`);
-    console.log(`  Include event: ${start > now && start <= threeDaysFromNow}`);
-    
     return start > now && start <= threeDaysFromNow;
   }).sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
