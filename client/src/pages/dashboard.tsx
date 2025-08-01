@@ -247,11 +247,11 @@ export default function Dashboard() {
           <div className="absolute bottom-6 left-16">
             <div className="flex flex-col items-center space-y-3">
               {/* Text positioned above with arrow */}
-              <div className="flex items-end space-x-4">
+              <div className="flex items-end space-x-5">
                 <div className="text-white text-sm drop-shadow-md">
                   Consulter sur votre<br />appareil mobile
                 </div>
-                <div className="text-white text-5xl transform rotate-12 mb-1 ml-2">
+                <div className="text-white text-5xl transform rotate-20 mb-1 ml-3">
                   ↷
                 </div>
               </div>
