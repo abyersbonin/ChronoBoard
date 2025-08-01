@@ -29,15 +29,15 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     if (eventDate.toDateString() === today.toDateString()) {
-      return "Aujourd'hui";
+      return "AUJOURD'HUI";
     } else if (eventDate.toDateString() === tomorrow.toDateString()) {
-      return "Demain";
+      return "DEMAIN";
     } else {
-      return eventDate.toLocaleDateString('fr-FR', {
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric'
-      });
+      // Format as "DIMANCHE, AOÛT 3"
+      const weekday = eventDate.toLocaleDateString('fr-FR', { weekday: 'long' }).toUpperCase();
+      const month = eventDate.toLocaleDateString('fr-FR', { month: 'long' }).toUpperCase();
+      const day = eventDate.getDate();
+      return `${weekday}, ${month} ${day}`;
     }
   };
 
@@ -82,7 +82,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
             
             return (
               <div key={dateKey}>
-                <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                <h3 className={`${(isToday || isTomorrow) ? 'text-base' : 'text-lg'} font-semibold mb-4 text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
                   {formatDate(date)}
                 </h3>
                 <div className="space-y-4">

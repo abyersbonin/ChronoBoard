@@ -71,12 +71,11 @@ export function DashboardHeader({ title, backgroundImageUrl, location, use24Hour
   };
 
   const getCurrentDate = () => {
-    return currentTime.toLocaleDateString('fr-FR', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    // Format as "DIMANCHE, AOÛT 3"
+    const weekday = currentTime.toLocaleDateString('fr-FR', { weekday: 'long' }).toUpperCase();
+    const month = currentTime.toLocaleDateString('fr-FR', { month: 'long' }).toUpperCase();
+    const day = currentTime.getDate();
+    return `${weekday}, ${month} ${day}`;
   };
 
   const formatTime = (date: Date) => {
@@ -101,8 +100,8 @@ export function DashboardHeader({ title, backgroundImageUrl, location, use24Hour
         {/* Top row with title and upload button */}
         <div className="flex items-start justify-between pt-4 mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-white">{title}</h1>
-            <p className="text-lg text-gray-200 mt-1">
+            <h1 className="text-3xl font-bold text-white" style={{ fontFamily: 'Montserrat, sans-serif' }}>{title}</h1>
+            <p className="text-lg text-gray-200 mt-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
               {getCurrentDate()}
             </p>
           </div>
@@ -129,7 +128,7 @@ export function DashboardHeader({ title, backgroundImageUrl, location, use24Hour
         <div className="flex items-end justify-between">
           {/* Large Clock */}
           <div className="bg-black bg-opacity-30 backdrop-blur-sm rounded-xl px-6 py-4 border border-white border-opacity-20">
-            <div className="text-5xl font-bold text-blue-400">
+            <div className="text-5xl font-bold text-blue-400" style={{ fontFamily: 'Montserrat, sans-serif' }}>
               {formatTime(currentTime)}
             </div>
           </div>

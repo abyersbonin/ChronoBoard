@@ -103,7 +103,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   }
 
   const getDayName = (dateStr: string, index: number) => {
-    const days = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+    const days = ["DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"];
     const today = new Date();
     const forecastDate = new Date(dateStr);
     
@@ -113,8 +113,8 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
     
     const dayDiff = Math.round((forecastDateOnly.getTime() - todayDateOnly.getTime()) / (1000 * 60 * 60 * 24));
     
-    if (dayDiff === 0) return "Aujourd'hui";
-    if (dayDiff === 1) return "Demain";
+    if (dayDiff === 0) return "AUJOURD'HUI";
+    if (dayDiff === 1) return "DEMAIN";
     
     // For any other day, return the day name
     return days[forecastDate.getDay()];
@@ -193,11 +193,10 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
           padding: '12px 8px'
         }}>
           <div style={{ 
-            fontSize: '14px', 
+            fontSize: getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '12px' : '14px', 
             fontFamily: 'Montserrat, sans-serif', 
             color: 'white', 
             fontWeight: '500',
-            textTransform: 'capitalize',
             lineHeight: '1',
             marginBottom: '8px'
           }}>
