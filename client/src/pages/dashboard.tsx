@@ -264,8 +264,8 @@ export default function Dashboard() {
               </div>
               
               {/* Right side: Long curved arrow */}
-              <div className="text-white text-6xl transform rotate-90 -ml-2">
-                ⤴
+              <div className="text-white text-6xl transform rotate-45 -ml-2">
+                ↗
               </div>
             </div>
           </div>
