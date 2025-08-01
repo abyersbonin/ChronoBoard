@@ -268,7 +268,7 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 container mx-auto px-6 py-8">
+      <div className="relative z-10 w-full px-6 py-8">
         <div className={`grid gap-8 ${isLoggedIn ? 'lg:grid-cols-3' : 'lg:grid-cols-1'}`}>
           <div className={isLoggedIn ? 'lg:col-span-2' : 'lg:col-span-1'}>
             <CurrentEvent event={currentEvent} />
