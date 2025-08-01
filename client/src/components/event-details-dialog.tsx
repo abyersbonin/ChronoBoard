@@ -11,7 +11,7 @@ interface EventDetailsDialogProps {
 export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDialogProps) {
   if (!event || !open) return null;
 
-  // Close on Escape key
+  // Handle escape key and body scroll
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -22,6 +22,9 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     if (open) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
+    } else {
+      // Ensure scroll is restored when dialog closes
+      document.body.style.overflow = 'unset';
     }
     
     return () => {
@@ -29,6 +32,13 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       document.body.style.overflow = 'unset';
     };
   }, [open, onOpenChange]);
+
+  // Additional cleanup when component unmounts or dialog closes
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
 
   const formatTime = (date: Date) => {
     return new Date(date).toLocaleTimeString('fr-FR', {
