@@ -115,12 +115,12 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       style={{
         position: 'absolute',
         left: '50%',
-        top: '25.7vh',
+        top: '90px',
         transform: 'translateX(-50%)',
         fontFamily: 'Montserrat, sans-serif',
         display: 'flex',
         gap: '8px',
-        zIndex: 10
+        zIndex: 30
       }}
     >
       {/* Current weather */}
