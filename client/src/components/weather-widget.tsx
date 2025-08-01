@@ -54,7 +54,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   if (isLoading) {
     return (
       <div 
-        className="fixed backdrop-blur-sm rounded-xl border flex z-[100]"
+        className="fixed backdrop-blur-sm rounded-md border flex z-[100] overflow-hidden"
         style={{
           backgroundColor: 'rgba(54, 69, 92, 0.3)',
           borderColor: 'rgba(214, 204, 194, 0.4)',
@@ -66,11 +66,11 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         }}
       >
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="flex-1 text-center flex flex-col justify-center px-2">
+          <div key={i} className="flex-1 text-center flex flex-col justify-center px-1 min-w-0">
             <div className="animate-pulse">
-              <div className="h-3 bg-white/20 rounded mb-2"></div>
-              <div className="h-5 bg-white/20 rounded mb-2"></div>
-              <div className="h-4 bg-white/20 rounded"></div>
+              <div className="h-2 bg-white/20 rounded mb-1"></div>
+              <div className="h-3 bg-white/20 rounded mb-1"></div>
+              <div className="h-2 bg-white/20 rounded"></div>
             </div>
           </div>
         ))}
@@ -81,7 +81,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   if (error || !weather) {
     return (
       <div 
-        className="fixed backdrop-blur-sm rounded-xl border flex items-center justify-center z-[100]"
+        className="fixed backdrop-blur-sm rounded-md border flex items-center justify-center z-[100] overflow-hidden"
         style={{
           backgroundColor: 'rgba(54, 69, 92, 0.3)',
           borderColor: 'rgba(214, 204, 194, 0.4)',
@@ -93,8 +93,8 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         }}
       >
         <div className="flex items-center justify-center text-white/70">
-          <Thermometer className="w-4 h-4 mr-2" />
-          <span className="text-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+          <Thermometer className="w-3 h-3 mr-2" />
+          <span className="text-xs" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             Météo indisponible
           </span>
         </div>
@@ -111,7 +111,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
 
   return (
     <div 
-      className="fixed backdrop-blur-sm rounded-xl border flex z-[100]"
+      className="fixed backdrop-blur-sm rounded-md border flex z-[100] overflow-hidden"
       style={{
         backgroundColor: 'rgba(54, 69, 92, 0.3)',
         borderColor: 'rgba(214, 204, 194, 0.4)',
@@ -123,35 +123,35 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       }}
     >
       {/* Today's weather */}
-      <div className="flex-1 text-center flex flex-col justify-center px-2">
-        <div className="text-xs text-gray-300 mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+      <div className="flex-1 text-center flex flex-col justify-center px-1 min-w-0">
+        <div className="text-[18px] text-gray-300 mb-1 truncate" style={{ fontFamily: 'Montserrat, sans-serif' }}>
           Aujourd'hui
         </div>
-        <div className="text-lg font-bold text-yellow-400 mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+        <div className="text-[18px] font-bold text-yellow-400 mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
           {Math.round(weather.current.temp)}°C
         </div>
-        <div className="text-base mb-1">
+        <div className="text-[18px] mb-1">
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
-        <div className="text-[9px] text-gray-400 capitalize leading-tight" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+        <div className="text-[18px] text-gray-400 capitalize leading-tight truncate px-0.5" style={{ fontFamily: 'Montserrat, sans-serif' }}>
           {weather.current.condition}
         </div>
       </div>
 
       {/* Next 3 days forecast */}
       {weather.forecast.slice(1, 4).map((day, index) => (
-        <div key={index} className="flex-1 text-center flex flex-col justify-center px-2 border-l border-white/20">
-          <div className="text-xs text-gray-300 mb-1 capitalize" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+        <div key={index} className="flex-1 text-center flex flex-col justify-center px-1 border-l border-white/20 min-w-0">
+          <div className="text-[18px] text-gray-300 mb-1 capitalize truncate" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             {day.day}
           </div>
-          <div className="text-sm font-semibold mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            <span className="text-orange-400">{Math.round(day.high)}°C</span>
-            <span className="text-blue-300 text-xs ml-1">{Math.round(day.low)}°C</span>
+          <div className="text-[18px] font-semibold mb-1 truncate" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+            <span className="text-orange-400">{Math.round(day.high)}°</span>
+            <span className="text-blue-300 text-[18px] ml-1">{Math.round(day.low)}°</span>
           </div>
-          <div className="text-sm mb-1">
+          <div className="text-[18px] mb-1">
             {getWeatherIcon(day.condition || '', day.icon)}
           </div>
-          <div className="text-[9px] text-gray-400 capitalize leading-tight" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+          <div className="text-[18px] text-gray-400 capitalize leading-tight truncate px-0.5" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             {day.condition}
           </div>
         </div>
