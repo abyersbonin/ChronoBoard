@@ -54,10 +54,10 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   if (isLoading) {
     return (
       <div 
-        className="fixed backdrop-blur-sm rounded-md border flex z-[100] overflow-hidden"
+        className="absolute backdrop-blur-sm rounded-md border flex z-[100] overflow-hidden"
         style={{
-          backgroundColor: 'rgba(54, 69, 92, 0.3)',
-          borderColor: 'rgba(214, 204, 194, 0.4)',
+          backgroundColor: 'rgba(54, 69, 92, 0.8)',
+          borderColor: 'rgba(214, 204, 194, 0.6)',
           height: '8.4vh',
           width: '68.9vw',
           left: '29vw',
@@ -66,11 +66,11 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         }}
       >
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="flex-1 text-center flex flex-col justify-between py-2 px-1 min-w-0">
+          <div key={i} className="flex-1 text-center flex flex-col justify-between py-2 px-2 min-w-0">
             <div className="animate-pulse space-y-2">
-              <div className="h-5 bg-white/20 rounded"></div>
-              <div className="h-5 bg-white/20 rounded"></div>
-              <div className="h-5 bg-white/20 rounded"></div>
+              <div className="h-5 bg-white/40 rounded"></div>
+              <div className="h-5 bg-white/40 rounded"></div>
+              <div className="h-6 bg-white/40 rounded"></div>
             </div>
           </div>
         ))}
@@ -111,41 +111,86 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
 
   return (
     <div 
-      className="fixed backdrop-blur-sm rounded-md border flex z-[100] overflow-hidden"
       style={{
-        backgroundColor: 'rgba(54, 69, 92, 0.3)',
-        borderColor: 'rgba(214, 204, 194, 0.4)',
+        position: 'absolute',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        border: '1px solid rgba(255, 255, 255, 0.3)',
+        borderRadius: '6px',
         height: '8.4vh',
         width: '68.9vw',
         left: '29vw',
         top: '25.7vh',
-        fontFamily: 'Montserrat, sans-serif'
+        fontFamily: 'Montserrat, sans-serif',
+        display: 'flex',
+        zIndex: 100,
+        overflow: 'hidden'
       }}
     >
       {/* Today's weather */}
-      <div className="flex-1 text-center flex flex-col justify-between py-2 px-1 min-w-0">
-        <div className="text-[18px] text-gray-300 truncate" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+      <div style={{ 
+        flex: 1, 
+        textAlign: 'center', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justifyContent: 'space-between', 
+        padding: '4px 8px',
+        minWidth: 0
+      }}>
+        <div style={{ 
+          fontSize: '14px', 
+          fontFamily: 'Montserrat, sans-serif', 
+          color: 'white', 
+          fontWeight: '500',
+          lineHeight: '1'
+        }}>
           Aujourd'hui
         </div>
-        <div className="text-[18px] font-bold text-yellow-400" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+        <div style={{ 
+          fontSize: '16px', 
+          fontFamily: 'Montserrat, sans-serif', 
+          color: '#fbbf24', 
+          fontWeight: 'bold',
+          lineHeight: '1'
+        }}>
           {Math.round(weather.current.temp)}°C
         </div>
-        <div className="text-xl">
+        <div style={{ fontSize: '20px', lineHeight: '1' }}>
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
       </div>
 
       {/* Next 3 days forecast */}
       {weather.forecast.slice(1, 4).map((day, index) => (
-        <div key={index} className="flex-1 text-center flex flex-col justify-between py-2 px-1 border-l border-white/20 min-w-0">
-          <div className="text-[18px] text-gray-300 capitalize truncate" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+        <div key={index} style={{
+          flex: 1,
+          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: '4px 8px',
+          borderLeft: '1px solid rgba(255, 255, 255, 0.3)',
+          minWidth: 0
+        }}>
+          <div style={{ 
+            fontSize: '14px', 
+            fontFamily: 'Montserrat, sans-serif', 
+            color: 'white', 
+            fontWeight: '500',
+            textTransform: 'capitalize',
+            lineHeight: '1'
+          }}>
             {day.day}
           </div>
-          <div className="text-[18px] font-semibold truncate" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            <span className="text-orange-400">{Math.round(day.high)}°</span>
-            <span className="text-blue-300 text-sm ml-1">{Math.round(day.low)}°</span>
+          <div style={{ 
+            fontSize: '16px', 
+            fontFamily: 'Montserrat, sans-serif', 
+            fontWeight: '600',
+            lineHeight: '1'
+          }}>
+            <span style={{ color: '#fb923c' }}>{Math.round(day.high)}°</span>
+            <span style={{ color: '#93c5fd', fontSize: '14px', marginLeft: '4px' }}>{Math.round(day.low)}°</span>
           </div>
-          <div className="text-xl">
+          <div style={{ fontSize: '20px', lineHeight: '1' }}>
             {getWeatherIcon(day.condition || '', day.icon)}
           </div>
         </div>
