@@ -215,8 +215,8 @@ export default function Dashboard() {
           className="relative p-8 overflow-hidden"
           style={{
             backgroundImage: `url(${spaHeaderImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundSize: '99.938% 44.49%',
+            backgroundPosition: '0.049% -0.003%',
             backgroundRepeat: 'no-repeat',
             minHeight: '350px'
           }}
