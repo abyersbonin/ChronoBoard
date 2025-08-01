@@ -441,7 +441,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/weather/:location", async (req, res) => {
     try {
       const { location } = req.params;
-      const apiKey = "bb8213b1aa75181da5c769bde25a25f9";
+      const apiKey = process.env.WEATHER_API_KEY || "bb8213b1aa75181da5c769bde25a25f9";
 
       // Current weather with French language - ensure we get Eastman, Quebec, Canada
       const locationQuery = location.toLowerCase() === 'eastman' ? 'Eastman,QC,CA' : location;
@@ -454,6 +454,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const currentData = await currentResponse.json();
+      
+      // Debug: Log weather data to verify authenticity
+      console.log(`Weather API response for ${locationQuery}:`, {
+        location: currentData.name,
+        temp: currentData.main.temp,
+        condition: currentData.weather[0].description,
+        coords: currentData.coord,
+        country: currentData.sys.country
+      });
 
       // 4-day forecast with French language
       const forecastResponse = await fetch(
