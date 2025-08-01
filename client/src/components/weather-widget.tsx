@@ -66,11 +66,11 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         }}
       >
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="flex-1 text-center flex flex-col justify-center px-1 min-w-0">
-            <div className="animate-pulse">
-              <div className="h-2 bg-white/20 rounded mb-1"></div>
-              <div className="h-3 bg-white/20 rounded mb-1"></div>
-              <div className="h-2 bg-white/20 rounded"></div>
+          <div key={i} className="flex-1 text-center flex flex-col justify-between py-2 px-1 min-w-0">
+            <div className="animate-pulse space-y-2">
+              <div className="h-5 bg-white/20 rounded"></div>
+              <div className="h-5 bg-white/20 rounded"></div>
+              <div className="h-5 bg-white/20 rounded"></div>
             </div>
           </div>
         ))}
@@ -123,36 +123,30 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       }}
     >
       {/* Today's weather */}
-      <div className="flex-1 text-center flex flex-col justify-center px-1 min-w-0">
-        <div className="text-[18px] text-gray-300 mb-1 truncate" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+      <div className="flex-1 text-center flex flex-col justify-between py-2 px-1 min-w-0">
+        <div className="text-[18px] text-gray-300 truncate" style={{ fontFamily: 'Montserrat, sans-serif' }}>
           Aujourd'hui
         </div>
-        <div className="text-[18px] font-bold text-yellow-400 mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+        <div className="text-[18px] font-bold text-yellow-400" style={{ fontFamily: 'Montserrat, sans-serif' }}>
           {Math.round(weather.current.temp)}°C
         </div>
-        <div className="text-[18px] mb-1">
+        <div className="text-xl">
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
-        </div>
-        <div className="text-[18px] text-gray-400 capitalize leading-tight truncate px-0.5" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-          {weather.current.condition}
         </div>
       </div>
 
       {/* Next 3 days forecast */}
       {weather.forecast.slice(1, 4).map((day, index) => (
-        <div key={index} className="flex-1 text-center flex flex-col justify-center px-1 border-l border-white/20 min-w-0">
-          <div className="text-[18px] text-gray-300 mb-1 capitalize truncate" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+        <div key={index} className="flex-1 text-center flex flex-col justify-between py-2 px-1 border-l border-white/20 min-w-0">
+          <div className="text-[18px] text-gray-300 capitalize truncate" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             {day.day}
           </div>
-          <div className="text-[18px] font-semibold mb-1 truncate" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+          <div className="text-[18px] font-semibold truncate" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             <span className="text-orange-400">{Math.round(day.high)}°</span>
-            <span className="text-blue-300 text-[18px] ml-1">{Math.round(day.low)}°</span>
+            <span className="text-blue-300 text-sm ml-1">{Math.round(day.low)}°</span>
           </div>
-          <div className="text-[18px] mb-1">
+          <div className="text-xl">
             {getWeatherIcon(day.condition || '', day.icon)}
-          </div>
-          <div className="text-[18px] text-gray-400 capitalize leading-tight truncate px-0.5" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            {day.condition}
           </div>
         </div>
       ))}
