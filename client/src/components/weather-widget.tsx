@@ -104,6 +104,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
 
   const getDayName = (dateStr: string, index: number) => {
     if (index === 0) return "Aujourd'hui";
+    if (index === 1) return "Demain";
     const days = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
     const date = new Date(dateStr);
     return days[date.getDay()];
@@ -126,14 +127,14 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       <div style={{ 
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
         borderRadius: '8px',
-        width: '140px',
-        height: '100px',
+        width: '160px',
+        height: '110px',
         textAlign: 'center', 
         display: 'flex', 
         flexDirection: 'row',
         justifyContent: 'center', 
         alignItems: 'center',
-        padding: '16px',
+        padding: '20px',
         gap: '12px'
       }}>
         <div style={{ 
@@ -160,7 +161,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
           borderRadius: '8px',
           width: '120px',
-          height: '100px',
+          height: '110px',
           textAlign: 'center',
           display: 'flex',
           flexDirection: 'column',
