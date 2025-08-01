@@ -148,7 +148,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
     >
       {/* Current weather */}
       <div style={{ 
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
         borderRadius: '8px',
         width: '200px',
         height: '110px',
@@ -181,7 +181,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       {/* Authentic forecast data only */}
       {authentiForecast.map((day, index) => (
         <div key={index} style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          backgroundColor: 'rgba(0, 0, 0, 0.4)',
           borderRadius: '8px',
           width: '120px',
           height: '110px',
