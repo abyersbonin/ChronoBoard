@@ -246,13 +246,13 @@ export default function Dashboard() {
           {/* QR Code section on the left */}
           <div className="absolute bottom-6 left-20">
             <div className="relative">
-              {/* Text positioned above and to the right */}
-              <div className="absolute -top-16 left-12 text-white text-sm drop-shadow-md whitespace-nowrap">
+              {/* Text positioned above */}
+              <div className="absolute -top-16 -left-2 text-white text-sm drop-shadow-md whitespace-nowrap">
                 Consulter sur votre<br />appareil mobile
               </div>
               
               {/* Curved arrow pointing to QR code */}
-              <div className="absolute -top-6 left-16 text-white text-4xl transform rotate-45">
+              <div className="absolute -top-8 left-8 text-white text-4xl transform rotate-45">
                 ↷
               </div>
               
