@@ -120,17 +120,22 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
     return days[forecastDate.getDay()];
   };
 
-  // Debug: Check forecast data
-  const filteredForecast = weather.forecast.filter(day => {
-    const today = new Date();
+  // Use only authentic weather forecast data
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
+  
+  // Check if today's forecast exists in the data
+  const todayExists = weather.forecast.some(day => day.date === todayStr);
+  
+  // Filter forecast to include today and future days only
+  const authentiForecast = weather.forecast.filter(day => {
     const forecastDate = new Date(day.date);
     const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const forecastDateOnly = new Date(forecastDate.getFullYear(), forecastDate.getMonth(), forecastDate.getDate());
     return forecastDateOnly >= todayDateOnly;
   });
-  console.log('Total forecast days:', weather.forecast.length);
-  console.log('Filtered forecast days:', filteredForecast.length);
-  console.log('Forecast dates:', filteredForecast.map(d => d.date));
+  
+  console.log('Authentic forecast available:', authentiForecast.length, authentiForecast.map(d => d.date));
 
   return (
     <div 
@@ -177,14 +182,8 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         </div>
       </div>
 
-      {/* Today's forecast, Tomorrow, Day after tomorrow, Next day - Filter out yesterday */}
-      {weather.forecast.filter(day => {
-        const today = new Date();
-        const forecastDate = new Date(day.date);
-        const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        const forecastDateOnly = new Date(forecastDate.getFullYear(), forecastDate.getMonth(), forecastDate.getDate());
-        return forecastDateOnly >= todayDateOnly; // Only today and future days
-      }).slice(0, 4).map((day, index) => (
+      {/* Authentic forecast data only */}
+      {authentiForecast.map((day, index) => (
         <div key={index} style={{
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
           borderRadius: '8px',
