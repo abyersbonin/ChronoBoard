@@ -120,6 +120,18 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
     return days[forecastDate.getDay()];
   };
 
+  // Debug: Check forecast data
+  const filteredForecast = weather.forecast.filter(day => {
+    const today = new Date();
+    const forecastDate = new Date(day.date);
+    const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const forecastDateOnly = new Date(forecastDate.getFullYear(), forecastDate.getMonth(), forecastDate.getDate());
+    return forecastDateOnly >= todayDateOnly;
+  });
+  console.log('Total forecast days:', weather.forecast.length);
+  console.log('Filtered forecast days:', filteredForecast.length);
+  console.log('Forecast dates:', filteredForecast.map(d => d.date));
+
   return (
     <div 
       style={{
