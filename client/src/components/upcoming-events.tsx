@@ -50,7 +50,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
 
   if (events.length === 0) {
     return (
-      <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
+      <div className="bg-gray-100/60 backdrop-blur-sm rounded-xl p-6 border border-gray-300/50 shadow-lg">
         <h2 className="text-xl font-semibold text-gray-800 mb-6">Événements à venir</h2>
         <div className="text-center py-8">
           <p className="text-gray-600 mb-2">Aucun événement à venir</p>
@@ -61,7 +61,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
+    <div className="bg-gray-100/60 backdrop-blur-sm rounded-xl p-6 border border-gray-300/50 shadow-lg">
       <h2 className="text-xl font-semibold text-gray-800 mb-6">Événements à venir</h2>
       
       <div className="space-y-6">
@@ -81,7 +81,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                 {dayEvents.map((event) => (
                   <div
                     key={event.id}
-                    className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200 border border-gray-200"
+                    className="flex items-start space-x-4 p-4 bg-gray-200/40 rounded-lg hover:bg-gray-200/60 transition-colors duration-200 border border-gray-300/40"
                   >
                     <div className="text-center min-w-0 flex-shrink-0">
                       <div className="text-xl font-bold text-gray-800">

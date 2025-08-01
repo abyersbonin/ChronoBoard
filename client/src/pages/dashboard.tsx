@@ -214,13 +214,13 @@ export default function Dashboard() {
       {/* Header with Spa Image Background */}
       <div className="relative z-10">
         <div 
-          className="relative p-6 overflow-hidden"
+          className="relative p-8 overflow-hidden"
           style={{
             backgroundImage: `url(${spaHeaderImage})`,
-            backgroundSize: 'cover',
+            backgroundSize: '120%',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            minHeight: '200px'
+            minHeight: '280px'
           }}
         >
           {/* Dark overlay for better text readability */}
@@ -240,7 +240,7 @@ export default function Dashboard() {
                 <img 
                   src="https://www.spa-eastman.com/wp-content/themes/spa-eastman/assets/images/logo-spa-1977-blanc-fr.svg" 
                   alt="Spa Eastman" 
-                  className="mx-auto h-20 drop-shadow-lg"
+                  className="mx-auto h-24 drop-shadow-lg"
                   style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))' }}
                 />
               </div>
@@ -252,11 +252,11 @@ export default function Dashboard() {
             </div>
             
             {/* Time directly under logo */}
-            <div className="text-center">
+            <div className="text-center mt-6">
               <div className="flex items-center justify-center space-x-4 text-white/90 text-lg">
                 <span className="drop-shadow-md">{settings?.location || "Eastman"}</span>
                 <span>•</span>
-                <span className="text-2xl font-semibold drop-shadow-md" data-live-time>
+                <span className="text-3xl font-semibold drop-shadow-md" data-live-time>
                   {new Date().toLocaleTimeString('fr-FR', {
                     hour: '2-digit',
                     minute: '2-digit',

@@ -15,7 +15,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
 
   if (!event) {
     return (
-      <div className="bg-white rounded-xl p-6 border border-gray-200 mb-8 shadow-lg">
+      <div className="bg-gray-100/60 backdrop-blur-sm rounded-xl p-6 border border-gray-300/50 mb-8 shadow-lg">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-gray-800">À présent</h2>
           <div className="text-3xl font-bold text-blue-600">{getCurrentTime()}</div>
@@ -41,7 +41,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl p-6 border border-gray-200 mb-8 shadow-lg">
+    <div className="bg-gray-100/60 backdrop-blur-sm rounded-xl p-6 border border-gray-300/50 mb-8 shadow-lg">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold text-gray-800">À présent</h2>
         <div className="text-3xl font-bold text-blue-600">
