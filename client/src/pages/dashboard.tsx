@@ -158,20 +158,39 @@ export default function Dashboard() {
     todayEvents.forEach(event => {
       const start = new Date(event.startTime);
       const end = new Date(event.endTime);
-      console.log(`  ${event.title}: ${start.toLocaleTimeString('fr-CA', { timeZone: 'America/Toronto' })} - ${end.toLocaleTimeString('fr-CA', { timeZone: 'America/Toronto' })}`);
+      const isCurrentlyOngoing = start <= now && end > now;
+      console.log(`  ${event.title}: ${start.toLocaleTimeString('fr-CA', { timeZone: 'America/Toronto' })} - ${end.toLocaleTimeString('fr-CA', { timeZone: 'America/Toronto' })} ${isCurrentlyOngoing ? '⭐ ONGOING' : ''}`);
     });
 
+    // Also check events from tomorrow in case of timezone issues
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    
+    const tomorrowEvents = events.filter(event => {
+      const eventDate = new Date(event.startTime);
+      const eventDateStr = eventDate.toISOString().split('T')[0];
+      return eventDateStr === tomorrowStr;
+    });
+
+    console.log(`Tomorrow's events (${tomorrowEvents.length} found) - checking for timezone issues:`);
+    tomorrowEvents.slice(0, 5).forEach(event => {
+      const start = new Date(event.startTime);
+      const end = new Date(event.endTime);
+      const isCurrentlyOngoing = start <= now && end > now;
+      console.log(`  ${event.title}: ${start.toLocaleTimeString('fr-CA', { timeZone: 'America/Toronto' })} - ${end.toLocaleTimeString('fr-CA', { timeZone: 'America/Toronto' })} ${isCurrentlyOngoing ? '⭐ ONGOING' : ''}`);
+    });
+
+    // Check ALL events for ongoing status, not just today's
     const ongoing = events.find(event => {
       const start = new Date(event.startTime);
       const end = new Date(event.endTime);
       const isOngoing = start <= now && end > now;
       
-      // Only log events that are close to current time (today)
-      const eventDate = new Date(event.startTime);
-      const todayStr = now.toISOString().split('T')[0];
-      const eventDateStr = eventDate.toISOString().split('T')[0];
+      // Log ALL potentially ongoing events (within 24 hours of now)
+      const hoursDiff = Math.abs(start.getTime() - now.getTime()) / (1000 * 60 * 60);
       
-      if (eventDateStr === todayStr) {
+      if (hoursDiff <= 24) {
         console.log(`Checking event: ${event.title}`);
         console.log(`  Start: ${start.toISOString()} (Quebec: ${start.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })})`);
         console.log(`  End: ${end.toISOString()} (Quebec: ${end.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })})`);
