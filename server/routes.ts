@@ -474,7 +474,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         country: currentData.sys.country
       });
 
-      // 4-day forecast with French language
+      // 7-day forecast with French language
       const forecastResponse = await fetch(
         `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(locationQuery)}&appid=${apiKey}&units=metric&lang=fr`
       );
@@ -485,29 +485,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const forecastData = await forecastResponse.json();
 
-      // Process forecast data to get daily forecasts
-      const dailyForecasts = [];
-      const processedDates = new Set();
+      // Process forecast data to get daily forecasts with better aggregation
+      const dailyData: { [key: string]: { highs: number[], lows: number[], conditions: string[], icons: string[] } } = {};
 
+      // Group forecast data by date and collect all temps and conditions for each day
       for (const item of forecastData.list) {
         const date = new Date(item.dt * 1000);
-        const dateKey = date.toDateString();
+        const dateKey = date.toISOString().split('T')[0];
         
-        if (!processedDates.has(dateKey) && dailyForecasts.length < 3) {
-          const dayName: string = dailyForecasts.length === 0 ? 'Aujourd\'hui' : 
-                                 dailyForecasts.length === 1 ? 'Demain' : 
-                                 date.toLocaleDateString('fr-FR', { weekday: 'short' });
-          
-          processedDates.add(dateKey);
-          dailyForecasts.push({
-            date: date.toISOString().split('T')[0],
-            day: dayName,
-            high: Math.round(item.main.temp_max),
-            low: Math.round(item.main.temp_min),
-            condition: item.weather[0].description,
-            icon: item.weather[0].icon,
-          });
+        if (!dailyData[dateKey]) {
+          dailyData[dateKey] = { highs: [], lows: [], conditions: [], icons: [] };
         }
+        
+        dailyData[dateKey].highs.push(item.main.temp_max);
+        dailyData[dateKey].lows.push(item.main.temp_min);
+        dailyData[dateKey].conditions.push(item.weather[0].description);
+        dailyData[dateKey].icons.push(item.weather[0].icon);
+      }
+
+      // Convert grouped data to daily forecasts, taking max high and min low for each day
+      const dailyForecasts = [];
+      const sortedDates = Object.keys(dailyData).sort();
+      
+      for (let i = 0; i < Math.min(sortedDates.length, 7); i++) {
+        const dateKey = sortedDates[i];
+        const dayData = dailyData[dateKey];
+        const date = new Date(dateKey);
+        
+        const dayName: string = i === 0 ? 'Aujourd\'hui' : 
+                               i === 1 ? 'Demain' : 
+                               date.toLocaleDateString('fr-FR', { weekday: 'long' });
+        
+        // Use the most frequent condition and icon for the day (midday preference)
+        const mostFrequentCondition = dayData.conditions.sort((a, b) =>
+          dayData.conditions.filter(v => v === a).length - dayData.conditions.filter(v => v === b).length
+        ).pop() || dayData.conditions[0];
+        
+        const mostFrequentIcon = dayData.icons.sort((a, b) =>
+          dayData.icons.filter(v => v === a).length - dayData.icons.filter(v => v === b).length
+        ).pop() || dayData.icons[0];
+        
+        dailyForecasts.push({
+          date: dateKey,
+          day: dayName,
+          high: Math.round(Math.max(...dayData.highs)),
+          low: Math.round(Math.min(...dayData.lows)),
+          condition: mostFrequentCondition,
+          icon: mostFrequentIcon,
+        });
       }
 
       const weatherData: WeatherData = {

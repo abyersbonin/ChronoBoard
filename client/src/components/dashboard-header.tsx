@@ -137,7 +137,7 @@ export function DashboardHeader({ title, backgroundImageUrl, location, use24Hour
           <div className="flex space-x-3">
             {weatherLoading ? (
               // Weather loading skeletons
-              [...Array(4)].map((_, i) => (
+              [...Array(6)].map((_, i) => (
                 <div key={i} className="bg-black bg-opacity-30 backdrop-blur-sm rounded-xl p-3 border border-white border-opacity-20 text-center min-w-[80px]">
                   <Skeleton className="h-3 w-12 mx-auto mb-2" />
                   <Skeleton className="h-6 w-8 mx-auto mb-2" />
@@ -164,8 +164,8 @@ export function DashboardHeader({ title, backgroundImageUrl, location, use24Hour
                   </div>
                 </div>
 
-                {/* Next 3 days forecast */}
-                {weather.forecast.slice(1, 4).map((day, index) => (
+                {/* Next 5 days forecast */}
+                {weather.forecast.slice(1, 6).map((day, index) => (
                   <div key={index} className="bg-black bg-opacity-30 backdrop-blur-sm rounded-xl p-3 border border-white border-opacity-20 text-center min-w-[80px]">
                     <div className="text-xs text-gray-300 mb-1 capitalize">{day.day}</div>
                     <div className="text-lg font-semibold mb-1">

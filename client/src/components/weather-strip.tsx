@@ -16,8 +16,8 @@ export function WeatherStrip({ location }: WeatherStripProps) {
   if (isLoading) {
     return (
       <div className="mb-8">
-        <div className="grid grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => (
+        <div className="grid grid-cols-7 gap-3">
+          {[...Array(7)].map((_, i) => (
             <div key={i} className="bg-dashboard-card rounded-xl p-4 text-center border border-gray-700">
               <Skeleton className="h-4 w-16 mx-auto mb-2" />
               <Skeleton className="h-8 w-12 mx-auto mb-2" />
@@ -43,29 +43,29 @@ export function WeatherStrip({ location }: WeatherStripProps) {
 
   return (
     <div className="mb-8">
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-7 gap-3">
         {/* Today's weather */}
-        <div className="bg-dashboard-card rounded-xl p-4 text-center border border-gray-700">
-          <div className="text-sm text-gray-400 mb-2">Aujourd'hui</div>
-          <div className="text-2xl font-bold text-yellow-400 mb-2">
+        <div className="bg-dashboard-card rounded-xl p-3 text-center border border-gray-700">
+          <div className="text-xs text-gray-400 mb-2">Aujourd'hui</div>
+          <div className="text-xl font-bold text-yellow-400 mb-2">
             {weather.current.temp}°
           </div>
-          <i className={`${getWeatherIconClass(weather.current.icon)} text-2xl mb-2`} />
-          <div className="text-xs text-gray-400 capitalize">
+          <i className={`${getWeatherIconClass(weather.current.icon)} text-xl mb-1`} />
+          <div className="text-xs text-gray-400 capitalize leading-tight">
             {weather.current.condition}
           </div>
         </div>
 
-        {/* Next 3 days forecast */}
-        {weather.forecast.slice(1, 4).map((day, index) => (
-          <div key={index} className="bg-dashboard-card rounded-xl p-4 text-center border border-gray-700">
-            <div className="text-sm text-gray-400 mb-2 capitalize">{day.day}</div>
-            <div className="text-xl font-semibold mb-1">
+        {/* Next 6 days forecast */}
+        {weather.forecast.slice(1, 7).map((day, index) => (
+          <div key={index} className="bg-dashboard-card rounded-xl p-3 text-center border border-gray-700">
+            <div className="text-xs text-gray-400 mb-2 capitalize">{day.day}</div>
+            <div className="text-lg font-semibold mb-1">
               <span className="text-orange-400">{day.high}°</span>
-              <span className="text-blue-300 text-sm ml-1">{day.low}°</span>
+              <span className="text-blue-300 text-xs ml-1">{day.low}°</span>
             </div>
-            <i className={`${getWeatherIconClass(day.icon)} text-xl mb-2`} />
-            <div className="text-xs text-gray-400 capitalize">
+            <i className={`${getWeatherIconClass(day.icon)} text-lg mb-1`} />
+            <div className="text-xs text-gray-400 capitalize leading-tight">
               {day.condition}
             </div>
           </div>
