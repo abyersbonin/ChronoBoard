@@ -146,6 +146,36 @@ export default function Dashboard() {
     console.log('Current Quebec time:', now.toLocaleString('fr-CA', { timeZone: 'America/Toronto' }));
     console.log('Total events received:', events.length);
     
+    // Search for the specific missing event - broader search
+    const waterEvents = events.filter(event => 
+      event.title.toLowerCase().includes('eau') ||
+      event.title.toLowerCase().includes('water') ||
+      event.title.toLowerCase().includes('étirements') || 
+      event.title.toLowerCase().includes('etirements')
+    );
+    
+    console.log(`🔍 Found ${waterEvents.length} water/étirements events:`);
+    waterEvents.forEach(event => {
+      const start = new Date(event.startTime);
+      const end = new Date(event.endTime);
+      const isOngoing = start <= now && end > now;
+      console.log(`  ${event.title}: ${start.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })} - ${end.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })} ${isOngoing ? '⭐ ONGOING' : ''}`);
+    });
+
+    // Also search for events around 11:30-12:30 timeframe
+    const targetEvents = events.filter(event => {
+      const start = new Date(event.startTime);
+      const startQuebec = start.toLocaleString('fr-CA', { timeZone: 'America/Toronto', hour12: false });
+      return startQuebec.includes('11:30') || startQuebec.includes('12:30');
+    });
+    
+    console.log(`🕐 Events starting at 11:30 or 12:30 today:`);
+    targetEvents.forEach(event => {
+      const start = new Date(event.startTime);
+      const end = new Date(event.endTime);
+      console.log(`  ${event.title}: ${start.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })} - ${end.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })}`);
+    });
+    
     // Check only today's events for ongoing status
     const todayEvents = events.filter(event => {
       const eventDate = new Date(event.startTime);
