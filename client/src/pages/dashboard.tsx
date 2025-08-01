@@ -253,7 +253,7 @@ export default function Dashboard() {
               
               {/* Curved arrow connecting text to QR code */}
               <div className="absolute top-8 right-[-40px] text-white text-4xl transform rotate-90">
-                ↶
+                ↷
               </div>
               
               {/* QR Code centered below text */}
