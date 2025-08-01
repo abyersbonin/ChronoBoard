@@ -82,9 +82,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
             
             return (
               <div key={dateKey}>
-                <h3 className={`text-lg font-semibold mb-4 ${
-                  isToday ? 'text-blue-600' : isTomorrow ? 'text-green-600' : 'text-yellow-600'
-                }`}>
+                <h3 className="text-lg font-semibold mb-4 text-gray-800">
                   {formatDate(date)}
                 </h3>
                 <div className="space-y-4">
