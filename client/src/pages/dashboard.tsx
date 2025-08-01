@@ -252,8 +252,16 @@ export default function Dashboard() {
               </div>
               
               {/* Curved arrow connecting text to QR code */}
-              <div className="absolute top-4 left-[140px] text-white text-7xl transform rotate-[45deg] scale-x-150">
-                ↴
+              <div className="absolute top-2 left-[120px]">
+                <svg width="80" height="60" viewBox="0 0 80 60" className="drop-shadow-md">
+                  <path 
+                    d="M10 15 Q40 5 65 35 L58 30 M65 35 L58 42" 
+                    stroke="white" 
+                    strokeWidth="3" 
+                    fill="none" 
+                    strokeLinecap="round"
+                  />
+                </svg>
               </div>
               
               {/* QR Code centered below text */}
