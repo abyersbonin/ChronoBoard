@@ -140,10 +140,6 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   return (
     <div 
       style={{
-        position: 'absolute',
-        left: '50%',
-        top: '90px',
-        transform: 'translateX(-50%)',
         fontFamily: 'Montserrat, sans-serif',
         display: 'flex',
         gap: '8px',
