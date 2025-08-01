@@ -247,7 +247,7 @@ export default function Dashboard() {
           <div className="absolute bottom-6 left-16">
             <div className="flex flex-col items-center space-y-4">
               {/* Text positioned above with arrow */}
-              <div className="flex items-end space-x-6 ml-2">
+              <div className="flex items-end space-x-6 ml-4">
                 <div className="text-white text-sm drop-shadow-md">
                   Consulter sur votre<br />appareil mobile
                 </div>
