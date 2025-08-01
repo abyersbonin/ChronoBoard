@@ -1,0 +1,10 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="80" rx="16" fill="#4B91F1"/>
+  <circle cx="40" cy="40" r="18" fill="none" stroke="white" stroke-width="3"/>
+  <circle cx="40" cy="40" r="4" fill="white"/>
+  <path d="M40 22V34" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <path d="M40 46V58" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <path d="M58 40H46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <path d="M34 40H22" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  <text x="40" y="70" text-anchor="middle" fill="white" font-family="Arial" font-size="8" font-weight="bold">SPA</text>
+</svg>

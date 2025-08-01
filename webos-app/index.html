@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Spa Eastman Dashboard</title>
+    <!-- WebOS TV specific meta tags -->
+    <meta name="screen-mode" content="full" />
+    <meta name="disable-scrollbars" content="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="/assets/index-BioHk-4H.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-6G1iBJ8F.css">
+    <style>
+      /* WebOS TV specific styles */
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #000;
+        font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      
+      #root {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+      }
+      
+      /* TV-optimized cursor styles */
+      * {
+        cursor: none !important;
+      }
+      
+      /* Focus indicators for TV navigation */
+      .tv-focus {
+        outline: 3px solid #4A90E2 !important;
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    
+    <!-- WebOS TV API configuration -->
+    <script>
+      // Configuration for TV environment
+      window.SPA_EASTMAN_CONFIG = {
+        isTV: true,
+        apiBaseUrl: 'https://your-spa-eastman-api.replit.dev/api', // Update with your deployment URL
+        autoRefreshInterval: 30000, // 30 seconds
+        tvMode: true
+      };
+      
+      // WebOS specific initialization
+      if (typeof webOSDev !== 'undefined') {
+        webOSDev.DOMContentLoaded(function() {
+          console.log('Spa Eastman Dashboard loaded on webOS');
+        });
+      }
+      
+      // TV remote control handling
+      document.addEventListener('keydown', function(e) {
+        switch(e.keyCode) {
+          case 27: // ESC - Exit app
+            if (typeof webOSSystem !== 'undefined') {
+              webOSSystem.platformBack();
+            }
+            break;
+          case 13: // ENTER - Select
+            e.preventDefault();
+            break;
+          case 37: // LEFT
+          case 39: // RIGHT  
+          case 38: // UP
+          case 40: // DOWN
+            e.preventDefault();
+            // Handle navigation
+            break;
+        }
+      });
+    </script>
+  </body>
+</html>

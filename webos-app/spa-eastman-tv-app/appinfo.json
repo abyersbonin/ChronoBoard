@@ -1,0 +1,22 @@
+{
+    "id": "com.spaeastman.dashboard",
+    "version": "1.0.0",
+    "vendor": "Spa Eastman",
+    "type": "web",
+    "main": "index.html",
+    "title": "Spa Eastman Dashboard",
+    "icon": "icon.svg",
+    "largeIcon": "icon.svg",
+    "category": "Entertainment",
+    "requiredPermissions": [
+        "internet.operation",
+        "network.operation"
+    ],
+    "supportedLanguages": ["fr-CA", "en-US"],
+    "defaultLanguage": "fr-CA",
+    "resolution": "1920x1080",
+    "disableBackHistoryAPI": true,
+    "enableBackgroundRun": false,
+    "bgColor": "#ffffff",
+    "enableNodeJS": false
+}
