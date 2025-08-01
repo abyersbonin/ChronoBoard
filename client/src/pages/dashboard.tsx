@@ -251,19 +251,7 @@ export default function Dashboard() {
                 Consulter sur votre<br />appareil mobile
               </div>
               
-              {/* Curved arrow connecting text to QR code */}
-              <div className="absolute top-2 left-[120px]">
-                <svg width="90" height="70" viewBox="0 0 90 70" className="drop-shadow-md">
-                  <path 
-                    d="M15 20 Q45 5 70 45 Q70 45 65 38 Q70 45 75 40" 
-                    stroke="white" 
-                    strokeWidth="8" 
-                    fill="none" 
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
+
               
               {/* QR Code centered below text */}
               <div className="bg-white p-3 rounded-lg shadow-lg mx-auto w-fit">
