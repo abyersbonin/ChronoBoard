@@ -17,6 +17,7 @@ export interface IStorage {
   createCalendarEvent(userId: string, event: InsertCalendarEvent): Promise<CalendarEvent>;
   updateCalendarEvent(eventId: string, event: Partial<InsertCalendarEvent>): Promise<CalendarEvent | undefined>;
   deleteCalendarEvent(eventId: string): Promise<boolean>;
+  clearCalendarEvents(userId: string): Promise<void>;
   syncCalendarEvents(userId: string, events: InsertCalendarEvent[]): Promise<CalendarEvent[]>;
 }
 
@@ -121,6 +122,15 @@ export class MemStorage implements IStorage {
 
   async deleteCalendarEvent(eventId: string): Promise<boolean> {
     return this.calendarEvents.delete(eventId);
+  }
+
+  async clearCalendarEvents(userId: string): Promise<void> {
+    const eventsToDelete = Array.from(this.calendarEvents.values())
+      .filter(event => event.userId === userId);
+    
+    for (const event of eventsToDelete) {
+      this.calendarEvents.delete(event.id);
+    }
   }
 
   async syncCalendarEvents(userId: string, events: InsertCalendarEvent[]): Promise<CalendarEvent[]> {
@@ -236,11 +246,12 @@ export class DatabaseStorage implements IStorage {
     return result.rowCount > 0;
   }
 
+  async clearCalendarEvents(userId: string): Promise<void> {
+    await db.delete(calendarEvents);
+  }
+
   async syncCalendarEvents(userId: string, events: InsertCalendarEvent[]): Promise<CalendarEvent[]> {
-    // Clear existing events for this sync
-    await db.delete(calendarEvents).where(eq(calendarEvents.icalEventId, ''));
-    
-    // Add new events
+    // Add new events (clearing is handled separately now)
     const syncedEvents: CalendarEvent[] = [];
     for (const eventData of events) {
       const event = await this.createCalendarEvent(userId, eventData);

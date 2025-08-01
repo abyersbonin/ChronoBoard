@@ -163,9 +163,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "No iCal URLs configured" });
       }
 
+      // Clear existing events to ensure fresh data starting from today
+      await storage.clearCalendarEvents(userId);
+      
       const allEvents: any[] = [];
       const now = new Date();
-      const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const threeDaysFromNow = new Date(now);
+      threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
+      const threeMonthsFromNow = new Date(now);
+      threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3);
+      
+      console.log(`Syncing events from ${now.toISOString()} to ${threeMonthsFromNow.toISOString()}`);
 
 
       // Fetch and parse each iCal URL
@@ -244,7 +252,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const startDate = new Date(event.start);
             const endDate = new Date(event.end);
             
-            if (endDate >= now && startDate <= oneWeekFromNow) {
+            if (endDate >= now && startDate <= threeMonthsFromNow) {
               const singleEvent = {
                 id: event.uid || `${Date.now()}-${Math.random()}`,
                 title: event.summary || 'Untitled Event',
@@ -289,7 +297,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   
                   console.log(`  Override: recDate="${recDate}", actualStart="${overrideStart.toISOString()}", summary="${recEventTyped.summary}"`);
                   
-                  if (overrideEnd >= now && overrideStart <= oneWeekFromNow) {
+                  if (overrideEnd >= now && overrideStart <= threeMonthsFromNow) {
                     // Debug override events
                     if (overrideStart.getDate() === 27 && overrideStart.getMonth() === 6 && overrideStart.getHours() === 13) {
                       console.log(`*** PROCESSING RECURRENCE OVERRIDE for July 27 1PM: "${recEventTyped.summary}"`);
@@ -317,7 +325,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               }
               
               // Then generate regular recurring instances
-              const instances = event.rrule.between(now, oneWeekFromNow, true);
+              const instances = event.rrule.between(now, threeMonthsFromNow, true);
               console.log(`Generated ${instances.length} instances for "${event.summary}"`);
               
               for (const instanceStart of instances) {
