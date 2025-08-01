@@ -212,6 +212,8 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-white text-white font-sans relative">
+      {/* Weather Widget - Positioned absolutely based on specifications */}
+      <WeatherWidget location={settings?.location || "Eastman"} />
       
       {/* Header with Spa Image Background */}
       <div className="relative z-10">
@@ -264,10 +266,7 @@ export default function Dashboard() {
             </div>
           </div>
           
-          {/* Weather forecast on the right */}
-          <div className="absolute bottom-6 right-6">
-            <WeatherWidget location={settings?.location || "Eastman"} />
-          </div>
+
         </div>
       </div>
 
