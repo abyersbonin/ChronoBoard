@@ -216,7 +216,7 @@ export default function Dashboard() {
           style={{
             backgroundImage: `url(${spaHeaderImage})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center 30%',
+            backgroundPosition: 'center 45%',
             backgroundRepeat: 'no-repeat',
             minHeight: '350px'
           }}
