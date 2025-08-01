@@ -59,8 +59,8 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
           backgroundColor: 'rgba(54, 69, 92, 0.8)',
           borderColor: 'rgba(214, 204, 194, 0.6)',
           height: '8.4vh',
-          width: '68.9vw',
-          left: '29vw',
+          width: '72vw',
+          left: '27vw',
           top: '25.7vh',
           fontFamily: 'Montserrat, sans-serif'
         }}
@@ -81,13 +81,13 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   if (error || !weather) {
     return (
       <div 
-        className="fixed backdrop-blur-sm rounded-md border flex items-center justify-center z-[100] overflow-hidden"
+        className="absolute backdrop-blur-sm rounded-md border flex items-center justify-center z-[100] overflow-hidden"
         style={{
           backgroundColor: 'rgba(54, 69, 92, 0.3)',
           borderColor: 'rgba(214, 204, 194, 0.4)',
           height: '8.4vh',
-          width: '68.9vw',
-          left: '29vw',
+          width: '72vw',
+          left: '27vw',
           top: '25.7vh',
           fontFamily: 'Montserrat, sans-serif'
         }}
@@ -113,12 +113,12 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
     <div 
       style={{
         position: 'absolute',
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'rgba(128, 128, 128, 0.4)',
         border: '1px solid rgba(255, 255, 255, 0.3)',
         borderRadius: '6px',
         height: '8.4vh',
-        width: '68.9vw',
-        left: '29vw',
+        width: '72vw',
+        left: '27vw',
         top: '25.7vh',
         fontFamily: 'Montserrat, sans-serif',
         display: 'flex',
