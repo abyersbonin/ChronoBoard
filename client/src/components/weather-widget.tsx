@@ -165,14 +165,14 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         </div>
       </div>
 
-      {/* Today's forecast, Tomorrow, Day after - Filter out yesterday */}
+      {/* Today's forecast, Tomorrow, Day after, Day after tomorrow - Filter out yesterday */}
       {weather.forecast.filter(day => {
         const today = new Date();
         const forecastDate = new Date(day.date);
         const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         const forecastDateOnly = new Date(forecastDate.getFullYear(), forecastDate.getMonth(), forecastDate.getDate());
         return forecastDateOnly >= todayDateOnly; // Only today and future days
-      }).slice(0, 3).map((day, index) => (
+      }).slice(0, 4).map((day, index) => (
         <div key={index} style={{
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
           borderRadius: '8px',
