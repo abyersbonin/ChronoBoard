@@ -127,7 +127,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       <div style={{ 
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
         borderRadius: '8px',
-        width: '160px',
+        width: '180px',
         height: '110px',
         textAlign: 'center', 
         display: 'flex', 
