@@ -113,37 +113,35 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
     <div 
       style={{
         position: 'absolute',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        borderRadius: '8px',
-        height: '120px',
-        width: '600px',
         left: '50%',
         top: '25.7vh',
         transform: 'translateX(-50%)',
         fontFamily: 'Montserrat, sans-serif',
         display: 'flex',
-        zIndex: 100,
-        overflow: 'hidden'
+        gap: '8px',
+        zIndex: 100
       }}
     >
-      {/* Today's weather - larger section */}
+      {/* Today's weather - complete left */}
       <div style={{ 
-        width: '150px',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        borderRadius: '8px',
+        width: '140px',
+        height: '100px',
         textAlign: 'center', 
         display: 'flex', 
-        flexDirection: 'column', 
+        flexDirection: 'row',
         justifyContent: 'center', 
         alignItems: 'center',
         padding: '16px',
-        borderRight: '1px solid rgba(255, 255, 255, 0.3)'
+        gap: '12px'
       }}>
         <div style={{ 
-          fontSize: '48px', 
+          fontSize: '60px', 
           fontFamily: 'Montserrat, sans-serif', 
           color: 'white', 
           fontWeight: 'bold',
-          lineHeight: '1',
-          marginBottom: '8px'
+          lineHeight: '1'
         }}>
           {Math.round(weather.current.temp)}°
         </div>
@@ -159,42 +157,44 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       {/* Next 3 days forecast */}
       {weather.forecast.slice(1, 4).map((day, index) => (
         <div key={index} style={{
-          flex: 1,
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          borderRadius: '8px',
+          width: '100px',
+          height: '100px',
           textAlign: 'center',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: '16px 8px',
-          borderRight: index < 2 ? '1px solid rgba(255, 255, 255, 0.3)' : 'none'
+          padding: '12px 8px'
         }}>
           <div style={{ 
-            fontSize: '16px', 
+            fontSize: '14px', 
             fontFamily: 'Montserrat, sans-serif', 
             color: 'white', 
             fontWeight: '500',
             textTransform: 'capitalize',
             lineHeight: '1',
-            marginBottom: '12px'
+            marginBottom: '6px'
           }}>
             {day.day}
           </div>
           <div style={{ 
-            fontSize: '32px', 
+            fontSize: '28px', 
             lineHeight: '1',
             color: 'white',
-            marginBottom: '12px'
+            marginBottom: '6px'
           }}>
             {getWeatherIcon(day.condition || '', day.icon)}
           </div>
           <div style={{ 
-            fontSize: '14px', 
+            fontSize: '12px', 
             fontFamily: 'Montserrat, sans-serif', 
             color: 'white',
             fontWeight: '500',
-            lineHeight: '1'
+            lineHeight: '1.2'
           }}>
-            <div style={{ marginBottom: '2px' }}>{Math.round(day.high)}°</div>
+            <div style={{ marginBottom: '1px' }}>{Math.round(day.high)}°</div>
             <div style={{ color: '#93c5fd' }}>{Math.round(day.low)}°</div>
           </div>
         </div>
