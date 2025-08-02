@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Cloud, Sun, CloudRain, Thermometer, CloudSnow, Zap, CloudDrizzle, CloudLightning } from "lucide-react";
+import { Thermometer } from "lucide-react";
 import { type WeatherData } from "@shared/schema";
 
 interface WeatherWidgetProps {
@@ -20,43 +20,34 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   });
 
   const getWeatherIcon = (condition: string, iconCode?: string) => {
-    // Convert OpenWeatherMap icon codes to Lucide React icons with colors
+    // Convert OpenWeatherMap icon codes to proper emojis with TV-optimized styling
     if (iconCode) {
-      const iconMap: { [key: string]: JSX.Element } = {
-        '01d': <Sun className="w-full h-full" style={{ color: '#FFA500' }} />, // Orange sun
-        '01n': <Sun className="w-full h-full" style={{ color: '#FFE4B5' }} />, // Light moon color
-        '02d': <Cloud className="w-full h-full" style={{ color: '#87CEEB' }} />, // Sky blue
-        '02n': <Cloud className="w-full h-full" style={{ color: '#9CA3AF' }} />, // Gray
-        '03d': <Cloud className="w-full h-full" style={{ color: '#D3D3D3' }} />, // Light gray
-        '03n': <Cloud className="w-full h-full" style={{ color: '#9CA3AF' }} />, // Gray
-        '04d': <Cloud className="w-full h-full" style={{ color: '#9CA3AF' }} />, // Gray
-        '04n': <Cloud className="w-full h-full" style={{ color: '#6B7280' }} />, // Dark gray
-        '09d': <CloudDrizzle className="w-full h-full" style={{ color: '#4A90E2' }} />, // Blue
-        '09n': <CloudDrizzle className="w-full h-full" style={{ color: '#4A90E2' }} />, // Blue
-        '10d': <CloudRain className="w-full h-full" style={{ color: '#4A90E2' }} />, // Blue
-        '10n': <CloudRain className="w-full h-full" style={{ color: '#4A90E2' }} />, // Blue
-        '11d': <CloudLightning className="w-full h-full" style={{ color: '#FFD700' }} />, // Gold
-        '11n': <CloudLightning className="w-full h-full" style={{ color: '#FFD700' }} />, // Gold
-        '13d': <CloudSnow className="w-full h-full" style={{ color: '#E6E6FA' }} />, // Lavender
-        '13n': <CloudSnow className="w-full h-full" style={{ color: '#E6E6FA' }} />, // Lavender
-        '50d': <Cloud className="w-full h-full" style={{ color: '#A9A9A9' }} />, // Dark gray (mist)
-        '50n': <Cloud className="w-full h-full" style={{ color: '#696969' }} />, // Dim gray (mist)
+      const iconMap: { [key: string]: string } = {
+        '01d': '☀️', '01n': '🌙',
+        '02d': '⛅', '02n': '☁️',
+        '03d': '☁️', '03n': '☁️',
+        '04d': '☁️', '04n': '☁️',
+        '09d': '🌧️', '09n': '🌧️',
+        '10d': '🌦️', '10n': '🌧️',
+        '11d': '⛈️', '11n': '⛈️',
+        '13d': '❄️', '13n': '❄️',
+        '50d': '🌫️', '50n': '🌫️'
       };
-      return iconMap[iconCode] || <Sun className="w-full h-full" style={{ color: '#FFA500' }} />;
+      return iconMap[iconCode] || '☀️';
     }
     
     // Fallback based on condition text
     const lowerCondition = condition.toLowerCase();
     if (lowerCondition.includes('rain') || lowerCondition.includes('shower')) {
-      return <CloudRain className="w-full h-full" style={{ color: '#4A90E2' }} />;
+      return '🌧️';
     } else if (lowerCondition.includes('cloud')) {
-      return <Cloud className="w-full h-full" style={{ color: '#87CEEB' }} />;
+      return '☁️';
     } else if (lowerCondition.includes('snow')) {
-      return <CloudSnow className="w-full h-full" style={{ color: '#E6E6FA' }} />;
+      return '❄️';
     } else if (lowerCondition.includes('thunder')) {
-      return <CloudLightning className="w-full h-full" style={{ color: '#FFD700' }} />;
+      return '⛈️';
     } else {
-      return <Sun className="w-full h-full" style={{ color: '#FFA500' }} />;
+      return '☀️';
     }
   };
 
@@ -179,10 +170,12 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
           {Math.round(weather.current.temp)}°
         </div>
         <div style={{ 
-          width: '48px',
-          height: '48px',
+          fontSize: '48px', 
           lineHeight: '1',
-          color: 'white'
+          fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, Android Emoji, EmojiSymbols, EmojiOne, Twemoji Mozilla, system-ui, sans-serif',
+          textRendering: 'optimizeQuality',
+          WebkitFontSmoothing: 'antialiased',
+          MozOsxFontSmoothing: 'grayscale'
         }}>
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
@@ -213,12 +206,13 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
             {getDayName(day.date, index)}
           </div>
           <div style={{ 
-            width: '32px',
-            height: '32px',
+            fontSize: '32px', 
             lineHeight: '1',
-            color: 'white',
             marginBottom: '8px',
-            margin: '0 auto 8px auto'
+            fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, Android Emoji, EmojiSymbols, EmojiOne, Twemoji Mozilla, system-ui, sans-serif',
+            textRendering: 'optimizeQuality',
+            WebkitFontSmoothing: 'antialiased',
+            MozOsxFontSmoothing: 'grayscale'
           }}>
             {getWeatherIcon(day.condition || '', day.icon)}
           </div>
