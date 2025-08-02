@@ -177,7 +177,8 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
           fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif',
           fontVariantEmoji: 'unicode',
           textRendering: 'optimizeQuality',
-          WebkitFontSmoothing: 'antialiased'
+          WebkitFontSmoothing: 'antialiased',
+          transform: 'translateY(-2px)'
         } as any}>
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
