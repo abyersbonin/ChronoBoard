@@ -166,7 +166,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
           color: 'white', 
           fontWeight: 'bold',
           lineHeight: '1',
-          letterSpacing: '2px'
+          letterSpacing: '4px'
         }}>
           {Math.round(weather.current.temp)}°
         </div>
