@@ -79,7 +79,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
     if (!calendarSource) return 'GÉNÉRAL';
     
     // Extract a short name from the calendar source
-    if (calendarSource.includes('spaeastman')) return 'PRINCIPAL';
+    if (calendarSource.includes('spaeastman')) return 'ACTIVITÉS';
     if (calendarSource.includes('group.calendar.google.com')) {
       // Try to extract meaningful name from group calendar ID
       const match = calendarSource.match(/([a-f0-9]{64})/);
