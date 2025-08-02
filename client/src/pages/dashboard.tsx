@@ -141,6 +141,36 @@ export default function Dashboard() {
     },
   });
 
+  // Automatic calendar sync every 5 minutes for logged-in admins
+  useEffect(() => {
+    if (!isLoggedIn || !settings?.icalUrls || settings.icalUrls.length === 0) {
+      return; // Don't sync if not logged in or no calendars configured
+    }
+
+    // Function to perform automatic sync without showing success toast
+    const performAutoSync = async () => {
+      try {
+        await syncIcalCalendar(DEFAULT_USER_ID);
+        queryClient.invalidateQueries({ queryKey: ['/api/calendar-events', DEFAULT_USER_ID] });
+        console.log('Calendar automatically synchronized');
+      } catch (error) {
+        console.error('Auto-sync failed:', error);
+        // Don't show error toast for automatic sync to avoid spam
+      }
+    };
+
+    // Initial sync after component loads (if calendars are configured)
+    const initialSyncTimer = setTimeout(performAutoSync, 30000); // Wait 30 seconds after load
+
+    // Set up recurring sync every 5 minutes
+    const autoSyncInterval = setInterval(performAutoSync, 5 * 60 * 1000); // Every 5 minutes
+
+    return () => {
+      clearTimeout(initialSyncTimer);
+      clearInterval(autoSyncInterval);
+    };
+  }, [isLoggedIn, settings?.icalUrls, queryClient]); // Re-run when login status or calendars change
+
   // Real-time current event detection with separate timer
   const checkCurrentEvent = () => {
     if (events.length === 0) {
