@@ -170,7 +170,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       style={{
         fontFamily: 'Montserrat, sans-serif',
         display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
+        flexDirection: 'row',
         gap: isMobile ? '4px' : '8px',
         zIndex: 30
       }}
