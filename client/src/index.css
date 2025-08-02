@@ -88,13 +88,8 @@
   }
 }
 
-/* Hide scrollbar when in fullscreen mode */
-:fullscreen {
-  overflow: hidden;
-}
-
+/* Hide scrollbar when in fullscreen mode but keep scroll functionality */
 :fullscreen body {
-  overflow-y: auto;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
 }
@@ -104,12 +99,7 @@
 }
 
 /* WebKit fullscreen support */
-:-webkit-full-screen {
-  overflow: hidden;
-}
-
 :-webkit-full-screen body {
-  overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -119,12 +109,7 @@
 }
 
 /* Mozilla fullscreen support */
-:-moz-full-screen {
-  overflow: hidden;
-}
-
 :-moz-full-screen body {
-  overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
