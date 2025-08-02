@@ -48,6 +48,55 @@ export function CurrentEvent({ event }: CurrentEventProps) {
     return textarea.value;
   };
 
+  // Get badge color based on calendar source
+  const getBadgeColor = (calendarSource: string | null) => {
+    if (!calendarSource) return 'bg-gray-500';
+    
+    // Generate consistent colors based on calendar source
+    const colors = [
+      'bg-blue-500',
+      'bg-green-500', 
+      'bg-purple-500',
+      'bg-orange-500',
+      'bg-pink-500',
+      'bg-indigo-500',
+      'bg-teal-500',
+      'bg-red-500'
+    ];
+    
+    // Simple hash function to consistently assign colors
+    let hash = 0;
+    for (let i = 0; i < calendarSource.length; i++) {
+      hash = ((hash << 5) - hash) + calendarSource.charCodeAt(i);
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    
+    return colors[Math.abs(hash) % colors.length];
+  };
+
+  // Get calendar display name from source
+  const getCalendarName = (calendarSource: string | null) => {
+    if (!calendarSource) return 'Général';
+    
+    // Extract a short name from the calendar source
+    if (calendarSource.includes('spaeastman')) return 'Principal';
+    if (calendarSource.includes('group.calendar.google.com')) {
+      // Try to extract meaningful name from group calendar ID
+      const match = calendarSource.match(/([a-f0-9]{64})/);
+      if (match) {
+        const id = match[1];
+        // Map known calendar IDs to names
+        if (id.startsWith('8d3d8be7')) return 'Activités';
+        if (id.startsWith('9402bc30')) return 'Événements';
+        if (id.startsWith('c3e052be')) return 'Workshops';
+        if (id.startsWith('4dfbddf3')) return 'Réservations';
+      }
+      return 'Groupe';
+    }
+    
+    return 'Autre';
+  };
+
   // Update current time every 10 seconds - TV optimized
   useEffect(() => {
     const timer = setInterval(() => {
@@ -106,9 +155,14 @@ export function CurrentEvent({ event }: CurrentEventProps) {
         </div>
         
         <div className="border-l-4 border-blue-500 pl-4 flex-1 relative">
-          <h3 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-800 mb-3`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            {decodeHtmlEntities(event.title)}
-          </h3>
+          <div className="flex items-center gap-3 mb-3">
+            <h3 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+              {decodeHtmlEntities(event.title)}
+            </h3>
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)}`}>
+              {getCalendarName(event.calendarSource)}
+            </span>
+          </div>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center space-x-4'} text-gray-500`}>
             {event.location && (
               <div className="flex items-center">
