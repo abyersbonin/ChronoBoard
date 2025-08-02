@@ -38,6 +38,13 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
     return () => window.removeEventListener('resize', detectMobile);
   }, []);
 
+  // Decode HTML entities in text
+  const decodeHtmlEntities = (text: string) => {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  };
+
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
     setShowEventDetails(true);
@@ -126,12 +133,12 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                       </div>
                       <div className="flex-1 min-w-0 relative">
                         <h4 className="text-lg font-semibold text-gray-800 mb-2">
-                          {event.title}
+                          {decodeHtmlEntities(event.title)}
                         </h4>
                         {event.location && (
                           <div className="flex items-center text-gray-500 text-sm">
                             <MapPin className="mr-1 h-3 w-3" />
-                            <span>{event.location}</span>
+                            <span>{decodeHtmlEntities(event.location)}</span>
                           </div>
                         )}
                         

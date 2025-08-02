@@ -1,6 +1,6 @@
 import { MapPin, Clock, Calendar, X } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 interface EventDetailsDialogProps {
   event: CalendarEvent | null;
@@ -9,6 +9,33 @@ interface EventDetailsDialogProps {
 }
 
 export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDialogProps) {
+  // Mobile device detection (excluding TV browsers)
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const detectMobile = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth <= 768;
+      
+      // Exclude TV browsers (webOS, Tizen, etc.)
+      const isTVBrowser = /webos|tizen|smart-tv|smarttv/.test(userAgent);
+      
+      // Check for mobile user agents
+      const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
+      
+      // Mobile if: (touch device AND small screen AND mobile UA) AND NOT TV browser
+      const mobile = (isTouchDevice && isSmallScreen && isMobileUA) && !isTVBrowser;
+      
+      setIsMobile(mobile);
+    };
+    
+    detectMobile();
+    window.addEventListener('resize', detectMobile);
+    
+    return () => window.removeEventListener('resize', detectMobile);
+  }, []);
+
   // Decode HTML entities in text
   const decodeHtmlEntities = (text: string) => {
     const textarea = document.createElement('textarea');
@@ -64,7 +91,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div className={`fixed inset-0 z-[100] flex items-center justify-center ${isMobile ? 'p-4' : 'p-8'}`}>
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
@@ -78,7 +105,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       />
       
       {/* Modal Content */}
-      <div className="relative z-[101] w-full max-w-md mx-4 bg-white rounded-lg shadow-2xl border border-gray-300 p-6">
+      <div className={`relative z-[101] w-full ${isMobile ? 'max-w-sm mx-2' : 'max-w-md mx-4'} bg-white rounded-lg shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'}`}>
         {/* Close Button */}
         <button
           onClick={() => {
@@ -95,14 +122,14 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
         </button>
         
         {/* Header */}
-        <div className="mb-6 pr-8">
-          <h2 className="text-xl font-bold text-gray-800">
+        <div className={`${isMobile ? 'mb-4 pr-6' : 'mb-6 pr-8'}`}>
+          <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold text-gray-800`}>
             {decodeHtmlEntities(event.title)}
           </h2>
         </div>
         
         {/* Content */}
-        <div className="space-y-4">
+        <div className={isMobile ? 'space-y-3' : 'space-y-4'}>
           {/* Date and Time */}
           <div className="flex items-center space-x-3 text-gray-700">
             <Calendar className="h-5 w-5 text-blue-600 flex-shrink-0" />

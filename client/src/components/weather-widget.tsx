@@ -214,34 +214,34 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       </div>
 
       {/* Authentic forecast data only - show fewer items on mobile */}
-      {authentiForecast.slice(0, isMobile ? 2 : authentiForecast.length).map((day, index) => (
+      {authentiForecast.slice(0, isMobile ? 3 : authentiForecast.length).map((day, index) => (
         <div key={index} style={{
           backgroundColor: 'rgba(0, 0, 0, 0.4)',
           borderRadius: '8px',
-          width: isMobile ? '75px' : '120px',
-          height: isMobile ? '80px' : '110px',
+          width: isMobile ? '90px' : '120px',
+          height: isMobile ? '95px' : '110px',
           textAlign: 'center',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: isMobile ? '6px 4px' : '12px 8px'
+          padding: isMobile ? '8px 6px' : '12px 8px'
         }}>
           <div style={{ 
-            fontSize: isMobile ? '9px' : (getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '12px' : '14px'), 
+            fontSize: isMobile ? '11px' : (getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '12px' : '14px'), 
             fontFamily: 'Montserrat, sans-serif', 
             color: 'white', 
             fontWeight: '500',
             lineHeight: '1',
-            marginBottom: isMobile ? '4px' : '8px'
+            marginBottom: isMobile ? '5px' : '8px'
           }}>
             {getDayName(day.date, index)}
           </div>
           <div style={{ 
-            fontSize: isMobile ? '20px' : '32px', 
+            fontSize: isMobile ? '24px' : '32px', 
             lineHeight: '1',
             color: 'white',
-            marginBottom: isMobile ? '4px' : '8px',
+            marginBottom: isMobile ? '5px' : '8px',
             fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif',
             fontVariantEmoji: 'unicode',
             textRendering: 'optimizeQuality',
@@ -250,13 +250,13 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
             {getWeatherIcon(day.condition || '', day.icon)}
           </div>
           <div style={{ 
-            fontSize: isMobile ? '10px' : '13px', 
+            fontSize: isMobile ? '11px' : '13px', 
             fontFamily: 'Montserrat, sans-serif', 
             color: 'white',
             fontWeight: '500',
             lineHeight: '1.2'
           }}>
-            <div style={{ marginBottom: '2px' }}>{Math.round(day.high)}°</div>
+            <div style={{ marginBottom: isMobile ? '1px' : '2px' }}>{Math.round(day.high)}°</div>
             <div style={{ color: '#93c5fd' }}>{Math.round(day.low)}°</div>
           </div>
         </div>

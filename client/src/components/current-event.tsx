@@ -41,6 +41,13 @@ export function CurrentEvent({ event }: CurrentEventProps) {
     return () => window.removeEventListener('resize', detectMobile);
   }, []);
 
+  // Decode HTML entities in text
+  const decodeHtmlEntities = (text: string) => {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  };
+
   // Update current time every 10 seconds - TV optimized
   useEffect(() => {
     const timer = setInterval(() => {
@@ -100,13 +107,13 @@ export function CurrentEvent({ event }: CurrentEventProps) {
         
         <div className="border-l-4 border-blue-500 pl-4 flex-1 relative">
           <h3 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-800 mb-3`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            {event.title}
+            {decodeHtmlEntities(event.title)}
           </h3>
           <div className={`flex ${isMobile ? 'flex-col space-y-2' : 'items-center space-x-4'} text-gray-500`}>
             {event.location && (
               <div className="flex items-center">
                 <MapPin className="mr-2 h-4 w-4" />
-                <span>{event.location}</span>
+                <span>{decodeHtmlEntities(event.location)}</span>
               </div>
             )}
             <div className="flex items-center">
