@@ -22,6 +22,33 @@ export default function Dashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { isLoggedIn, isLoading: authLoading } = useAuth();
+  
+  // Mobile device detection (excluding TV browsers)
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const detectMobile = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth <= 768;
+      
+      // Exclude TV browsers (webOS, Tizen, etc.)
+      const isTVBrowser = /webos|tizen|smart-tv|smarttv/.test(userAgent);
+      
+      // Check for mobile user agents
+      const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
+      
+      // Mobile if: (touch device AND small screen AND mobile UA) AND NOT TV browser
+      const mobile = (isTouchDevice && isSmallScreen && isMobileUA) && !isTVBrowser;
+      
+      setIsMobile(mobile);
+    };
+    
+    detectMobile();
+    window.addEventListener('resize', detectMobile);
+    
+    return () => window.removeEventListener('resize', detectMobile);
+  }, []);
 
   // Fetch settings - only if admin is logged in
   const { data: settings, isLoading: settingsLoading } = useQuery({
@@ -203,7 +230,7 @@ export default function Dashboard() {
             backgroundSize: 'cover',
             backgroundPosition: 'center 60%',
             backgroundRepeat: 'no-repeat',
-            height: '350px',
+            height: isMobile ? '250px' : '350px',
             imageRendering: 'auto'
           }}
         >
@@ -211,45 +238,45 @@ export default function Dashboard() {
           <div className="absolute inset-0 bg-black opacity-25"></div>
           
           {/* Login and Fullscreen buttons positioned absolute top-left */}
-          <div className="absolute left-6 top-6 z-20 flex gap-3">
+          <div className={`absolute ${isMobile ? 'left-3 top-3' : 'left-6 top-6'} z-20 flex gap-3`}>
             <LoginDialog />
             {/* Show fullscreen button only for logged-in admins */}
             {isLoggedIn && <FullscreenButton />}
           </div>
 
           {/* Logo at the very top center */}
-          <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-10">
+          <div className={`absolute ${isMobile ? 'top-3' : 'top-6'} left-1/2 transform -translate-x-1/2 z-10`}>
             <img 
               src="https://www.spa-eastman.com/wp-content/themes/spa-eastman/assets/images/logo-spa-1977-blanc-fr.svg" 
               alt="Spa Eastman" 
-              className="h-20 drop-shadow-lg"
+              className={`${isMobile ? 'h-12' : 'h-20'} drop-shadow-lg`}
               style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))' }}
             />
           </div>
           
-          {/* QR Code section on the left */}
-          <div className="absolute bottom-6 left-16">
-            <div className="relative">
-              {/* Text positioned above */}
-              <div className="text-white text-sm drop-shadow-md text-center mb-2">
-                Consulter sur votre<br />appareil mobile
-              </div>
-              
-
-              
-              {/* QR Code centered below text */}
-              <div className="bg-white p-3 rounded-lg shadow-lg mx-auto w-fit">
-                <img 
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://dakboard.com/screen/uuid/67c08e6d-141948-8496-db3f400f4013" 
-                  alt="QR Code"
-                  className="w-24 h-24"
-                />
+          {/* QR Code section on the left - hide on mobile */}
+          {!isMobile && (
+            <div className="absolute bottom-6 left-16">
+              <div className="relative">
+                {/* Text positioned above */}
+                <div className="text-white text-sm drop-shadow-md text-center mb-2">
+                  Consulter sur votre<br />appareil mobile
+                </div>
+                
+                {/* QR Code centered below text */}
+                <div className="bg-white p-3 rounded-lg shadow-lg mx-auto w-fit">
+                  <img 
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://dakboard.com/screen/uuid/67c08e6d-141948-8496-db3f400f4013" 
+                    alt="QR Code"
+                    className="w-24 h-24"
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          )}
           
           {/* Weather Widget - Positioned at bottom right corner of header */}
-          <div className="absolute bottom-6 right-6 z-20">
+          <div className={`absolute ${isMobile ? 'bottom-3 right-3' : 'bottom-6 right-6'} z-20`}>
             <WeatherWidget location={settings?.location || "Eastman"} />
           </div>
 
@@ -257,15 +284,15 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content - Add top margin to account for fixed header */}
-      <div className="relative z-10 w-full px-6 py-8" style={{ marginTop: '350px' }}>
-        <div className={`grid gap-8 ${isLoggedIn ? 'lg:grid-cols-3' : 'lg:grid-cols-1'}`}>
-          <div className={isLoggedIn ? 'lg:col-span-2' : 'lg:col-span-1'}>
+      <div className={`relative z-10 w-full ${isMobile ? 'px-3 py-4' : 'px-6 py-8'}`} style={{ marginTop: isMobile ? '250px' : '350px' }}>
+        <div className={`grid gap-8 ${isLoggedIn && !isMobile ? 'lg:grid-cols-3' : 'grid-cols-1'}`}>
+          <div className={isLoggedIn && !isMobile ? 'lg:col-span-2' : 'col-span-1'}>
             <CurrentEvent event={currentEvent} />
             <UpcomingEvents events={upcomingEvents} />
           </div>
 
-          {/* Show side panel only for logged-in admins */}
-          {isLoggedIn && (
+          {/* Show side panel only for logged-in admins and not on mobile */}
+          {isLoggedIn && !isMobile && (
             <SidePanel
               onSyncCalendar={handleSyncCalendar}
               isCalendarConnected={!!(settings?.icalUrls && settings.icalUrls.length > 0)}

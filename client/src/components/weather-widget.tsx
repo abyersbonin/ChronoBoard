@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 import { Thermometer } from "lucide-react";
 import { type WeatherData } from "@shared/schema";
 
@@ -7,6 +8,33 @@ interface WeatherWidgetProps {
 }
 
 export function WeatherWidget({ location }: WeatherWidgetProps) {
+  // Mobile device detection (excluding TV browsers)
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const detectMobile = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth <= 768;
+      
+      // Exclude TV browsers (webOS, Tizen, etc.)
+      const isTVBrowser = /webos|tizen|smart-tv|smarttv/.test(userAgent);
+      
+      // Check for mobile user agents
+      const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
+      
+      // Mobile if: (touch device AND small screen AND mobile UA) AND NOT TV browser
+      const mobile = (isTouchDevice && isSmallScreen && isMobileUA) && !isTVBrowser;
+      
+      setIsMobile(mobile);
+    };
+    
+    detectMobile();
+    window.addEventListener('resize', detectMobile);
+    
+    return () => window.removeEventListener('resize', detectMobile);
+  }, []);
+
   const { data: weather, isLoading, error } = useQuery({
     queryKey: ['/api/weather', location],
     queryFn: async () => {
@@ -142,7 +170,8 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       style={{
         fontFamily: 'Montserrat, sans-serif',
         display: 'flex',
-        gap: '8px',
+        flexDirection: isMobile ? 'column' : 'row',
+        gap: isMobile ? '4px' : '8px',
         zIndex: 30
       }}
     >
@@ -150,69 +179,69 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       <div style={{ 
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         borderRadius: '8px',
-        width: '200px',
-        height: '110px',
+        width: isMobile ? '160px' : '200px',
+        height: isMobile ? '80px' : '110px',
         textAlign: 'center', 
         display: 'flex', 
         flexDirection: 'row',
         justifyContent: 'center', 
         alignItems: 'center',
-        padding: '20px',
-        gap: '12px'
+        padding: isMobile ? '12px' : '20px',
+        gap: isMobile ? '8px' : '12px'
       }}>
         <div style={{ 
-          fontSize: '60px', 
+          fontSize: isMobile ? '36px' : '60px', 
           fontFamily: 'Montserrat, sans-serif', 
           color: 'white', 
           fontWeight: 'bold',
           lineHeight: '1',
-          letterSpacing: '4px'
+          letterSpacing: isMobile ? '2px' : '4px'
         }}>
           {Math.round(weather.current.temp)}°
         </div>
         <div style={{ 
-          fontSize: '48px', 
+          fontSize: isMobile ? '28px' : '48px', 
           lineHeight: '1',
           color: 'white',
           fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif',
           fontVariantEmoji: 'unicode',
           textRendering: 'optimizeQuality',
           WebkitFontSmoothing: 'antialiased',
-          transform: 'translateY(-2px)'
+          transform: isMobile ? 'translateY(-1px)' : 'translateY(-2px)'
         } as any}>
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
       </div>
 
-      {/* Authentic forecast data only */}
-      {authentiForecast.map((day, index) => (
+      {/* Authentic forecast data only - show fewer items on mobile */}
+      {authentiForecast.slice(0, isMobile ? 2 : authentiForecast.length).map((day, index) => (
         <div key={index} style={{
           backgroundColor: 'rgba(0, 0, 0, 0.4)',
           borderRadius: '8px',
-          width: '120px',
-          height: '110px',
+          width: isMobile ? '75px' : '120px',
+          height: isMobile ? '80px' : '110px',
           textAlign: 'center',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: '12px 8px'
+          padding: isMobile ? '6px 4px' : '12px 8px'
         }}>
           <div style={{ 
-            fontSize: getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '12px' : '14px', 
+            fontSize: isMobile ? '9px' : (getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '12px' : '14px'), 
             fontFamily: 'Montserrat, sans-serif', 
             color: 'white', 
             fontWeight: '500',
             lineHeight: '1',
-            marginBottom: '8px'
+            marginBottom: isMobile ? '4px' : '8px'
           }}>
             {getDayName(day.date, index)}
           </div>
           <div style={{ 
-            fontSize: '32px', 
+            fontSize: isMobile ? '20px' : '32px', 
             lineHeight: '1',
             color: 'white',
-            marginBottom: '8px',
+            marginBottom: isMobile ? '4px' : '8px',
             fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif',
             fontVariantEmoji: 'unicode',
             textRendering: 'optimizeQuality',
@@ -221,7 +250,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
             {getWeatherIcon(day.condition || '', day.icon)}
           </div>
           <div style={{ 
-            fontSize: '13px', 
+            fontSize: isMobile ? '10px' : '13px', 
             fontFamily: 'Montserrat, sans-serif', 
             color: 'white',
             fontWeight: '500',

@@ -1,7 +1,7 @@
 import { MapPin } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { EventDetailsDialog } from "./event-details-dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface UpcomingEventsProps {
   events: CalendarEvent[];
@@ -10,6 +10,33 @@ interface UpcomingEventsProps {
 export function UpcomingEvents({ events }: UpcomingEventsProps) {
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [showEventDetails, setShowEventDetails] = useState(false);
+  
+  // Mobile device detection (excluding TV browsers)
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const detectMobile = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth <= 768;
+      
+      // Exclude TV browsers (webOS, Tizen, etc.)
+      const isTVBrowser = /webos|tizen|smart-tv|smarttv/.test(userAgent);
+      
+      // Check for mobile user agents
+      const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
+      
+      // Mobile if: (touch device AND small screen AND mobile UA) AND NOT TV browser
+      const mobile = (isTouchDevice && isSmallScreen && isMobileUA) && !isTVBrowser;
+      
+      setIsMobile(mobile);
+    };
+    
+    detectMobile();
+    window.addEventListener('resize', detectMobile);
+    
+    return () => window.removeEventListener('resize', detectMobile);
+  }, []);
 
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
@@ -59,8 +86,8 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
 
   if (events.length === 0) {
     return (
-      <div className="bg-gray-100 bg-opacity-60 rounded-xl p-6 border border-gray-300 shadow-lg">
-        <h2 className="text-xl font-semibold text-gray-800 mb-6">Événements à venir</h2>
+      <div className={`bg-gray-100 bg-opacity-60 rounded-xl ${isMobile ? 'p-4' : 'p-6'} border border-gray-300 shadow-lg`}>
+        <h2 className={`${isMobile ? 'text-lg mb-4' : 'text-xl mb-6'} font-semibold text-gray-800`}>Événements à venir</h2>
         <div className="text-center py-8">
           <p className="text-gray-600 mb-2">Aucun événement à venir</p>
           <p className="text-gray-500 text-sm">Les calendriers iCal se synchronisent automatiquement</p>
@@ -71,8 +98,8 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
 
   return (
     <>
-      <div className="bg-gray-100 bg-opacity-60 rounded-xl p-6 border border-gray-300 shadow-lg">
-        <h2 className="text-xl font-semibold text-gray-800 mb-6">Événements à venir</h2>
+      <div className={`bg-gray-100 bg-opacity-60 rounded-xl ${isMobile ? 'p-4' : 'p-6'} border border-gray-300 shadow-lg`}>
+        <h2 className={`${isMobile ? 'text-lg mb-4' : 'text-xl mb-6'} font-semibold text-gray-800`}>Événements à venir</h2>
         
         <div className="space-y-6">
           {Object.entries(groupedEvents).map(([dateKey, dayEvents]) => {
