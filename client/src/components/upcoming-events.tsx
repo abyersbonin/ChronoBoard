@@ -1,4 +1,4 @@
-import { MapPin, Hand } from "lucide-react";
+import { MapPin, MousePointer } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { EventDetailsDialog } from "./event-details-dialog";
 import { useState } from "react";
@@ -109,10 +109,14 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                         )}
                       </div>
                       
-                      {/* Tap icon with animation */}
-                      <div className="flex items-center justify-center ml-4">
-                        <div className="animate-pulse">
-                          <Hand className="h-6 w-6 text-blue-500 transform rotate-12" style={{ animation: 'bounce 2s infinite' }} />
+                      {/* Clicking icon with shockwave animation */}
+                      <div className="flex items-center justify-center ml-4 relative">
+                        <div className="relative">
+                          {/* Shockwave ripple effect */}
+                          <div className="absolute inset-0 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 1.8s infinite' }}></div>
+                          <div className="absolute inset-0 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 1.8s infinite 0.4s' }}></div>
+                          {/* Clicking pointer */}
+                          <MousePointer className="h-6 w-6 text-blue-600 relative z-10" style={{ animation: 'clickFinger 1.2s infinite' }} />
                         </div>
                       </div>
                     </div>

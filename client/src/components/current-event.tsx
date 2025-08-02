@@ -1,4 +1,4 @@
-import { MapPin, Clock, Hand } from "lucide-react";
+import { MapPin, Clock, MousePointer } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { EventDetailsDialog } from "./event-details-dialog";
 import { useState, useEffect } from "react";
@@ -91,10 +91,14 @@ export function CurrentEvent({ event }: CurrentEventProps) {
           </div>
         </div>
         
-        {/* Tap icon with animation */}
-        <div className="flex items-center justify-center ml-4">
-          <div className="animate-pulse">
-            <Hand className="h-8 w-8 text-blue-500 transform rotate-12" style={{ animation: 'bounce 2s infinite' }} />
+        {/* Clicking icon with shockwave animation */}
+        <div className="flex items-center justify-center ml-4 relative">
+          <div className="relative">
+            {/* Shockwave ripple effect */}
+            <div className="absolute inset-0 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 2s infinite' }}></div>
+            <div className="absolute inset-0 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 2s infinite 0.5s' }}></div>
+            {/* Clicking pointer */}
+            <MousePointer className="h-8 w-8 text-blue-600 relative z-10" style={{ animation: 'clickFinger 1.5s infinite' }} />
           </div>
         </div>
       </div>
