@@ -141,35 +141,46 @@ export default function Dashboard() {
     },
   });
 
-  // Automatic calendar sync every 5 minutes for logged-in admins
+  // Automatic calendar sync every 5 minutes - works for everyone
   useEffect(() => {
-    if (!isLoggedIn || !settings?.icalUrls || settings.icalUrls.length === 0) {
-      return; // Don't sync if not logged in or no calendars configured
-    }
+    console.log('Setting up auto-sync...');
 
-    // Function to perform automatic sync without showing success toast
+    // Function to perform automatic sync for everyone
     const performAutoSync = async () => {
       try {
-        await syncIcalCalendar(DEFAULT_USER_ID);
-        queryClient.invalidateQueries({ queryKey: ['/api/calendar-events', DEFAULT_USER_ID] });
-        console.log('Calendar automatically synchronized');
+        console.log('Starting automatic calendar sync...');
+        
+        // Make direct API call (no admin auth needed anymore)
+        const response = await fetch(`/api/sync-ical-calendar/${DEFAULT_USER_ID}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          queryClient.invalidateQueries({ queryKey: ['/api/calendar-events', DEFAULT_USER_ID] });
+          console.log(`Calendar automatically synchronized: ${data.eventCount} events`);
+        } else {
+          console.error('Auto-sync failed:', response.status, response.statusText);
+        }
       } catch (error) {
         console.error('Auto-sync failed:', error);
-        // Don't show error toast for automatic sync to avoid spam
       }
     };
 
-    // Initial sync after component loads (if calendars are configured)
-    const initialSyncTimer = setTimeout(performAutoSync, 30000); // Wait 30 seconds after load
+    // Initial sync after component loads (wait 10 seconds)
+    const initialSyncTimer = setTimeout(performAutoSync, 10000);
 
     // Set up recurring sync every 5 minutes
-    const autoSyncInterval = setInterval(performAutoSync, 5 * 60 * 1000); // Every 5 minutes
+    const autoSyncInterval = setInterval(performAutoSync, 5 * 60 * 1000);
 
     return () => {
       clearTimeout(initialSyncTimer);
       clearInterval(autoSyncInterval);
     };
-  }, [isLoggedIn, settings?.icalUrls, queryClient]); // Re-run when login status or calendars change
+  }, [queryClient]); // Only re-run when queryClient changes
 
   // Real-time current event detection with separate timer
   const checkCurrentEvent = () => {

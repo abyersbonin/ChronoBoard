@@ -157,8 +157,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // iCal Calendar sync - protected by admin auth
-  app.post("/api/sync-ical-calendar/:userId", requireAdmin, async (req, res) => {
+  // iCal Calendar sync - public access (no admin auth required)
+  app.post("/api/sync-ical-calendar/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
       const settings = await storage.getSettings(userId);
