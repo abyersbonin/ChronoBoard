@@ -172,8 +172,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         <div style={{ 
           fontSize: '48px', 
           lineHeight: '1',
-          color: 'white',
-          fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, Android Emoji, EmojiSymbols, EmojiOne, Twemoji Mozilla, system-ui, sans-serif'
+          color: 'white'
         }}>
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
@@ -207,8 +206,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
             fontSize: '32px', 
             lineHeight: '1',
             color: 'white',
-            marginBottom: '8px',
-            fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, Android Emoji, EmojiSymbols, EmojiOne, Twemoji Mozilla, system-ui, sans-serif'
+            marginBottom: '8px'
           }}>
             {getWeatherIcon(day.condition || '', day.icon)}
           </div>
