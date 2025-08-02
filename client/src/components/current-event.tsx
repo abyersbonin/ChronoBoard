@@ -91,24 +91,11 @@ export function CurrentEvent({ event }: CurrentEventProps) {
           </div>
         </div>
         
-        {/* Hand tapping icon with animation */}
-        <div className="flex items-center justify-center ml-4 relative">
-          <div className="relative" style={{ animation: 'tapHand 1.5s infinite' }}>
-            {/* Custom tapping hand SVG */}
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-blue-600">
-              {/* Hand outline */}
-              <path d="M8 20c-.5 0-1-.2-1.4-.6-.8-.8-.8-2 0-2.8L11 12.2c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0L6.2 14.2c-.8.8-2 .8-2.8 0s-.8-2 0-2.8L7.8 7c.8-.8 2-.8 2.8 0 .4.4 1 .4 1.4 0s.4-1 0-1.4c-.8-.8-.8-2 0-2.8s2-.8 2.8 0L18.2 6.2c.8.8.8 2 0 2.8L14.8 12.4c-.4.4-.4 1 0 1.4.4.4 1 .4 1.4 0l3.4-3.4c.8-.8 2-.8 2.8 0s.8 2 0 2.8L18 17.6c-.4.4-.6.9-.6 1.4v1c0 1.1-.9 2-2 2H8z" stroke="currentColor" strokeWidth="2" fill="none"/>
-              {/* Index finger pointing down */}
-              <path d="M12 2v8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-              {/* Radiating tap lines */}
-              <g className="tap-rays" style={{ animation: 'tapRays 1.5s infinite' }}>
-                <path d="M10 8l-2-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
-                <path d="M14 8l2-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
-                <path d="M8 10l-2 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
-                <path d="M16 10l2 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
-                <path d="M12 6l0-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
-              </g>
-            </svg>
+        {/* Shockwave animation centered on right */}
+        <div className="flex items-center justify-center ml-4 relative w-12 h-12">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-4 h-4 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 2s infinite' }}></div>
+            <div className="absolute w-4 h-4 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 2s infinite 0.5s' }}></div>
           </div>
         </div>
       </div>
