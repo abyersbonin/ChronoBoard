@@ -290,13 +290,14 @@ export default function Dashboard() {
           style={{
             backgroundImage: `url(${spaHeaderImage})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center 55%',
+            backgroundPosition: 'center 60%',
             backgroundRepeat: 'no-repeat',
-            height: '350px'
+            height: '350px',
+            imageRendering: 'crisp-edges'
           }}
         >
-          {/* Dark overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
+          {/* Dark overlay for better text readability - removed blur for crisp image */}
+          <div className="absolute inset-0 bg-black/25"></div>
           
           {/* Login button positioned absolute top-left */}
           <div className="absolute left-6 top-6 z-20">
