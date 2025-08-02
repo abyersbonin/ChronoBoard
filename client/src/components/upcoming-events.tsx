@@ -73,25 +73,25 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
 
   // Get calendar display name from source
   const getCalendarName = (calendarSource: string | null) => {
-    if (!calendarSource) return 'Général';
+    if (!calendarSource) return 'GÉNÉRAL';
     
     // Extract a short name from the calendar source
-    if (calendarSource.includes('spaeastman')) return 'Principal';
+    if (calendarSource.includes('spaeastman')) return 'PRINCIPAL';
     if (calendarSource.includes('group.calendar.google.com')) {
       // Try to extract meaningful name from group calendar ID
       const match = calendarSource.match(/([a-f0-9]{64})/);
       if (match) {
         const id = match[1];
         // Map known calendar IDs to names
-        if (id.startsWith('8d3d8be7')) return 'Activités';
-        if (id.startsWith('9402bc30')) return 'Événements';
-        if (id.startsWith('c3e052be')) return 'Workshops';
-        if (id.startsWith('4dfbddf3')) return 'Réservations';
+        if (id.startsWith('8d3d8be7')) return 'ACTIVITÉS';
+        if (id.startsWith('9402bc30')) return 'CONFÉRENCES';
+        if (id.startsWith('c3e052be')) return 'WORKSHOPS';
+        if (id.startsWith('4dfbddf3')) return 'VISITE';
       }
-      return 'Groupe';
+      return 'GROUPE';
     }
     
-    return 'Autre';
+    return 'AUTRE';
   };
 
   const handleEventClick = (event: CalendarEvent) => {
@@ -185,7 +185,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                           <h4 className="text-lg font-semibold text-gray-800">
                             {decodeHtmlEntities(event.title)}
                           </h4>
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)}`}>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)}`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
                             {getCalendarName(event.calendarSource)}
                           </span>
                         </div>
