@@ -45,30 +45,22 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
     return textarea.value;
   };
 
-  // Get badge color based on calendar source
+  // Get badge color based on calendar name (not source)
   const getBadgeColor = (calendarSource: string | null) => {
-    if (!calendarSource) return 'bg-gray-500';
+    const calendarName = getCalendarName(calendarSource);
     
-    // Generate consistent colors based on calendar source
-    const colors = [
-      'bg-blue-500',
-      'bg-green-500', 
-      'bg-purple-500',
-      'bg-orange-500',
-      'bg-pink-500',
-      'bg-indigo-500',
-      'bg-teal-500',
-      'bg-red-500'
-    ];
+    // Assign consistent colors based on calendar name
+    const colorMap: { [key: string]: string } = {
+      'ACTIVITÉS': 'bg-blue-500',
+      'CONFÉRENCES': 'bg-green-500',
+      'WORKSHOPS': 'bg-purple-500',
+      'VISITE': 'bg-orange-500',
+      'GROUPE': 'bg-indigo-500',
+      'GÉNÉRAL': 'bg-gray-500',
+      'AUTRE': 'bg-red-500'
+    };
     
-    // Simple hash function to consistently assign colors
-    let hash = 0;
-    for (let i = 0; i < calendarSource.length; i++) {
-      hash = ((hash << 5) - hash) + calendarSource.charCodeAt(i);
-      hash = hash & hash; // Convert to 32-bit integer
-    }
-    
-    return colors[Math.abs(hash) % colors.length];
+    return colorMap[calendarName] || 'bg-gray-500';
   };
 
   // Get calendar display name from source
