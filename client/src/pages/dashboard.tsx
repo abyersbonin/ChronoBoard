@@ -6,6 +6,7 @@ import { UpcomingEvents } from "@/components/upcoming-events";
 import { SidePanel } from "@/components/side-panel";
 import { SpaBackground } from "@/components/spa-background";
 import { LoginDialog } from "@/components/login-dialog";
+import { FullscreenButton } from "@/components/fullscreen-button";
 import { WeatherWidget } from "@/components/weather-widget";
 import spaHeaderImage from "@assets/spa-eastman_pavillon-pricipal_levee-du-soleil_face_credit-auqueb-4-scaled-e1736788112766_1753560070028.jpg";
 import { type CalendarEvent, type Settings } from "@shared/schema";
@@ -299,9 +300,10 @@ export default function Dashboard() {
           {/* Dark overlay for better text readability - removed blur for crisp image */}
           <div className="absolute inset-0 bg-black/25"></div>
           
-          {/* Login button positioned absolute top-left */}
-          <div className="absolute left-6 top-6 z-20">
+          {/* Login and Fullscreen buttons positioned absolute top-left */}
+          <div className="absolute left-6 top-6 z-20 flex gap-3">
             <LoginDialog />
+            <FullscreenButton />
           </div>
 
           {/* Logo at the very top center */}
