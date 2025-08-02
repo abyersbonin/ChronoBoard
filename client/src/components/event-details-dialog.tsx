@@ -9,6 +9,13 @@ interface EventDetailsDialogProps {
 }
 
 export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDialogProps) {
+  // Decode HTML entities in text
+  const decodeHtmlEntities = (text: string) => {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  };
+
   // Handle escape key and body scroll - runs even when dialog is closed
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -90,7 +97,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
         {/* Header */}
         <div className="mb-6 pr-8">
           <h2 className="text-xl font-bold text-gray-800">
-            {event.title}
+            {decodeHtmlEntities(event.title)}
           </h2>
         </div>
         
@@ -111,7 +118,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
           {event.location && (
             <div className="flex items-center space-x-3 text-gray-700">
               <MapPin className="h-5 w-5 text-green-600 flex-shrink-0" />
-              <span>{event.location}</span>
+              <span>{decodeHtmlEntities(event.location)}</span>
             </div>
           )}
 
@@ -120,7 +127,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
             <div className="mt-4 pt-4 border-t border-gray-200">
               <h4 className="font-medium text-gray-800 mb-2">Description</h4>
               <p className="text-gray-600 leading-relaxed">
-                {event.description}
+                {decodeHtmlEntities(event.description)}
               </p>
             </div>
           )}
