@@ -35,7 +35,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
       <div className="bg-gray-100/60 backdrop-blur-sm rounded-xl p-6 border border-gray-300/50 mb-8 shadow-lg" style={{ fontFamily: 'Montserrat, sans-serif' }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-gray-800" style={{ fontFamily: 'Montserrat, sans-serif' }}>À présent</h2>
-          <div className="text-3xl font-bold text-blue-600" style={{ fontFamily: 'Montserrat, sans-serif' }}>{getCurrentTime()}</div>
+          <div className="text-3xl font-bold text-blue-600" style={{ fontFamily: 'Montserrat, sans-serif' }}>{currentTime}</div>
         </div>
         
         <div className="border-l-4 border-gray-300 pl-4">
@@ -67,7 +67,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-gray-800" style={{ fontFamily: 'Montserrat, sans-serif' }}>À présent</h2>
           <div className="text-3xl font-bold text-blue-600" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            {getCurrentTime()}
+            {currentTime}
           </div>
         </div>
         
