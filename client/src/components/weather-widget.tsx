@@ -172,6 +172,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         <div style={{ 
           fontSize: '48px', 
           lineHeight: '1',
+          color: 'white',
           fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, Android Emoji, EmojiSymbols, EmojiOne, Twemoji Mozilla, system-ui, sans-serif',
           textRendering: 'optimizeQuality',
           WebkitFontSmoothing: 'antialiased',
@@ -208,7 +209,9 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
           <div style={{ 
             fontSize: '32px', 
             lineHeight: '1',
+            color: 'white',
             marginBottom: '8px',
+            textAlign: 'center',
             fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, Android Emoji, EmojiSymbols, EmojiOne, Twemoji Mozilla, system-ui, sans-serif',
             textRendering: 'optimizeQuality',
             WebkitFontSmoothing: 'antialiased',
