@@ -57,7 +57,7 @@ export default function Dashboard() {
       if (!response.ok) throw new Error('Failed to fetch events');
       return response.json() as Promise<CalendarEvent[]>;
     },
-    refetchInterval: 30 * 1000, // Refresh every 30 seconds for live dashboard
+    refetchInterval: 60 * 1000, // Refresh every 60 seconds - optimized for TV performance
   });
 
   // Update settings mutation - only if admin is logged in
@@ -284,8 +284,8 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-white text-white font-sans relative">
-      {/* Header with Spa Image Background */}
-      <div className="relative z-10">
+      {/* Fixed Header with Spa Image Background */}
+      <div className="fixed top-0 left-0 right-0 z-50">
         <div 
           className="relative overflow-hidden"
           style={{
@@ -294,7 +294,7 @@ export default function Dashboard() {
             backgroundPosition: 'center 60%',
             backgroundRepeat: 'no-repeat',
             height: '350px',
-            imageRendering: 'crisp-edges'
+            imageRendering: 'auto'
           }}
         >
           {/* Dark overlay for better text readability - removed blur for crisp image */}
@@ -345,8 +345,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 w-full px-6 py-8">
+      {/* Main Content - Add top margin to account for fixed header */}
+      <div className="relative z-10 w-full px-6 py-8" style={{ marginTop: '350px' }}>
         <div className={`grid gap-8 ${isLoggedIn ? 'lg:grid-cols-3' : 'lg:grid-cols-1'}`}>
           <div className={isLoggedIn ? 'lg:col-span-2' : 'lg:col-span-1'}>
             <CurrentEvent event={currentEvent} />

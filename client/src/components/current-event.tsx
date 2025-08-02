@@ -14,14 +14,14 @@ export function CurrentEvent({ event }: CurrentEventProps) {
     minute: '2-digit'
   }));
 
-  // Update current time every second
+  // Update current time every 10 seconds - TV optimized
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date().toLocaleTimeString('fr-FR', {
         hour: '2-digit',
         minute: '2-digit'
       }));
-    }, 1000);
+    }, 10000); // 10 seconds instead of 1 second for better TV performance
 
     return () => clearInterval(timer);
   }, []);
