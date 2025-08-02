@@ -507,7 +507,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const dailyForecasts = [];
       const sortedDates = Object.keys(dailyData).sort();
       
-      for (let i = 0; i < Math.min(sortedDates.length, 4); i++) {
+      for (let i = 0; i < Math.min(sortedDates.length, 5); i++) {
         const dateKey = sortedDates[i];
         const dayData = dailyData[dateKey];
         const date = new Date(dateKey);
