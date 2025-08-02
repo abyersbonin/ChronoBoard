@@ -88,6 +88,47 @@
   }
 }
 
+/* Hide scrollbar when in fullscreen mode */
+:fullscreen {
+  overflow: hidden;
+}
+
+:fullscreen body {
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+:fullscreen body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* WebKit fullscreen support */
+:-webkit-full-screen {
+  overflow: hidden;
+}
+
+:-webkit-full-screen body {
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+:-webkit-full-screen body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mozilla fullscreen support */
+:-moz-full-screen {
+  overflow: hidden;
+}
+
+:-moz-full-screen body {
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
 /* Shockwave ripple animation */
 @keyframes ripple {
   0% {
