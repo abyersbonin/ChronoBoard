@@ -62,7 +62,7 @@ export function FullscreenButton() {
       onClick={toggleFullscreen}
       variant="outline"
       size="sm"
-      className="bg-white/20 hover:bg-white/30 border-white/30 text-white backdrop-blur-sm transition-all duration-200"
+      className="bg-white bg-opacity-20 hover:bg-white hover:bg-opacity-30 border-white text-white"
       style={{ fontFamily: 'Montserrat, sans-serif' }}
       title={isFullscreen ? "Quitter le plein écran" : "Plein écran"}
     >

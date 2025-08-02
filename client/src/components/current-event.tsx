@@ -32,7 +32,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
 
   if (!event) {
     return (
-      <div className="bg-gray-100/60 backdrop-blur-sm rounded-xl p-6 border border-gray-300/50 mb-8 shadow-lg" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+      <div className="bg-gray-100 bg-opacity-60 rounded-xl p-6 border border-gray-300 mb-8 shadow-lg" style={{ fontFamily: 'Montserrat, sans-serif' }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-gray-800" style={{ fontFamily: 'Montserrat, sans-serif' }}>À présent</h2>
           <div className="text-3xl font-bold text-blue-600" style={{ fontFamily: 'Montserrat, sans-serif' }}>{currentTime}</div>
@@ -60,7 +60,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
   return (
     <>
       <div 
-        className="bg-gray-100/60 backdrop-blur-sm rounded-xl p-6 border border-gray-300/50 mb-8 shadow-lg cursor-pointer hover:bg-gray-100/70 transition-colors duration-200"
+        className="bg-gray-100 bg-opacity-60 rounded-xl p-6 border border-gray-300 mb-8 shadow-lg cursor-pointer hover:bg-gray-100 hover:bg-opacity-70"
         onClick={() => setShowEventDetails(true)}
         style={{ fontFamily: 'Montserrat, sans-serif' }}
       >

@@ -54,7 +54,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   if (isLoading) {
     return (
       <div 
-        className="absolute backdrop-blur-sm rounded-md border flex z-[100] overflow-hidden"
+        className="absolute rounded-md border flex z-[100] overflow-hidden"
         style={{
           backgroundColor: 'rgba(54, 69, 92, 0.8)',
           borderColor: 'rgba(214, 204, 194, 0.6)',
@@ -81,7 +81,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
   if (error || !weather) {
     return (
       <div 
-        className="absolute backdrop-blur-sm rounded-md border flex items-center justify-center z-[100] overflow-hidden"
+        className="absolute rounded-md border flex items-center justify-center z-[100] overflow-hidden"
         style={{
           backgroundColor: 'rgba(54, 69, 92, 0.3)',
           borderColor: 'rgba(214, 204, 194, 0.4)',
@@ -135,7 +135,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
     return forecastDateOnly >= todayDateOnly;
   });
   
-  console.log('Authentic forecast available:', authentiForecast.length, authentiForecast.map(d => d.date));
+  // Forecast logging removed for TV performance
 
   return (
     <div 

@@ -116,22 +116,7 @@ export default function Dashboard() {
   });
 
   // Find current event
-  // Live time update for header
-  useEffect(() => {
-    const timer = setInterval(() => {
-      // Force re-render every second for live time
-      const timeElement = document.querySelector('[data-live-time]');
-      if (timeElement) {
-        timeElement.textContent = new Date().toLocaleTimeString('fr-FR', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        });
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
+  // Removed header timer for TV performance - time updates handled by individual components
 
   // Find current event
   useEffect(() => {
@@ -143,74 +128,7 @@ export default function Dashboard() {
     const now = new Date();
     const today = now.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
     
-    console.log('Current time UTC:', now.toISOString());
-    console.log('Current Quebec time:', now.toLocaleString('fr-CA', { timeZone: 'America/Toronto' }));
-    console.log('Total events received:', events.length);
-    
-    // Search for the specific missing event - broader search
-    const waterEvents = events.filter(event => 
-      event.title.toLowerCase().includes('eau') ||
-      event.title.toLowerCase().includes('water') ||
-      event.title.toLowerCase().includes('étirements') || 
-      event.title.toLowerCase().includes('etirements')
-    );
-    
-    console.log(`🔍 Found ${waterEvents.length} water/étirements events:`);
-    waterEvents.forEach(event => {
-      const start = new Date(event.startTime);
-      const end = new Date(event.endTime);
-      const isOngoing = start <= now && end > now;
-      console.log(`  ${event.title}: ${start.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })} - ${end.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })} ${isOngoing ? '⭐ ONGOING' : ''}`);
-    });
-
-    // Also search for events around 11:30-12:30 timeframe
-    const targetEvents = events.filter(event => {
-      const start = new Date(event.startTime);
-      const startQuebec = start.toLocaleString('fr-CA', { timeZone: 'America/Toronto', hour12: false });
-      return startQuebec.includes('11:30') || startQuebec.includes('12:30');
-    });
-    
-    console.log(`🕐 Events starting at 11:30 or 12:30 today:`);
-    targetEvents.forEach(event => {
-      const start = new Date(event.startTime);
-      const end = new Date(event.endTime);
-      console.log(`  ${event.title}: ${start.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })} - ${end.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })}`);
-    });
-    
-    // Check only today's events for ongoing status
-    const todayEvents = events.filter(event => {
-      const eventDate = new Date(event.startTime);
-      const todayStr = now.toISOString().split('T')[0];
-      const eventDateStr = eventDate.toISOString().split('T')[0];
-      return eventDateStr === todayStr;
-    });
-
-    console.log(`Today's events (${todayEvents.length} found):`);
-    todayEvents.forEach(event => {
-      const start = new Date(event.startTime);
-      const end = new Date(event.endTime);
-      const isCurrentlyOngoing = start <= now && end > now;
-      console.log(`  ${event.title}: ${start.toLocaleTimeString('fr-CA', { timeZone: 'America/Toronto' })} - ${end.toLocaleTimeString('fr-CA', { timeZone: 'America/Toronto' })} ${isCurrentlyOngoing ? '⭐ ONGOING' : ''}`);
-    });
-
-    // Also check events from tomorrow in case of timezone issues
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
-    
-    const tomorrowEvents = events.filter(event => {
-      const eventDate = new Date(event.startTime);
-      const eventDateStr = eventDate.toISOString().split('T')[0];
-      return eventDateStr === tomorrowStr;
-    });
-
-    console.log(`Tomorrow's events (${tomorrowEvents.length} found) - checking for timezone issues:`);
-    tomorrowEvents.slice(0, 5).forEach(event => {
-      const start = new Date(event.startTime);
-      const end = new Date(event.endTime);
-      const isCurrentlyOngoing = start <= now && end > now;
-      console.log(`  ${event.title}: ${start.toLocaleTimeString('fr-CA', { timeZone: 'America/Toronto' })} - ${end.toLocaleTimeString('fr-CA', { timeZone: 'America/Toronto' })} ${isCurrentlyOngoing ? '⭐ ONGOING' : ''}`);
-    });
+    // Removed console logging for TV performance
 
     // Check ALL events for ongoing status, not just today's
     const ongoing = events.find(event => {
@@ -218,20 +136,12 @@ export default function Dashboard() {
       const end = new Date(event.endTime);
       const isOngoing = start <= now && end > now;
       
-      // Log ALL potentially ongoing events (within 24 hours of now)
-      const hoursDiff = Math.abs(start.getTime() - now.getTime()) / (1000 * 60 * 60);
-      
-      if (hoursDiff <= 24) {
-        console.log(`Checking event: ${event.title}`);
-        console.log(`  Start: ${start.toISOString()} (Quebec: ${start.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })})`);
-        console.log(`  End: ${end.toISOString()} (Quebec: ${end.toLocaleString('fr-CA', { timeZone: 'America/Toronto' })})`);
-        console.log(`  Is ongoing: ${isOngoing} (${start <= now ? 'started' : 'not started'}, ${end > now ? 'not ended' : 'ended'})`);
-      }
+      // Removed detailed logging for performance
       
       return isOngoing;
     });
 
-    console.log('Found ongoing event:', ongoing?.title || 'None');
+    // Found ongoing event (logging removed for TV performance)
     setCurrentEvent(ongoing || null);
   }, [events]);
 
@@ -297,8 +207,8 @@ export default function Dashboard() {
             imageRendering: 'auto'
           }}
         >
-          {/* Dark overlay for better text readability - removed blur for crisp image */}
-          <div className="absolute inset-0 bg-black/25"></div>
+          {/* Simplified overlay for TV performance */}
+          <div className="absolute inset-0 bg-black opacity-25"></div>
           
           {/* Login and Fullscreen buttons positioned absolute top-left */}
           <div className="absolute left-6 top-6 z-20 flex gap-3">
