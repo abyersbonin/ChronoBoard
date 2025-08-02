@@ -180,7 +180,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         borderRadius: '8px',
         width: isMobile ? '135px' : '200px',
-        height: isMobile ? '80px' : '110px',
+        height: isMobile ? '95px' : '110px',
         textAlign: 'center', 
         display: 'flex', 
         flexDirection: 'row',
@@ -228,7 +228,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
           padding: isMobile ? '6px 4px' : '12px 8px'
         }}>
           <div style={{ 
-            fontSize: isMobile ? '11px' : (getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '12px' : '14px'), 
+            fontSize: isMobile ? '9px' : (getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '12px' : '14px'), 
             fontFamily: 'Montserrat, sans-serif', 
             color: 'white', 
             fontWeight: '500',

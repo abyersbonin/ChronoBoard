@@ -110,7 +110,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
   };
 
   return (
-    <div className={`fixed inset-0 z-[100] flex items-center justify-center ${isMobile ? 'p-4' : 'p-8'}`} style={{ paddingTop: isMobile ? '280px' : '8px' }}>
+    <div className={`fixed inset-0 z-[100] flex items-start justify-center ${isMobile ? 'p-3' : 'p-8 items-center'}`} style={{ paddingTop: isMobile ? '270px' : '8px' }}>
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
@@ -124,7 +124,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       />
       
       {/* Modal Content */}
-      <div className={`relative z-[101] w-full ${isMobile ? 'max-w-sm mx-2 max-h-[calc(100vh-300px)] overflow-y-auto' : 'max-w-md mx-4'} bg-white rounded-lg shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'}`}>
+      <div className={`relative z-[101] w-full ${isMobile ? 'max-w-xs mx-2 max-h-[calc(100vh-280px)] overflow-y-auto' : 'max-w-md mx-4'} bg-white rounded-lg shadow-2xl border border-gray-300 ${isMobile ? 'p-3' : 'p-6'}`}>
         {/* Close Button */}
         <button
           onClick={() => {
