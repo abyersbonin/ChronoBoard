@@ -213,7 +213,8 @@ export default function Dashboard() {
           {/* Login and Fullscreen buttons positioned absolute top-left */}
           <div className="absolute left-6 top-6 z-20 flex gap-3">
             <LoginDialog />
-            <FullscreenButton />
+            {/* Show fullscreen button only for logged-in admins */}
+            {isLoggedIn && <FullscreenButton />}
           </div>
 
           {/* Logo at the very top center */}

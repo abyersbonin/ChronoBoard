@@ -158,7 +158,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         justifyContent: 'center', 
         alignItems: 'center',
         padding: '20px',
-        gap: '12px'
+        gap: '18px'
       }}>
         <div style={{ 
           fontSize: '60px', 
