@@ -188,13 +188,15 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                           </div>
                         )}
                         
-                        {/* Shockwave animation - absolute positioned to right center */}
-                        <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                          <div className="relative">
-                            <div className="w-3 h-3 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 1.8s infinite' }}></div>
-                            <div className="absolute top-0 left-0 w-3 h-3 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 1.8s infinite 0.4s' }}></div>
+                        {/* Shockwave animation - hide on mobile */}
+                        {!isMobile && (
+                          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                            <div className="relative">
+                              <div className="w-3 h-3 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 1.8s infinite' }}></div>
+                              <div className="absolute top-0 left-0 w-3 h-3 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 1.8s infinite 0.4s' }}></div>
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                   ))}

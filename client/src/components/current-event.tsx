@@ -170,13 +170,15 @@ export function CurrentEvent({ event }: CurrentEventProps) {
             </div>
           </div>
           
-          {/* Shockwave animation - absolute positioned to right center */}
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <div className="relative">
-              <div className="w-4 h-4 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 2s infinite' }}></div>
-              <div className="absolute top-0 left-0 w-4 h-4 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 2s infinite 0.5s' }}></div>
+          {/* Shockwave animation - hide on mobile */}
+          {!isMobile && (
+            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+              <div className="relative">
+                <div className="w-4 h-4 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 2s infinite' }}></div>
+                <div className="absolute top-0 left-0 w-4 h-4 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 2s infinite 0.5s' }}></div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
