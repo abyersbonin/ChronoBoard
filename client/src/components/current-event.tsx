@@ -1,4 +1,4 @@
-import { MapPin, Clock, MousePointer } from "lucide-react";
+import { MapPin, Clock, Hand } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { EventDetailsDialog } from "./event-details-dialog";
 import { useState, useEffect } from "react";
@@ -91,14 +91,14 @@ export function CurrentEvent({ event }: CurrentEventProps) {
           </div>
         </div>
         
-        {/* Clicking icon with shockwave animation */}
+        {/* Clicking finger with shockwave animation */}
         <div className="flex items-center justify-center ml-4 relative">
           <div className="relative">
-            {/* Shockwave ripple effect */}
-            <div className="absolute inset-0 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 2s infinite' }}></div>
-            <div className="absolute inset-0 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 2s infinite 0.5s' }}></div>
-            {/* Clicking pointer */}
-            <MousePointer className="h-8 w-8 text-blue-600 relative z-10" style={{ animation: 'clickFinger 1.5s infinite' }} />
+            {/* Clicking finger */}
+            <Hand className="h-8 w-8 text-blue-600 relative z-10 transform -rotate-12" style={{ animation: 'clickFinger 1.5s infinite' }} />
+            {/* Small shockwave ripples at fingertip */}
+            <div className="absolute top-1 right-2 w-3 h-3 rounded-full border border-blue-400 opacity-75" style={{ animation: 'ripple 1.5s infinite' }}></div>
+            <div className="absolute top-1 right-2 w-3 h-3 rounded-full border border-blue-300 opacity-50" style={{ animation: 'ripple 1.5s infinite 0.3s' }}></div>
           </div>
         </div>
       </div>
