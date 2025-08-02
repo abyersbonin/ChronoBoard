@@ -89,29 +89,55 @@
 }
 
 /* Hide scrollbar when in fullscreen mode but keep scroll functionality */
+:fullscreen,
+:fullscreen html,
 :fullscreen body {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
 }
 
+:fullscreen::-webkit-scrollbar,
+:fullscreen html::-webkit-scrollbar,
 :fullscreen body::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none !important; /* Chrome, Safari, Opera */
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* WebKit fullscreen support */
+:-webkit-full-screen,
+:-webkit-full-screen html,
 :-webkit-full-screen body {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
+:-webkit-full-screen::-webkit-scrollbar,
+:-webkit-full-screen html::-webkit-scrollbar,
 :-webkit-full-screen body::-webkit-scrollbar {
-  display: none;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* Mozilla fullscreen support */
+:-moz-full-screen,
+:-moz-full-screen html,
 :-moz-full-screen body {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+/* Additional webOS and TV browser support */
+:fullscreen * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+:fullscreen *::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* Shockwave ripple animation */
