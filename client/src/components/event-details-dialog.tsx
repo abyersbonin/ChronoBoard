@@ -170,14 +170,24 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
         }}
         onTouchMove={(e) => {
           if (isMobile) {
-            e.preventDefault();
-            e.stopPropagation();
+            // Only prevent scrolling on backdrop, not modal content
+            const target = e.target as HTMLElement;
+            if (target === e.currentTarget) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
           }
         }}
       />
       
       {/* Modal Content */}
-      <div className={`relative z-[101] w-full ${isMobile ? 'max-w-full mx-0 h-[55vh] overflow-y-auto rounded-t-lg' : 'max-w-md mx-4 rounded-lg'} bg-white shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'}`}>
+      <div 
+        className={`relative z-[101] w-full ${isMobile ? 'max-w-full mx-0 h-[55vh] overflow-y-auto rounded-t-lg' : 'max-w-md mx-4 rounded-lg'} bg-white shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'}`}
+        onTouchMove={(e) => {
+          // Allow scrolling within the modal content
+          e.stopPropagation();
+        }}
+      >
         {/* Close Button */}
         <button
           onClick={() => {
