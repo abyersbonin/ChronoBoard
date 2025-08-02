@@ -236,10 +236,12 @@ export default function Dashboard() {
           {/* Simplified overlay for TV performance */}
           <div className="absolute inset-0 bg-black opacity-25"></div>
           
-          {/* Fullscreen button positioned absolute top-left */}
-          <div className={`absolute ${isMobile ? 'left-3 top-3' : 'left-6 top-6'} z-20`}>
-            <FullscreenButton />
-          </div>
+          {/* Fullscreen button positioned absolute top-left - hide on mobile */}
+          {!isMobile && (
+            <div className="absolute left-6 top-6 z-20">
+              <FullscreenButton />
+            </div>
+          )}
 
           {/* Logo at the very top center */}
           <div className={`absolute ${isMobile ? 'top-3' : 'top-6'} left-1/2 transform -translate-x-1/2 z-10`}>

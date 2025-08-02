@@ -179,15 +179,15 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       <div style={{ 
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         borderRadius: '8px',
-        width: isMobile ? '160px' : '200px',
+        width: isMobile ? '135px' : '200px',
         height: isMobile ? '80px' : '110px',
         textAlign: 'center', 
         display: 'flex', 
         flexDirection: 'row',
         justifyContent: 'center', 
         alignItems: 'center',
-        padding: isMobile ? '12px' : '20px',
-        gap: isMobile ? '8px' : '12px'
+        padding: isMobile ? '8px' : '20px',
+        gap: isMobile ? '6px' : '12px'
       }}>
         <div style={{ 
           fontSize: isMobile ? '36px' : '60px', 
@@ -218,14 +218,14 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         <div key={index} style={{
           backgroundColor: 'rgba(0, 0, 0, 0.4)',
           borderRadius: '8px',
-          width: isMobile ? '90px' : '120px',
+          width: isMobile ? '75px' : '120px',
           height: isMobile ? '95px' : '110px',
           textAlign: 'center',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: isMobile ? '8px 6px' : '12px 8px'
+          padding: isMobile ? '6px 4px' : '12px 8px'
         }}>
           <div style={{ 
             fontSize: isMobile ? '11px' : (getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '12px' : '14px'), 

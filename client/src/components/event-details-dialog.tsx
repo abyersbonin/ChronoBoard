@@ -54,9 +54,22 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     if (open) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
+      // Additional scroll lock for mobile
+      if (isMobile) {
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.top = `-${window.scrollY}px`;
+      }
     } else {
       // Ensure scroll is restored when dialog closes
       document.body.style.overflow = '';
+      if (isMobile) {
+        document.documentElement.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+      }
     }
     
     return () => {
@@ -69,8 +82,14 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
   useEffect(() => {
     return () => {
       document.body.style.overflow = '';
+      if (isMobile) {
+        document.documentElement.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+      }
     };
-  }, []);
+  }, [isMobile]);
 
   if (!event || !open) return null;
 
@@ -91,7 +110,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
   };
 
   return (
-    <div className={`fixed inset-0 z-[100] flex items-center justify-center ${isMobile ? 'p-4' : 'p-8'}`}>
+    <div className={`fixed inset-0 z-[100] flex items-center justify-center ${isMobile ? 'p-4' : 'p-8'}`} style={{ paddingTop: isMobile ? '280px' : '8px' }}>
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
@@ -105,7 +124,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       />
       
       {/* Modal Content */}
-      <div className={`relative z-[101] w-full ${isMobile ? 'max-w-sm mx-2' : 'max-w-md mx-4'} bg-white rounded-lg shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'}`}>
+      <div className={`relative z-[101] w-full ${isMobile ? 'max-w-sm mx-2 max-h-[calc(100vh-300px)] overflow-y-auto' : 'max-w-md mx-4'} bg-white rounded-lg shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'}`}>
         {/* Close Button */}
         <button
           onClick={() => {
