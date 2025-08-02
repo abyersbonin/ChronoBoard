@@ -474,7 +474,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         country: currentData.sys.country
       });
 
-      // 7-day forecast with French language
+      // 5-day forecast with French language
       const forecastResponse = await fetch(
         `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(locationQuery)}&appid=${apiKey}&units=metric&lang=fr`
       );
@@ -507,7 +507,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const dailyForecasts = [];
       const sortedDates = Object.keys(dailyData).sort();
       
-      for (let i = 0; i < Math.min(sortedDates.length, 7); i++) {
+      for (let i = 0; i < Math.min(sortedDates.length, 5); i++) {
         const dateKey = sortedDates[i];
         const dayData = dailyData[dateKey];
         const date = new Date(dateKey);
