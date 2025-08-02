@@ -152,35 +152,32 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         borderRadius: '8px',
         width: '200px',
         height: '110px',
-        textAlign: 'center', 
         display: 'flex', 
         flexDirection: 'row',
         justifyContent: 'center', 
         alignItems: 'center',
         padding: '20px',
-        gap: '12px'
+        gap: '16px'
       }}>
         <div style={{ 
           fontSize: '60px', 
           fontFamily: 'Montserrat, sans-serif', 
           color: 'white', 
           fontWeight: 'bold',
-          lineHeight: '1'
+          lineHeight: '1',
+          display: 'flex',
+          alignItems: 'center'
         }}>
           {Math.round(weather.current.temp)}°
         </div>
         <div style={{ 
           fontSize: '48px', 
           lineHeight: '1',
-          color: 'white',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, Android Emoji, EmojiSymbols, EmojiOne, Twemoji Mozilla, system-ui, sans-serif',
-          textRendering: 'optimizeQuality',
-          WebkitFontSmoothing: 'antialiased',
-          MozOsxFontSmoothing: 'grayscale'
-        }}>
+          fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, Android Emoji, EmojiSymbols, EmojiOne, Twemoji Mozilla, system-ui, sans-serif'
+        } as React.CSSProperties}>
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
       </div>
@@ -192,45 +189,48 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
           borderRadius: '8px',
           width: '120px',
           height: '110px',
-          textAlign: 'center',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
+          justifyContent: 'space-evenly',
           alignItems: 'center',
-          padding: '12px 8px'
+          padding: '8px'
         }}>
           <div style={{ 
-            fontSize: getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '12px' : '14px', 
+            fontSize: getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '11px' : '12px', 
             fontFamily: 'Montserrat, sans-serif', 
             color: 'white', 
             fontWeight: '500',
             lineHeight: '1',
-            marginBottom: '8px'
+            textAlign: 'center',
+            height: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}>
             {getDayName(day.date, index)}
           </div>
           <div style={{ 
-            fontSize: '32px', 
+            fontSize: '28px', 
             lineHeight: '1',
-            color: 'white',
-            marginBottom: '8px',
+            height: '32px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '32px',
-            fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, Android Emoji, EmojiSymbols, EmojiOne, Twemoji Mozilla, system-ui, sans-serif',
-            textRendering: 'optimizeQuality',
-            WebkitFontSmoothing: 'antialiased',
-            MozOsxFontSmoothing: 'grayscale'
-          }}>
+            fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, Android Emoji, EmojiSymbols, EmojiOne, Twemoji Mozilla, system-ui, sans-serif'
+          } as React.CSSProperties}>
             {getWeatherIcon(day.condition || '', day.icon)}
           </div>
           <div style={{ 
-            fontSize: '13px', 
+            fontSize: '12px', 
             fontFamily: 'Montserrat, sans-serif', 
             color: 'white',
             fontWeight: '500',
-            lineHeight: '1.2'
+            lineHeight: '1.1',
+            textAlign: 'center',
+            height: '30px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
           }}>
             <div style={{ marginBottom: '2px' }}>{Math.round(day.high)}°</div>
             <div style={{ color: '#93c5fd' }}>{Math.round(day.low)}°</div>
