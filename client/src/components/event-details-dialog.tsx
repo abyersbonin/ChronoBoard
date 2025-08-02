@@ -52,6 +52,10 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       }
     };
     
+    const preventTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+
     if (open) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
@@ -63,6 +67,9 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
         document.body.style.position = 'fixed';
         document.body.style.width = '100%';
         document.body.style.top = `-${currentScrollY}px`;
+        document.body.style.touchAction = 'none';
+        // Prevent touch scrolling completely
+        document.addEventListener('touchmove', preventTouchMove, { passive: false });
       }
     } else {
       // Ensure scroll is restored when dialog closes
@@ -72,6 +79,9 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
         document.body.style.position = '';
         document.body.style.width = '';
         document.body.style.top = '';
+        document.body.style.touchAction = '';
+        // Remove touch prevention
+        document.removeEventListener('touchmove', preventTouchMove);
         // Restore scroll position
         window.scrollTo(0, scrollPosition);
       }
@@ -80,6 +90,9 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
+      if (isMobile) {
+        document.removeEventListener('touchmove', preventTouchMove);
+      }
     };
   }, [open, onOpenChange]);
 
@@ -144,12 +157,22 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
   };
 
   return (
-    <div className={`fixed inset-0 z-[100] flex ${isMobile ? 'items-end justify-center p-0' : 'items-center justify-center p-8'}`}>
+    <div 
+      className={`fixed inset-0 z-[100] flex ${isMobile ? 'items-end justify-center p-0' : 'items-center justify-center p-8'}`}
+      style={{ touchAction: isMobile ? 'none' : 'auto' }}
+    >
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        style={{ touchAction: isMobile ? 'none' : 'auto' }}
         onClick={() => {
           onOpenChange(false);
+        }}
+        onTouchMove={(e) => {
+          if (isMobile) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
         }}
       />
       
