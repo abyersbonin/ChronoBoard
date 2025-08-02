@@ -111,7 +111,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                       
                       {/* Shockwave animation centered on right */}
                       <div className="flex items-center justify-center ml-4 w-10 h-10 relative">
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" style={{ transform: 'translate(-50%, -40%)' }}>
                           <div className="w-3 h-3 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 1.8s infinite' }}></div>
                           <div className="absolute top-0 left-0 w-3 h-3 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 1.8s infinite 0.4s' }}></div>
                         </div>
