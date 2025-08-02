@@ -54,7 +54,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-gray-800" style={{ fontFamily: 'Montserrat, sans-serif' }}>À présent</h2>
           <div className="text-3xl font-bold text-blue-600" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            {formatTime(event.startTime)}
+            {getCurrentTime()}
           </div>
         </div>
         
