@@ -1,4 +1,4 @@
-import { MapPin, Clock } from "lucide-react";
+import { MapPin, Clock, Hand } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { EventDetailsDialog } from "./event-details-dialog";
 import { useState, useEffect } from "react";
@@ -71,7 +71,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
           </div>
         </div>
         
-        <div className="border-l-4 border-blue-500 pl-4">
+        <div className="border-l-4 border-blue-500 pl-4 flex-1">
           <h3 className="text-2xl font-bold text-gray-800 mb-3" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             {event.title}
           </h3>
@@ -88,6 +88,13 @@ export function CurrentEvent({ event }: CurrentEventProps) {
                 {formatTime(event.startTime)} - {formatTime(event.endTime)}
               </span>
             </div>
+          </div>
+        </div>
+        
+        {/* Tap icon with animation */}
+        <div className="flex items-center justify-center ml-4">
+          <div className="animate-pulse">
+            <Hand className="h-8 w-8 text-blue-500 transform rotate-12" style={{ animation: 'bounce 2s infinite' }} />
           </div>
         </div>
       </div>
