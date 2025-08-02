@@ -11,6 +11,7 @@ interface EventDetailsDialogProps {
 export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDialogProps) {
   // Mobile device detection (excluding TV browsers)
   const [isMobile, setIsMobile] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
   
   useEffect(() => {
     const detectMobile = () => {
@@ -56,10 +57,12 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       document.body.style.overflow = 'hidden';
       // Additional scroll lock for mobile
       if (isMobile) {
+        const currentScrollY = window.scrollY;
+        setScrollPosition(currentScrollY);
         document.documentElement.style.overflow = 'hidden';
         document.body.style.position = 'fixed';
         document.body.style.width = '100%';
-        document.body.style.top = `-${window.scrollY}px`;
+        document.body.style.top = `-${currentScrollY}px`;
       }
     } else {
       // Ensure scroll is restored when dialog closes
@@ -69,6 +72,8 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
         document.body.style.position = '';
         document.body.style.width = '';
         document.body.style.top = '';
+        // Restore scroll position
+        window.scrollTo(0, scrollPosition);
       }
     }
     
@@ -87,9 +92,11 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
         document.body.style.position = '';
         document.body.style.width = '';
         document.body.style.top = '';
+        // Restore scroll position on cleanup
+        window.scrollTo(0, scrollPosition);
       }
     };
-  }, [isMobile]);
+  }, [isMobile, scrollPosition]);
 
   if (!event || !open) return null;
 
@@ -116,10 +123,6 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         onClick={() => {
           onOpenChange(false);
-          // Force scroll restoration on backdrop click
-          setTimeout(() => {
-            document.body.style.overflow = '';
-          }, 10);
         }}
       />
       
@@ -129,10 +132,6 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
         <button
           onClick={() => {
             onOpenChange(false);
-            // Force scroll restoration on close button click
-            setTimeout(() => {
-              document.body.style.overflow = '';
-            }, 10);
           }}
           className="absolute right-4 top-4 p-1 rounded-sm opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-opacity"
         >
