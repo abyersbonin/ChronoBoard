@@ -97,7 +97,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                           {formatTime(event.startTime)}
                         </div>
                       </div>
-                      <div className="flex-1 min-w-0">
+                      <div className="flex-1 min-w-0 relative">
                         <h4 className="text-lg font-semibold text-gray-800 mb-2">
                           {event.title}
                         </h4>
@@ -107,13 +107,13 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                             <span>{event.location}</span>
                           </div>
                         )}
-                      </div>
-                      
-                      {/* Shockwave animation centered on right */}
-                      <div className="flex items-center justify-center ml-4 w-10 h-10">
-                        <div className="relative flex items-center justify-center">
-                          <div className="w-3 h-3 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 1.8s infinite' }}></div>
-                          <div className="absolute w-3 h-3 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 1.8s infinite 0.4s' }}></div>
+                        
+                        {/* Shockwave animation - absolute positioned to right center */}
+                        <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                          <div className="relative">
+                            <div className="w-3 h-3 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 1.8s infinite' }}></div>
+                            <div className="absolute top-0 left-0 w-3 h-3 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 1.8s infinite 0.4s' }}></div>
+                          </div>
                         </div>
                       </div>
                     </div>

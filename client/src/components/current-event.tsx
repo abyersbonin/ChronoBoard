@@ -71,7 +71,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
           </div>
         </div>
         
-        <div className="border-l-4 border-blue-500 pl-4 flex-1">
+        <div className="border-l-4 border-blue-500 pl-4 flex-1 relative">
           <h3 className="text-2xl font-bold text-gray-800 mb-3" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             {event.title}
           </h3>
@@ -89,13 +89,13 @@ export function CurrentEvent({ event }: CurrentEventProps) {
               </span>
             </div>
           </div>
-        </div>
-        
-        {/* Shockwave animation centered on right */}
-        <div className="flex items-center justify-center ml-4 w-12 h-12">
-          <div className="relative flex items-center justify-center">
-            <div className="w-4 h-4 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 2s infinite' }}></div>
-            <div className="absolute w-4 h-4 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 2s infinite 0.5s' }}></div>
+          
+          {/* Shockwave animation - absolute positioned to right center */}
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+            <div className="relative">
+              <div className="w-4 h-4 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 2s infinite' }}></div>
+              <div className="absolute top-0 left-0 w-4 h-4 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 2s infinite 0.5s' }}></div>
+            </div>
           </div>
         </div>
       </div>
