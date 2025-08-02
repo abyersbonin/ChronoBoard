@@ -115,35 +115,35 @@ export default function Dashboard() {
     },
   });
 
-  // Find current event
-  // Removed header timer for TV performance - time updates handled by individual components
-
-  // Find current event
-  useEffect(() => {
+  // Real-time current event detection with separate timer
+  const checkCurrentEvent = () => {
     if (events.length === 0) {
       setCurrentEvent(null);
       return;
     }
 
     const now = new Date();
-    const today = now.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
     
-    // Removed console logging for TV performance
-
-    // Check ALL events for ongoing status, not just today's
+    // Check ALL events for ongoing status
     const ongoing = events.find(event => {
       const start = new Date(event.startTime);
       const end = new Date(event.endTime);
-      const isOngoing = start <= now && end > now;
-      
-      // Removed detailed logging for performance
-      
-      return isOngoing;
+      return start <= now && end > now;
     });
 
-    // Found ongoing event (logging removed for TV performance)
     setCurrentEvent(ongoing || null);
+  };
+
+  // Check for current events when events data changes
+  useEffect(() => {
+    checkCurrentEvent();
   }, [events]);
+
+  // Add real-time timer to check for current events every 15 seconds
+  useEffect(() => {
+    const timer = setInterval(checkCurrentEvent, 15 * 1000); // Check every 15 seconds
+    return () => clearInterval(timer);
+  }, [events]); // Recreate timer when events change
 
   // Get upcoming events for the next 3 full days (not including current)
   const upcomingEvents = events.filter(event => {
