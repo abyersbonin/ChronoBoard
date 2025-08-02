@@ -88,23 +88,23 @@
   }
 }
 
-/* Custom animations for clicking finger and shockwave effects */
-@keyframes clickFinger {
+/* Custom animations for hand tapping icon */
+@keyframes tapHand {
   0%, 100% {
-    transform: rotate(-12deg) scale(1) translateY(0);
+    transform: scale(1) translateY(0);
   }
   50% {
-    transform: rotate(-12deg) scale(0.9) translateY(3px);
+    transform: scale(0.95) translateY(2px);
   }
 }
 
-@keyframes ripple {
-  0% {
-    transform: scale(0.5);
-    opacity: 1;
+@keyframes tapRays {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
   }
-  100% {
-    transform: scale(4);
-    opacity: 0;
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
   }
 }
