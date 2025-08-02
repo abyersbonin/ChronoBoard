@@ -1,7 +1,7 @@
 import { MapPin, Clock } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { EventDetailsDialog } from "./event-details-dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface CurrentEventProps {
   event: CalendarEvent | null;
@@ -9,12 +9,25 @@ interface CurrentEventProps {
 
 export function CurrentEvent({ event }: CurrentEventProps) {
   const [showEventDetails, setShowEventDetails] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit'
+  }));
+
+  // Update current time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit'
+      }));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const getCurrentTime = () => {
-    return new Date().toLocaleTimeString('fr-FR', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    return currentTime;
   };
 
   if (!event) {

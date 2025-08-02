@@ -56,7 +56,7 @@ export default function Dashboard() {
       if (!response.ok) throw new Error('Failed to fetch events');
       return response.json() as Promise<CalendarEvent[]>;
     },
-    refetchInterval: settings?.autoRefresh ? 5 * 60 * 1000 : false, // 5 minutes if auto-refresh enabled
+    refetchInterval: 30 * 1000, // Refresh every 30 seconds for live dashboard
   });
 
   // Update settings mutation - only if admin is logged in

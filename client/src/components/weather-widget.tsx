@@ -16,7 +16,7 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
       }
       return response.json() as Promise<WeatherData>;
     },
-    refetchInterval: 10 * 60 * 1000, // Refetch every 10 minutes
+    refetchInterval: 60 * 1000, // Refetch every 60 seconds for live updates
   });
 
   const getWeatherIcon = (condition: string, iconCode?: string) => {
