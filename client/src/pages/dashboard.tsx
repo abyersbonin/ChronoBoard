@@ -283,7 +283,7 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content - Add top margin to account for fixed header */}
-      <div className={`relative z-10 w-full ${isMobile ? 'px-3 py-4' : 'px-6 py-8'}`} style={{ marginTop: isMobile ? '250px' : '350px' }}>
+      <div className={`relative z-10 w-full ${isMobile ? 'px-2 py-4' : 'px-6 py-8'}`} style={{ marginTop: isMobile ? '250px' : '350px' }}>
         <div className="grid gap-8 grid-cols-1">
           <div className="col-span-1">
             <CurrentEvent event={currentEvent} />
