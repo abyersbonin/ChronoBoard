@@ -306,7 +306,7 @@ export default function Dashboard() {
                 {/* QR Code centered below text */}
                 <div className="bg-white p-3 rounded-lg shadow-lg mx-auto w-fit">
                   <img 
-                    src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://dakboard.com/screen/uuid/67c08e6d-141948-8496-db3f400f4013" 
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://chrono-board-tarnrsps.replit.app/" 
                     alt="QR Code"
                     className="w-24 h-24"
                   />
