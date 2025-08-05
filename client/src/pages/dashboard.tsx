@@ -299,14 +299,22 @@ export default function Dashboard() {
             <div className="absolute bottom-6 left-16">
               <div className="relative">
                 {/* Text positioned above with arrow */}
-                <div className="text-white text-sm drop-shadow-md text-center mb-2 flex items-center justify-center gap-2">
-                  <span>Consulter sur votre<br />appareil mobile</span>
-                  <img 
-                    src="https://www.spa-eastman.com/wp-content/uploads/2025/04/icones.png"
-                    alt="Arrow"
-                    className="w-4 h-4 rotate-90 drop-shadow-md"
-                    style={{ filter: 'brightness(0) invert(1)' }}
-                  />
+                <div className="text-white text-sm drop-shadow-md text-center mb-2">
+                  <div>Consulter sur votre<br />appareil mobile</div>
+                  <div className="flex justify-center mt-1">
+                    <svg 
+                      width="16" 
+                      height="16" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      className="drop-shadow-md"
+                    >
+                      <path 
+                        d="M12 16l-6-6h12l-6 6z" 
+                        fill="white"
+                      />
+                    </svg>
+                  </div>
                 </div>
                 
                 {/* QR Code centered below text */}
