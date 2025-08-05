@@ -37,11 +37,17 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     return () => window.removeEventListener('resize', detectMobile);
   }, []);
 
-  // Decode HTML entities in text
-  const decodeHtmlEntities = (text: string) => {
+  // Clean HTML tags and decode HTML entities
+  const cleanHtmlText = (text: string) => {
+    if (!text) return '';
+    
+    // First strip HTML tags
+    const stripHtml = text.replace(/<[^>]*>/g, '');
+    
+    // Then decode HTML entities
     const textarea = document.createElement('textarea');
-    textarea.innerHTML = text;
-    return textarea.value;
+    textarea.innerHTML = stripHtml;
+    return textarea.value.trim();
   };
 
   // Handle escape key and body scroll - runs even when dialog is closed
@@ -140,10 +146,10 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     
     const params = new URLSearchParams({
       action: 'TEMPLATE',
-      text: decodeHtmlEntities(event.title),
+      text: cleanHtmlText(event.title),
       dates: `${startTime}/${endTime}`,
-      details: event.description ? decodeHtmlEntities(event.description) : '',
-      location: event.location ? decodeHtmlEntities(event.location) : ''
+      details: event.description ? cleanHtmlText(event.description) : '',
+      location: event.location ? cleanHtmlText(event.location) : ''
     });
 
     return `https://calendar.google.com/calendar/render?${params.toString()}`;
@@ -202,7 +208,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
         {/* Header */}
         <div className={`${isMobile ? 'mb-4 pr-6' : 'mb-6 pr-8'}`}>
           <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold text-gray-800`}>
-            {decodeHtmlEntities(event.title)}
+            {cleanHtmlText(event.title)}
           </h2>
         </div>
         
@@ -223,7 +229,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
           {event.location && (
             <div className="flex items-center space-x-3 text-gray-700">
               <MapPin className="h-5 w-5 text-green-600 flex-shrink-0" />
-              <span>{decodeHtmlEntities(event.location)}</span>
+              <span>{cleanHtmlText(event.location)}</span>
             </div>
           )}
 
@@ -232,7 +238,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
             <div className="mt-4 pt-4 border-t border-gray-200">
               <h4 className="font-medium text-gray-800 mb-2">Description</h4>
               <p className="text-gray-600 leading-relaxed mb-4">
-                {decodeHtmlEntities(event.description)}
+                {cleanHtmlText(event.description)}
               </p>
             </div>
           )}

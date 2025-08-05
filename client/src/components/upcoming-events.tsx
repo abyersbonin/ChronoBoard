@@ -38,11 +38,17 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
     return () => window.removeEventListener('resize', detectMobile);
   }, []);
 
-  // Decode HTML entities in text
-  const decodeHtmlEntities = (text: string) => {
+  // Clean HTML tags and decode HTML entities
+  const cleanHtmlText = (text: string) => {
+    if (!text) return '';
+    
+    // First strip HTML tags
+    const stripHtml = text.replace(/<[^>]*>/g, '');
+    
+    // Then decode HTML entities
     const textarea = document.createElement('textarea');
-    textarea.innerHTML = text;
-    return textarea.value;
+    textarea.innerHTML = stripHtml;
+    return textarea.value.trim();
   };
 
   // Get badge color based on calendar name (not source)
@@ -175,7 +181,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                       <div className="flex-1 min-w-0 relative">
                         <div className="flex items-center gap-2 mb-2">
                           <h4 className="text-lg font-semibold text-gray-800">
-                            {decodeHtmlEntities(event.title)}
+                            {cleanHtmlText(event.title)}
                           </h4>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)}`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
                             {getCalendarName(event.calendarSource)}
@@ -184,7 +190,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                         {event.location && (
                           <div className="flex items-center text-gray-500 text-sm">
                             <MapPin className="mr-1 h-3 w-3" />
-                            <span>{decodeHtmlEntities(event.location)}</span>
+                            <span>{cleanHtmlText(event.location)}</span>
                           </div>
                         )}
                         
