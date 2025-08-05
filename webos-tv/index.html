@@ -136,7 +136,7 @@
     <script>
         // webOS TV App Configuration
         const DASHBOARD_URL = 'https://chrono-board-tarnrsps.replit.app';
-        const RELOAD_INTERVAL = 5 * 60 * 1000; // 5 minutes - smoother experience
+        const RELOAD_INTERVAL = 15 * 60 * 1000; // 15 minutes - minimal interference
         
         let reloadTimer = null;
         let connectionCheckTimer = null;
@@ -266,7 +266,7 @@
             reloadTimer = setInterval(() => {
                 reloadDashboard();
             }, RELOAD_INTERVAL);
-            console.log('Auto-reload started (5 minute interval)');
+            console.log('Auto-reload started (15 minute interval)');
         }
         
         // Stop automatic reload timer

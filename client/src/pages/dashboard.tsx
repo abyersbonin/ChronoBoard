@@ -83,7 +83,7 @@ export default function Dashboard() {
       if (!response.ok) throw new Error('Failed to fetch events');
       return response.json() as Promise<CalendarEvent[]>;
     },
-    refetchInterval: 5 * 60 * 1000, // Refresh every 5 minutes - less jarring for users
+    refetchInterval: 15 * 60 * 1000, // Refresh every 15 minutes - minimal interference
   });
 
   // Update settings mutation - only if admin is logged in
@@ -160,7 +160,8 @@ export default function Dashboard() {
 
         if (response.ok) {
           const data = await response.json();
-          queryClient.invalidateQueries({ queryKey: ['/api/calendar-events', DEFAULT_USER_ID] });
+          // Don't invalidate cache automatically to prevent jarring reloads
+          // queryClient.invalidateQueries({ queryKey: ['/api/calendar-events', DEFAULT_USER_ID] });
           console.log(`Calendar automatically synchronized: ${data.eventCount} events`);
         } else {
           console.error('Auto-sync failed:', response.status, response.statusText);
@@ -173,8 +174,8 @@ export default function Dashboard() {
     // Initial sync after component loads (wait 10 seconds)
     const initialSyncTimer = setTimeout(performAutoSync, 10000);
 
-    // Set up recurring sync every 5 minutes
-    const autoSyncInterval = setInterval(performAutoSync, 5 * 60 * 1000);
+    // Set up recurring sync every 30 minutes (much less aggressive)
+    const autoSyncInterval = setInterval(performAutoSync, 30 * 60 * 1000);
 
     return () => {
       clearTimeout(initialSyncTimer);
