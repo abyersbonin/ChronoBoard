@@ -213,8 +213,8 @@ export function WeatherWidget({ location }: WeatherWidgetProps) {
         </div>
       </div>
 
-      {/* Authentic forecast data only - show fewer items on mobile */}
-      {authentiForecast.slice(0, isMobile ? 3 : authentiForecast.length).map((day, index) => (
+      {/* Authentic forecast data only - show fewer items on mobile, limit to 4 days on desktop */}
+      {authentiForecast.slice(0, isMobile ? 3 : 4).map((day, index) => (
         <div key={index} style={{
           backgroundColor: 'rgba(0, 0, 0, 0.4)',
           borderRadius: '8px',
