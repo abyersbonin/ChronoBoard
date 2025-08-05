@@ -486,7 +486,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const forecastData = await forecastResponse.json();
 
       // Process forecast data to get daily forecasts with better aggregation
-      const dailyData: { [key: string]: { highs: number[], lows: number[], conditions: string[], icons: string[] } } = {};
+      const dailyData: { [key: string]: { highs: number[], lows: number[], conditions: string[], icons: string[], pops: number[] } } = {};
 
       // Group forecast data by date and collect all temps and conditions for each day
       for (const item of forecastData.list) {
@@ -494,13 +494,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const dateKey = date.toISOString().split('T')[0];
         
         if (!dailyData[dateKey]) {
-          dailyData[dateKey] = { highs: [], lows: [], conditions: [], icons: [] };
+          dailyData[dateKey] = { highs: [], lows: [], conditions: [], icons: [], pops: [] };
         }
         
         dailyData[dateKey].highs.push(item.main.temp_max);
         dailyData[dateKey].lows.push(item.main.temp_min);
         dailyData[dateKey].conditions.push(item.weather[0].description);
         dailyData[dateKey].icons.push(item.weather[0].icon);
+        dailyData[dateKey].pops.push(item.pop || 0); // Probability of precipitation
       }
 
       // Convert grouped data to daily forecasts, taking max high and min low for each day
@@ -524,9 +525,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
           dayData.conditions.filter(v => v === a).length - dayData.conditions.filter(v => v === b).length
         ).pop() || dayData.conditions[0];
         
-        const mostFrequentIcon = dayData.icons.sort((a, b) =>
-          dayData.icons.filter(v => v === a).length - dayData.icons.filter(v => v === b).length
-        ).pop() || dayData.icons[0];
+        // Improved icon selection: prioritize daytime icons and avoid rain icons when precipitation is very low
+        const avgPrecipitationProbability = dayData.pops.reduce((sum, pop) => sum + pop, 0) / dayData.pops.length;
+        const daytimeIcons = dayData.icons.filter(icon => icon.endsWith('d')); // daytime icons
+        
+        let selectedIcon;
+        if (avgPrecipitationProbability < 0.3 && daytimeIcons.length > 0) {
+          // Low chance of rain - prefer non-rain daytime icons
+          const nonRainDaytimeIcons = daytimeIcons.filter(icon => !icon.startsWith('09') && !icon.startsWith('10'));
+          if (nonRainDaytimeIcons.length > 0) {
+            selectedIcon = nonRainDaytimeIcons.sort((a, b) =>
+              daytimeIcons.filter(v => v === a).length - daytimeIcons.filter(v => v === b).length
+            ).pop();
+          } else {
+            selectedIcon = daytimeIcons[0];
+          }
+        } else {
+          // High chance of rain or no daytime data - use most frequent overall
+          selectedIcon = dayData.icons.sort((a, b) =>
+            dayData.icons.filter(v => v === a).length - dayData.icons.filter(v => v === b).length
+          ).pop() || dayData.icons[0];
+        }
+        
+        // Ensure selectedIcon is never undefined
+        if (!selectedIcon) {
+          selectedIcon = dayData.icons[0] || '01d';
+        }
+        
+        // Debug: Log icon selection for verification
+        console.log(`Date ${dateKey}: Icons [${dayData.icons.join(', ')}], PoP: ${Math.round(avgPrecipitationProbability * 100)}%, Selected: ${selectedIcon}, Condition: ${mostFrequentCondition}`);
         
         dailyForecasts.push({
           date: dateKey,
@@ -534,7 +561,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           high: Math.round(Math.max(...dayData.highs)),
           low: Math.round(Math.min(...dayData.lows)),
           condition: mostFrequentCondition,
-          icon: mostFrequentIcon,
+          icon: selectedIcon,
         });
       }
 
