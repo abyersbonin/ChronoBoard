@@ -83,7 +83,7 @@ export default function Dashboard() {
       if (!response.ok) throw new Error('Failed to fetch events');
       return response.json() as Promise<CalendarEvent[]>;
     },
-    refetchInterval: 60 * 1000, // Refresh every 60 seconds - optimized for TV performance
+    refetchInterval: 5 * 60 * 1000, // Refresh every 5 minutes - less jarring for users
   });
 
   // Update settings mutation - only if admin is logged in

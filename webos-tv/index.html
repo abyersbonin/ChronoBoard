@@ -136,7 +136,7 @@
     <script>
         // webOS TV App Configuration
         const DASHBOARD_URL = 'https://chrono-board-tarnrsps.replit.app';
-        const RELOAD_INTERVAL = 30000; // 30 seconds
+        const RELOAD_INTERVAL = 5 * 60 * 1000; // 5 minutes - smoother experience
         
         let reloadTimer = null;
         let connectionCheckTimer = null;
@@ -234,12 +234,30 @@
             console.log('Reloading dashboard...');
             const iframe = document.getElementById('dashboard-iframe');
             
-            // Add timestamp to force refresh
+            // Add timestamp to force refresh, but do it smoothly
             const url = new URL(DASHBOARD_URL);
             url.searchParams.set('t', Date.now());
-            iframe.src = url.toString();
             
+            // Show subtle loading indicator
             updateConnectionStatus('online', 'Actualisation...');
+            
+            // Use a smooth transition by preloading in background
+            const tempFrame = document.createElement('iframe');
+            tempFrame.style.display = 'none';
+            tempFrame.src = url.toString();
+            document.body.appendChild(tempFrame);
+            
+            tempFrame.onload = function() {
+                // Switch smoothly
+                iframe.src = tempFrame.src;
+                document.body.removeChild(tempFrame);
+                updateConnectionStatus('online', 'Mise à jour terminée');
+            };
+            
+            tempFrame.onerror = function() {
+                document.body.removeChild(tempFrame);
+                updateConnectionStatus('offline', 'Erreur de mise à jour');
+            };
         }
         
         // Start automatic reload timer
@@ -248,7 +266,7 @@
             reloadTimer = setInterval(() => {
                 reloadDashboard();
             }, RELOAD_INTERVAL);
-            console.log('Auto-reload started (30s interval)');
+            console.log('Auto-reload started (5 minute interval)');
         }
         
         // Stop automatic reload timer
