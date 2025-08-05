@@ -41,11 +41,17 @@ export function CurrentEvent({ event }: CurrentEventProps) {
     return () => window.removeEventListener('resize', detectMobile);
   }, []);
 
-  // Decode HTML entities in text
-  const decodeHtmlEntities = (text: string) => {
+  // Clean HTML tags and decode HTML entities
+  const cleanHtmlText = (text: string) => {
+    if (!text) return '';
+    
+    // First strip HTML tags
+    const stripHtml = text.replace(/<[^>]*>/g, '');
+    
+    // Then decode HTML entities
     const textarea = document.createElement('textarea');
-    textarea.innerHTML = text;
-    return textarea.value;
+    textarea.innerHTML = stripHtml;
+    return textarea.value.trim();
   };
 
   // Get badge color based on calendar name (not source)
@@ -149,7 +155,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
         <div className="border-l-4 border-blue-500 pl-4 flex-1 relative">
           <div className="flex items-center gap-3 mb-3">
             <h3 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
-              {decodeHtmlEntities(event.title)}
+              {cleanHtmlText(event.title)}
             </h3>
             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)}`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
               {getCalendarName(event.calendarSource)}
@@ -159,7 +165,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
             {event.location && (
               <div className="flex items-center">
                 <MapPin className="mr-2 h-4 w-4" />
-                <span>{decodeHtmlEntities(event.location)}</span>
+                <span>{cleanHtmlText(event.location)}</span>
               </div>
             )}
             <div className="flex items-center">
@@ -169,16 +175,6 @@ export function CurrentEvent({ event }: CurrentEventProps) {
               </span>
             </div>
           </div>
-          
-          {/* Shockwave animation - hide on mobile */}
-          {!isMobile && (
-            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-              <div className="relative">
-                <div className="w-4 h-4 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 2s infinite' }}></div>
-                <div className="absolute top-0 left-0 w-4 h-4 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 2s infinite 0.5s' }}></div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
