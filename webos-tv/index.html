@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="webos-version" content="24">
-    <meta name="webos-device-type" content="tv">
-    <meta name="webos-app-type" content="web">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spa Eastman Dashboard</title>
+    <meta name="theme-color" content="#00553f">
     
     <!-- webOS specific meta tags -->
-    <meta name="format-detection" content="telephone=no">
-    <meta name="x-webos-accessibilityEnabled" content="false">
-    <meta name="x-webos-focusable" content="true">
+    <meta name="webos:type" content="app">
+    <meta name="webos:tv" content="true">
     
     <style>
         * {
@@ -21,313 +18,65 @@
         }
         
         body {
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            cursor: none;
+            font-family: sans-serif;
+            background: #000;
             color: white;
-            background: #788C6B;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(172, 184, 164, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(172, 184, 164, 0.2) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(120, 140, 107, 0.4) 0%, transparent 50%),
-                linear-gradient(135deg, #788C6B 0%, #ACB8A4 100%);
-            background-attachment: fixed;
+            overflow: hidden;
+            cursor: none; /* Hide cursor for TV */
         }
         
-        body::before, body::after {
-            content: '';
+        .dashboard-iframe {
+            width: 100vw;
+            height: 100vh;
+            border: none;
             position: fixed;
-            pointer-events: none;
+            top: 0;
+            left: 0;
             z-index: 1;
         }
         
-        body::before {
+        .loading-screen {
+            position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><defs><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter></defs><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.03"/></svg>');
-            animation: float 20s ease-in-out infinite;
-        }
-        
-        body::after {
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.1) 100%);
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) translateX(0px); }
-            33% { transform: translateY(-10px) translateX(5px); }
-            66% { transform: translateY(5px) translateX(-5px); }
-        }
-        
-        #app {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .container {
+            width: 100vw;
             height: 100vh;
+            background: linear-gradient(135deg, rgba(120, 140, 107, 0.9) 0%, rgba(172, 184, 164, 0.8) 100%);
             display: flex;
             flex-direction: column;
-            padding: 2rem;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-out;
         }
         
-        .spa-header {
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+        
+        .loading-text {
+            font-size: 1.8rem;
+            color: white;
             text-align: center;
-            margin-bottom: 1.5rem;
+            font-weight: 300;
         }
         
         .spa-logo {
-            font-size: 3.5rem;
-            font-weight: 300;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            background: linear-gradient(45deg, #ffffff, #e8f4f8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .current-time {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            margin-bottom: 1rem;
-        }
-        
-        .main-grid {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            height: calc(100vh - 200px);
-        }
-        
-        .weather-card, .events-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .weather-card {
-            padding: 2rem;
-        }
-        
-        .weather-current {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .current-temp {
-            font-size: 4rem;
-            font-weight: 300;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-        
-        .current-condition {
-            font-size: 1.5rem;
-            opacity: 0.9;
-            text-transform: capitalize;
-            margin-bottom: 2rem;
-        }
-        
-        .weather-forecast {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-        }
-        
-        .forecast-day {
-            flex: 1;
-            text-align: center;
-            padding: 1rem 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-        }
-        
-        .forecast-day-name {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-        }
-        
-        .forecast-icon {
-            font-size: 1.5rem;
-            margin: 0.5rem 0;
-        }
-        
-        .forecast-temps {
-            font-size: 1rem;
-            font-weight: 500;
-        }
-        
-        .forecast-high {
-            margin-right: 0.5rem;
-        }
-        
-        .forecast-low {
-            opacity: 0.7;
-        }
-        
-        .events-card {
-            padding: 0;
-        }
-        
-        .events-header {
-            padding: 1.5rem 2rem 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .events-title {
-            font-size: 1.5rem;
-            font-weight: 500;
-            text-align: center;
-        }
-        
-        .events-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem 2rem 2rem;
-        }
-        
-        .current-event, .upcoming-events {
-            margin-bottom: 2rem;
-        }
-        
-        .section-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .event-item {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-            border-left: 4px solid #788C6B;
-            transition: all 0.3s ease;
-        }
-        
-        .event-item:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-        
-        .event-time {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-bottom: 0.25rem;
-        }
-        
-        .event-title {
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-            line-height: 1.3;
-        }
-        
-        .event-category {
-            font-size: 0.8rem;
-            opacity: 0.7;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.25rem;
-        }
-        
-        .event-location {
-            font-size: 0.8rem;
-            opacity: 0.6;
-        }
-        
-        .event-item.conference {
-            border-left-color: #ACB8A4;
-        }
-        
-        .event-item.visite {
-            border-left-color: #46513F;
-        }
-        
-        .event-item.activite {
-            border-left-color: #788C6B;
-        }
-        
-        .qr-section {
-            position: fixed;
-            bottom: 2rem;
-            left: 2rem;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 1rem;
-            border-radius: 12px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .qr-text {
-            color: #333;
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
-        }
-        
-        .qr-code {
-            width: 80px;
-            height: 80px;
-            background: white;
-            border: 2px solid #333;
-            border-radius: 4px;
-        }
-        
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #788C6B;
-            background-image: linear-gradient(135deg, #788C6B 0%, #ACB8A4 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            color: white;
-        }
-        
-        .loading h1 {
             font-size: 3rem;
+            font-weight: 300;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .loading p {
-            font-size: 1.5rem;
-            opacity: 0.8;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255,255,255,0.3);
-            border-top: 5px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-top: 2rem;
+            color: white;
         }
         
         @keyframes spin {
@@ -335,671 +84,292 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Scrollbar styling */
-        .events-content::-webkit-scrollbar {
-            width: 6px;
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            z-index: 2000;
+            display: none;
         }
         
-        .events-content::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
+        .connection-status.show {
+            display: block;
         }
         
-        .events-content::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
+        .connection-status.online {
+            background: rgba(40, 167, 69, 0.8);
         }
         
-        .events-content::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-        
-        .focusable {
-            outline: 3px solid #ff6b35;
-            outline-offset: 2px;
+        .connection-status.offline {
+            background: rgba(220, 53, 69, 0.8);
         }
     </style>
 </head>
 <body>
-    <div id="app">
-        <!-- Loading screen -->
-        <div class="loading" id="loading">
-            <h1>Spa Eastman</h1>
-            <p>Chargement du tableau de bord...</p>
-            <div class="spinner"></div>
-        </div>
-        
-        <!-- Main dashboard content -->
-        <div class="container" id="dashboard" style="display: none;">
-            <div class="spa-header">
-                <div class="spa-logo">Spa Eastman</div>
-                <div class="current-time" id="current-time"></div>
-            </div>
-            
-            <div class="main-grid">
-                <!-- Weather Card -->
-                <div class="weather-card">
-                    <div class="weather-current">
-                        <div class="current-temp" id="current-temp">--°</div>
-                        <div class="current-condition" id="current-condition">Chargement...</div>
-                    </div>
-                    <div class="weather-forecast" id="forecast-container">
-                        <!-- Forecast will be populated here -->
-                    </div>
-                </div>
-                
-                <!-- Events Card -->
-                <div class="events-card">
-                    <div class="events-header">
-                        <div class="events-title">Événements du jour</div>
-                    </div>
-                    <div class="events-content" id="events-container">
-                        <!-- Events will be populated here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- QR Code Section -->
-        <div class="qr-section" id="qr-section" style="display: none;">
-            <div class="qr-text">Consulter sur votre<br>appareil mobile</div>
-            <img class="qr-code" id="qr-code" alt="QR Code" />
-        </div>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="spa-logo">Spa Eastman</div>
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Chargement du tableau de bord...</div>
     </div>
 
+    <!-- Connection Status Indicator -->
+    <div class="connection-status" id="connection-status">
+        <span id="status-text">Connexion...</span>
+    </div>
+
+    <!-- Main Dashboard Iframe -->
+    <iframe 
+        id="dashboard-iframe"
+        class="dashboard-iframe"
+        src="https://chrono-board-tarnrsps.replit.app"
+        allow="fullscreen"
+        sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+        loading="eager">
+    </iframe>
+
     <script>
-        // API Configuration
-        const API_BASE = 'https://chrono-board-tarnrsps.replit.app/api';
-        const USER_ID = 'default-user';
+        // webOS TV App Configuration
+        const DASHBOARD_URL = 'https://chrono-board-tarnrsps.replit.app';
+        const RELOAD_INTERVAL = 30000; // 30 seconds
         
-        // Auto-refresh every 30 seconds for live data
-        const AUTO_REFRESH_INTERVAL = 30000;
-        let refreshTimer = null;
-        let currentWeather = null;
-        let currentEvents = [];
-        let dataLoaded = false;
+        let reloadTimer = null;
+        let connectionCheckTimer = null;
         
-        // App initialization
+        // Initialize app
         function initApp() {
             console.log('Spa Eastman Dashboard - webOS TV App starting...');
             
-            // Load initial data with retry
-            loadDashboardData();
+            const iframe = document.getElementById('dashboard-iframe');
+            const loadingScreen = document.getElementById('loading-screen');
+            const connectionStatus = document.getElementById('connection-status');
             
-            // Setup TV remote controls
+            // Handle iframe load events
+            iframe.addEventListener('load', function() {
+                console.log('Dashboard loaded successfully');
+                hideLoadingScreen();
+                updateConnectionStatus('online', 'Dashboard actif');
+                startAutoReload();
+            });
+            
+            iframe.addEventListener('error', function() {
+                console.error('Dashboard failed to load');
+                updateConnectionStatus('offline', 'Erreur de connexion');
+                // Retry loading after 5 seconds
+                setTimeout(() => {
+                    reloadDashboard();
+                }, 5000);
+            });
+            
+            // Setup webOS TV remote control
             setupRemoteControl();
             
-            // Update time display
-            updateTimeDisplay();
-            setInterval(updateTimeDisplay, 1000);
+            // Start connection monitoring
+            startConnectionMonitoring();
             
             // Handle app visibility changes
             document.addEventListener('visibilitychange', function() {
                 if (document.hidden) {
-                    stopAutoRefresh();
+                    stopAutoReload();
+                    stopConnectionMonitoring();
                 } else {
-                    startAutoRefresh();
-                    if (!dataLoaded) loadDashboardData();
+                    reloadDashboard();
+                    startAutoReload();
+                    startConnectionMonitoring();
                 }
             });
+            
+            // Initial connection test
+            testConnection();
         }
         
-        // Load weather and events data with fallbacks
-        async function loadDashboardData() {
-            let attempts = 0;
-            const maxAttempts = 3;
+        // Hide loading screen
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loading-screen');
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 1500); // Show loading for at least 1.5 seconds
+        }
+        
+        // Update connection status indicator
+        function updateConnectionStatus(status, message) {
+            const indicator = document.getElementById('connection-status');
+            const statusText = document.getElementById('status-text');
             
-            while (attempts < maxAttempts && !dataLoaded) {
-                try {
-                    attempts++;
-                    console.log(`Loading data attempt ${attempts}/${maxAttempts}`);
-                    
-                    // Try to load data with timeout
-                    const [weatherData, eventsData] = await Promise.all([
-                        fetchWeatherDataWithTimeout(),
-                        fetchEventsDataWithTimeout()
-                    ]);
-                    
-                    // Use fallback data if API fails
-                    const finalWeatherData = weatherData || getFallbackWeatherData();
-                    const finalEventsData = eventsData || getFallbackEventsData();
-                    
-                    displayWeather(finalWeatherData);
-                    displayEvents(finalEventsData);
-                    
-                    currentWeather = finalWeatherData;
-                    currentEvents = finalEventsData;
-                    dataLoaded = true;
-                    
-                    // Set up QR code
-                    setupQRCode();
-                    
-                    // Hide loading screen and show dashboard
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('dashboard').style.display = 'block';
-                    document.getElementById('qr-section').style.display = 'block';
-                    
-                    startAutoRefresh();
-                    break;
-                    
-                } catch (error) {
-                    console.error(`Error loading dashboard data (attempt ${attempts}):`, error);
-                    
-                    if (attempts >= maxAttempts) {
-                        // Load with fallback data
-                        displayWeather(getFallbackWeatherData());
-                        displayEvents(getFallbackEventsData());
-                        setupQRCode();
-                        
-                        document.getElementById('loading').style.display = 'none';
-                        document.getElementById('dashboard').style.display = 'block';
-                        document.getElementById('qr-section').style.display = 'block';
-                        
-                        dataLoaded = true;
-                        startAutoRefresh();
-                    } else {
-                        // Wait before retry
-                        await new Promise(resolve => setTimeout(resolve, 2000));
-                    }
-                }
+            indicator.className = `connection-status show ${status}`;
+            statusText.textContent = message;
+            
+            // Hide status after 3 seconds if online
+            if (status === 'online') {
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 3000);
             }
         }
         
-        // Fetch weather data with timeout
-        async function fetchWeatherDataWithTimeout() {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-            
+        // Test connection to dashboard
+        async function testConnection() {
             try {
-                const response = await fetch(`${API_BASE}/weather/Eastman`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Cache-Control': 'no-cache'
-                    },
-                    signal: controller.signal
+                const response = await fetch(DASHBOARD_URL, { 
+                    method: 'HEAD',
+                    mode: 'no-cors'
                 });
-                
-                clearTimeout(timeoutId);
-                
-                if (!response.ok) {
-                    throw new Error(`Weather API error: ${response.status}`);
-                }
-                
-                return await response.json();
+                return true;
             } catch (error) {
-                clearTimeout(timeoutId);
-                console.error('Weather fetch error:', error);
-                return null;
+                console.warn('Connection test failed:', error);
+                return false;
             }
         }
         
-        // Fetch events data with timeout
-        async function fetchEventsDataWithTimeout() {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        // Reload dashboard iframe
+        function reloadDashboard() {
+            console.log('Reloading dashboard...');
+            const iframe = document.getElementById('dashboard-iframe');
             
-            try {
-                const response = await fetch(`${API_BASE}/calendar-events/${USER_ID}`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Cache-Control': 'no-cache'
-                    },
-                    signal: controller.signal
-                });
-                
-                clearTimeout(timeoutId);
-                
-                if (!response.ok) {
-                    throw new Error(`Events API error: ${response.status}`);
+            // Add timestamp to force refresh
+            const url = new URL(DASHBOARD_URL);
+            url.searchParams.set('t', Date.now());
+            iframe.src = url.toString();
+            
+            updateConnectionStatus('online', 'Actualisation...');
+        }
+        
+        // Start automatic reload timer
+        function startAutoReload() {
+            stopAutoReload();
+            reloadTimer = setInterval(() => {
+                reloadDashboard();
+            }, RELOAD_INTERVAL);
+            console.log('Auto-reload started (30s interval)');
+        }
+        
+        // Stop automatic reload timer
+        function stopAutoReload() {
+            if (reloadTimer) {
+                clearInterval(reloadTimer);
+                reloadTimer = null;
+                console.log('Auto-reload stopped');
+            }
+        }
+        
+        // Start connection monitoring
+        function startConnectionMonitoring() {
+            stopConnectionMonitoring();
+            connectionCheckTimer = setInterval(async () => {
+                const isOnline = await testConnection();
+                if (!isOnline) {
+                    updateConnectionStatus('offline', 'Connexion perdue');
+                    // Try to reload if offline
+                    setTimeout(() => {
+                        reloadDashboard();
+                    }, 2000);
                 }
-                
-                return await response.json();
-            } catch (error) {
-                clearTimeout(timeoutId);
-                console.error('Events fetch error:', error);
-                return null;
+            }, 60000); // Check every minute
+        }
+        
+        // Stop connection monitoring
+        function stopConnectionMonitoring() {
+            if (connectionCheckTimer) {
+                clearInterval(connectionCheckTimer);
+                connectionCheckTimer = null;
             }
         }
         
-        // Fallback weather data when API is not accessible
-        function getFallbackWeatherData() {
-            return {
-                location: 'Eastman',
-                current: {
-                    temp: 19,
-                    condition: 'Couvert'
-                },
-                forecast: [
-                    { date: new Date().toISOString().split('T')[0], high: 27, low: 12, icon: '04d', condition: 'Couvert' },
-                    { date: new Date(Date.now() + 86400000).toISOString().split('T')[0], high: 25, low: 15, icon: '01d', condition: 'Ensoleillé' },
-                    { date: new Date(Date.now() + 172800000).toISOString().split('T')[0], high: 28, low: 15, icon: '04d', condition: 'Couvert' },
-                    { date: new Date(Date.now() + 259200000).toISOString().split('T')[0], high: 29, low: 17, icon: '04d', condition: 'Couvert' }
-                ]
-            };
-        }
-        
-        // Fallback events data when API is not accessible
-        function getFallbackEventsData() {
-            const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            
-            return [
-                {
-                    id: 'fallback-1',
-                    title: 'Aqua forme (bilingual)',
-                    startTime: new Date(today.getTime() + 11.5 * 60 * 60 * 1000).toISOString(), // 11:30
-                    endTime: new Date(today.getTime() + 12.5 * 60 * 60 * 1000).toISOString(), // 12:30
-                    location: 'Piscine extérieure',
-                    description: 'ACTIVITÉS'
-                },
-                {
-                    id: 'fallback-2',
-                    title: 'Nos 6 piliers mieux-être - Visite de bienvenue (Bilingual)',
-                    startTime: new Date(today.getTime() + 16 * 60 * 60 * 1000).toISOString(), // 16:00
-                    endTime: new Date(today.getTime() + 17 * 60 * 60 * 1000).toISOString(), // 17:00
-                    location: 'Départ de la réception',
-                    description: 'VISITE'
-                },
-                {
-                    id: 'fallback-3',
-                    title: 'Qu\'est-ce que le tapping "EFT" ?',
-                    startTime: new Date(today.getTime() + 17 * 60 * 60 * 1000).toISOString(), // 17:00
-                    endTime: new Date(today.getTime() + 18 * 60 * 60 * 1000).toISOString(), // 18:00
-                    location: 'Salle lac Stukely',
-                    description: 'CONFÉRENCES'
-                }
-            ];
-        }
-        
-        // Weather icon mapping
-        function getWeatherIcon(iconCode) {
-            const iconMap = {
-                '01d': '☀️', '01n': '🌙',
-                '02d': '⛅', '02n': '☁️',
-                '03d': '☁️', '03n': '☁️',
-                '04d': '☁️', '04n': '☁️',
-                '09d': '🌧️', '09n': '🌧️',
-                '10d': '🌦️', '10n': '🌧️',
-                '11d': '⛈️', '11n': '⛈️',
-                '13d': '❄️', '13n': '❄️',
-                '50d': '🌫️', '50n': '🌫️'
-            };
-            return iconMap[iconCode] || '☁️';
-        }
-        
-        // Display weather data exactly like the deployed app
-        function displayWeather(weather) {
-            if (!weather || !weather.current) return;
-            
-            // Current weather
-            document.getElementById('current-temp').textContent = `${Math.round(weather.current.temp)}°`;
-            document.getElementById('current-condition').textContent = weather.current.condition;
-            
-            // Display forecast - match the deployed app format
-            const forecastContainer = document.getElementById('forecast-container');
-            forecastContainer.innerHTML = '';
-            
-            if (weather.forecast && weather.forecast.length > 0) {
-                // Take first 4 days like the deployed app
-                weather.forecast.slice(0, 4).forEach((day, index) => {
-                    const dayElement = document.createElement('div');
-                    dayElement.className = 'forecast-day';
-                    
-                    const date = new Date(day.date);
-                    let dayName;
-                    
-                    if (index === 0) {
-                        dayName = 'AUJOURD\'HUI';
-                    } else if (index === 1) {
-                        dayName = 'DEMAIN';
-                    } else {
-                        dayName = date.toLocaleDateString('fr-FR', { weekday: 'short' }).toUpperCase();
-                    }
-                    
-                    const icon = getWeatherIcon(day.icon);
-                    
-                    dayElement.innerHTML = `
-                        <div class="forecast-day-name">${dayName}</div>
-                        <div class="forecast-icon">${icon}</div>
-                        <div class="forecast-temps">
-                            <span class="forecast-high">${Math.round(day.high)}°</span>
-                            <span class="forecast-low">${Math.round(day.low)}°</span>
-                        </div>
-                    `;
-                    
-                    forecastContainer.appendChild(dayElement);
-                });
-            }
-        }
-        
-        // Display events exactly like the deployed app
-        function displayEvents(events) {
-            const eventsContainer = document.getElementById('events-container');
-            eventsContainer.innerHTML = '';
-            
-            if (!events || events.length === 0) {
-                eventsContainer.innerHTML = '<div class="event-item"><div class="event-title">Aucun événement disponible</div></div>';
-                return;
-            }
-            
-            const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            const tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            
-            // Group events by date like the deployed app
-            const eventsByDate = {
-                current: [],
-                today: [],
-                tomorrow: [],
-                later: []
-            };
-            
-            events.forEach(event => {
-                const eventStart = new Date(event.startTime);
-                const eventEnd = new Date(event.endTime);
-                const eventDate = new Date(eventStart.getFullYear(), eventStart.getMonth(), eventStart.getDate());
-                
-                // Check if event is currently happening
-                if (now >= eventStart && now <= eventEnd) {
-                    eventsByDate.current.push(event);
-                } else if (eventDate.getTime() === today.getTime()) {
-                    eventsByDate.today.push(event);
-                } else if (eventDate.getTime() === tomorrow.getTime()) {
-                    eventsByDate.tomorrow.push(event);
-                } else if (eventDate > tomorrow) {
-                    eventsByDate.later.push(event);
-                }
-            });
-            
-            // Display current events (À présent)
-            if (eventsByDate.current.length > 0) {
-                const currentSection = document.createElement('div');
-                currentSection.className = 'current-event';
-                currentSection.innerHTML = '<div class="section-title">À présent</div>';
-                
-                eventsByDate.current.forEach(event => {
-                    currentSection.appendChild(createEventElement(event, true));
-                });
-                
-                eventsContainer.appendChild(currentSection);
-            }
-            
-            // Display upcoming events section
-            const upcomingSection = document.createElement('div');
-            upcomingSection.className = 'upcoming-events';
-            upcomingSection.innerHTML = '<div class="section-title">Événements à venir</div>';
-            
-            // Today's remaining events
-            if (eventsByDate.today.length > 0) {
-                const todayHeader = document.createElement('div');
-                todayHeader.innerHTML = '<h3 style="font-size: 1.1rem; margin: 1rem 0 0.5rem 0; opacity: 0.9;">AUJOURD\'HUI</h3>';
-                upcomingSection.appendChild(todayHeader);
-                
-                eventsByDate.today.slice(0, 5).forEach(event => {
-                    upcomingSection.appendChild(createEventElement(event));
-                });
-            }
-            
-            // Tomorrow's events
-            if (eventsByDate.tomorrow.length > 0) {
-                const tomorrowHeader = document.createElement('div');
-                tomorrowHeader.innerHTML = '<h3 style="font-size: 1.1rem; margin: 1rem 0 0.5rem 0; opacity: 0.9;">DEMAIN</h3>';
-                upcomingSection.appendChild(tomorrowHeader);
-                
-                eventsByDate.tomorrow.slice(0, 5).forEach(event => {
-                    upcomingSection.appendChild(createEventElement(event));
-                });
-            }
-            
-            // Later events (show first few days)
-            if (eventsByDate.later.length > 0) {
-                const laterEvents = eventsByDate.later.slice(0, 10);
-                let currentDateHeader = null;
-                
-                laterEvents.forEach(event => {
-                    const eventDate = new Date(event.startTime);
-                    const dateStr = eventDate.toLocaleDateString('fr-FR', { 
-                        weekday: 'long', 
-                        month: 'long', 
-                        day: 'numeric' 
-                    }).toUpperCase();
-                    
-                    if (dateStr !== currentDateHeader) {
-                        currentDateHeader = dateStr;
-                        const dateHeader = document.createElement('div');
-                        dateHeader.innerHTML = `<h3 style="font-size: 1.1rem; margin: 1rem 0 0.5rem 0; opacity: 0.9;">${dateStr}</h3>`;
-                        upcomingSection.appendChild(dateHeader);
-                    }
-                    
-                    upcomingSection.appendChild(createEventElement(event));
-                });
-            }
-            
-            eventsContainer.appendChild(upcomingSection);
-        }
-        
-        // Create event element matching the deployed app style
-        function createEventElement(event, isCurrent = false) {
-            const eventElement = document.createElement('div');
-            eventElement.className = 'event-item';
-            
-            const startTime = new Date(event.startTime);
-            const endTime = new Date(event.endTime);
-            
-            // Format time like the deployed app
-            const timeStr = isCurrent ? 
-                `${startTime.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}` :
-                `${startTime.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}`;
-            
-            // Clean HTML from title and get category
-            const cleanTitle = event.title.replace(/<[^>]*>/g, '').trim();
-            const category = getEventCategory(cleanTitle, event.description);
-            const categoryColor = getCategoryColor(category);
-            
-            eventElement.style.borderLeftColor = categoryColor;
-            eventElement.classList.add(category.toLowerCase());
-            
-            eventElement.innerHTML = `
-                <div class="event-time">${timeStr}${!isCurrent && endTime ? ' - ' + endTime.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'}) : ''}</div>
-                <div class="event-title">${cleanTitle}</div>
-                <div class="event-category">${category}</div>
-                ${event.location ? `<div class="event-location">${event.location}</div>` : ''}
-            `;
-            
-            return eventElement;
-        }
-        
-        // Get event category like the deployed app
-        function getEventCategory(title, description) {
-            const titleLower = title.toLowerCase();
-            const descLower = (description || '').toLowerCase();
-            
-            if (titleLower.includes('conférence') || descLower.includes('conférence')) {
-                return 'CONFÉRENCES';
-            } else if (titleLower.includes('visite') || descLower.includes('visite')) {
-                return 'VISITE';
-            } else {
-                return 'ACTIVITÉS';
-            }
-        }
-        
-        // Get category color like the deployed app
-        function getCategoryColor(category) {
-            switch (category) {
-                case 'CONFÉRENCES':
-                    return '#ACB8A4';
-                case 'VISITE':
-                    return '#46513F';
-                case 'ACTIVITÉS':
-                default:
-                    return '#788C6B';
-            }
-        }
-        
-        // Update time display
-        function updateTimeDisplay() {
-            const now = new Date();
-            const timeStr = now.toLocaleString('fr-FR', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            
-            document.getElementById('current-time').textContent = timeStr;
-        }
-        
-        // Setup QR code for mobile access
-        function setupQRCode() {
-            const qrCodeImg = document.getElementById('qr-code');
-            const qrUrl = 'https://chrono-board-tarnrsps.replit.app/';
-            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(qrUrl)}`;
-            qrCodeImg.src = qrApiUrl;
-        }
-        
-        // Show error message
-        function showError(message) {
-            document.getElementById('loading').innerHTML = `
-                <h1>Spa Eastman</h1>
-                <p>${message}</p>
-                <p style="font-size: 1rem; margin-top: 1rem; opacity: 0.7;">
-                    Appuyez sur OK pour réessayer
-                </p>
-            `;
-        }
-        
-        // Auto-refresh functionality
-        function startAutoRefresh() {
-            if (refreshTimer) clearInterval(refreshTimer);
-            
-            refreshTimer = setInterval(() => {
-                console.log('Auto-refreshing data...');
-                loadDashboardData();
-            }, AUTO_REFRESH_INTERVAL);
-            
-            console.log('Auto-refresh started (30s interval)');
-        }
-        
-        function stopAutoRefresh() {
-            if (refreshTimer) {
-                clearInterval(refreshTimer);
-                refreshTimer = null;
-                console.log('Auto-refresh stopped');
-            }
-        }
-        
-        function refreshDashboard() {
-            console.log('Manual refresh triggered');
-            loadDashboardData();
-        }
-        
-        // webOS TV remote control setup
+        // Setup webOS TV remote control
         function setupRemoteControl() {
-            // Register for remote key events
-            if (window.webOS && webOS.platform && webOS.platform.tv) {
-                // webOS TV specific remote handling
-                document.addEventListener('keydown', handleRemoteKey);
-                console.log('webOS TV remote control registered');
-            } else {
-                // Fallback for simulator/browser
-                document.addEventListener('keydown', handleRemoteKey);
-                console.log('Standard remote control registered');
-            }
-        }
-        
-        function handleRemoteKey(event) {
-            console.log('Remote key pressed:', event.keyCode, event.key);
-            
-            switch(event.keyCode) {
-                case 13: // OK/Enter button
-                case 32: // Space (OK alternative)
-                    event.preventDefault();
-                    refreshDashboard();
-                    break;
-                    
-                case 8: // Back button
-                case 27: // Escape
-                    event.preventDefault();
-                    // Handle back/exit
-                    if (window.webOS && webOS.platform && webOS.platform.tv) {
-                        // On real webOS TV, minimize app
+            document.addEventListener('keydown', function(event) {
+                console.log('Key pressed:', event.keyCode);
+                
+                switch(event.keyCode) {
+                    case 27: // BACK button
+                        console.log('Back button pressed - closing app');
                         if (window.webOSSystem) {
-                            webOSSystem.platformBack();
+                            window.webOSSystem.close();
+                        } else {
+                            // Fallback for testing
+                            history.back();
                         }
-                    } else {
-                        // In simulator, just refresh
-                        refreshDashboard();
-                    }
-                    break;
-                    
-                case 404: // Green button
-                    event.preventDefault();
-                    refreshDashboard();
-                    break;
-                    
-                case 405: // Yellow button
-                    event.preventDefault();
-                    // Toggle fullscreen if available
-                    if (document.fullscreenElement) {
-                        document.exitFullscreen();
-                    } else {
-                        document.documentElement.requestFullscreen();
-                    }
-                    break;
-                    
-                case 403: // Red button
-                    event.preventDefault();
-                    // Stop auto-refresh
-                    if (refreshTimer) {
-                        stopAutoRefresh();
-                        console.log('Auto-refresh stopped by user');
-                    } else {
-                        startAutoRefresh();
-                        console.log('Auto-refresh started by user');
-                    }
-                    break;
-                    
-                case 406: // Blue button
-                    event.preventDefault();
-                    // Force reload
-                    window.location.reload();
-                    break;
-                    
-                default:
-                    // Allow other keys to pass through
-                    break;
-            }
+                        break;
+                        
+                    case 13: // OK/Enter button
+                        console.log('OK button pressed - reloading dashboard');
+                        reloadDashboard();
+                        break;
+                        
+                    case 412: // REWIND button
+                        console.log('Rewind button pressed - force reload');
+                        reloadDashboard();
+                        break;
+                        
+                    case 417: // FAST FORWARD button
+                        console.log('Fast forward button pressed - toggle auto-reload');
+                        if (reloadTimer) {
+                            stopAutoReload();
+                            updateConnectionStatus('offline', 'Auto-reload désactivé');
+                        } else {
+                            startAutoReload();
+                            updateConnectionStatus('online', 'Auto-reload activé');
+                        }
+                        break;
+                        
+                    case 19: // PAUSE button
+                        console.log('Pause button pressed - pause/resume auto-reload');
+                        if (reloadTimer) {
+                            stopAutoReload();
+                            updateConnectionStatus('offline', 'Pause');
+                        } else {
+                            startAutoReload();
+                            updateConnectionStatus('online', 'Reprise');
+                        }
+                        break;
+                }
+                
+                // Prevent default behavior for TV remote buttons
+                event.preventDefault();
+                event.stopPropagation();
+            });
         }
         
-        // App lifecycle management
-        window.addEventListener('load', initApp);
+        // Handle webOS system events
+        if (window.webOS) {
+            // webOS TV lifecycle events
+            document.addEventListener('webOSLaunch', function(event) {
+                console.log('webOS Launch event:', event);
+                initApp();
+            });
+            
+            document.addEventListener('webOSRelaunch', function(event) {
+                console.log('webOS Relaunch event:', event);
+                reloadDashboard();
+            });
+        }
         
-        // Cleanup on unload
-        window.addEventListener('beforeunload', function() {
-            stopAutoRefresh();
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+        
+        // Error handling for iframe
+        window.addEventListener('error', function(event) {
+            console.error('Global error:', event.error);
+            updateConnectionStatus('offline', 'Erreur application');
         });
         
-        // webOS app lifecycle hooks
-        if (window.webOS) {
-            // App activated
-            window.addEventListener('webOSLaunch', function(event) {
-                console.log('webOS app launched with params:', event.detail);
-                refreshDashboard();
-            });
-            
-            // App reactivated
-            window.addEventListener('webOSRelaunch', function(event) {
-                console.log('webOS app relaunched with params:', event.detail);
-                refreshDashboard();
-            });
-        }
-        
-        console.log('Spa Eastman Dashboard - webOS TV App initialized');
+        // Handle unload to clean up timers
+        window.addEventListener('beforeunload', function() {
+            stopAutoReload();
+            stopConnectionMonitoring();
+        });
     </script>
 </body>
 </html>
