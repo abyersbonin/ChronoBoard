@@ -25,39 +25,68 @@
             height: 100vh;
             overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #788C6B 0%, #ACB8A4 100%);
             cursor: none;
             color: white;
+            background: #788C6B;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(172, 184, 164, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(172, 184, 164, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 140, 107, 0.4) 0%, transparent 50%),
+                linear-gradient(135deg, #788C6B 0%, #ACB8A4 100%);
+            background-attachment: fixed;
         }
         
-        #app {
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        body::before {
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            position: relative;
-            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><pattern id="mountains" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M0 80 L20 60 L40 80 L60 50 L80 70 L100 40 L100 100 L0 100 Z" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="200" height="200" fill="url(%23mountains)"/></svg>');
-            background-size: 300px 300px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200"><defs><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter></defs><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.03"/></svg>');
             animation: float 20s ease-in-out infinite;
         }
         
+        body::after {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.1) 100%);
+        }
+        
         @keyframes float {
-            0%, 100% { background-position: 0 0; }
-            50% { background-position: 50px 20px; }
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            33% { transform: translateY(-10px) translateX(5px); }
+            66% { transform: translateY(5px) translateX(-5px); }
+        }
+        
+        #app {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
         }
         
         .container {
-            padding: 2rem;
-            height: 100%;
+            height: 100vh;
             display: flex;
             flex-direction: column;
+            padding: 2rem;
         }
         
-        .header {
+        .spa-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         
-        .header h1 {
-            font-size: 4rem;
+        .spa-logo {
+            font-size: 3.5rem;
             font-weight: 300;
             margin-bottom: 0.5rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
@@ -67,37 +96,33 @@
             background-clip: text;
         }
         
-        .header p {
-            font-size: 1.5rem;
+        .current-time {
+            font-size: 1.2rem;
             opacity: 0.9;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            margin-bottom: 1rem;
         }
         
-        .main-content {
+        .main-grid {
             flex: 1;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2rem;
-            max-width: 100%;
+            height: calc(100vh - 200px);
         }
         
-        .weather-section {
-            background: rgba(255,255,255,0.15);
+        .weather-card, .events-card {
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         
-        .events-section {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+        .weather-card {
             padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            overflow-y: auto;
         }
         
         .weather-current {
@@ -105,71 +130,167 @@
             margin-bottom: 2rem;
         }
         
-        .weather-temp {
+        .current-temp {
             font-size: 4rem;
             font-weight: 300;
+            line-height: 1;
             margin-bottom: 0.5rem;
         }
         
-        .weather-condition {
+        .current-condition {
             font-size: 1.5rem;
             opacity: 0.9;
             text-transform: capitalize;
+            margin-bottom: 2rem;
         }
         
         .weather-forecast {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            display: flex;
+            justify-content: space-between;
             gap: 1rem;
         }
         
         .forecast-day {
+            flex: 1;
             text-align: center;
-            padding: 1rem;
-            background: rgba(255,255,255,0.1);
+            padding: 1rem 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
         }
         
-        .forecast-day h4 {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
+        .forecast-day-name {
+            font-size: 0.9rem;
             opacity: 0.8;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
         }
         
-        .forecast-temp {
+        .forecast-icon {
             font-size: 1.5rem;
+            margin: 0.5rem 0;
+        }
+        
+        .forecast-temps {
+            font-size: 1rem;
             font-weight: 500;
+        }
+        
+        .forecast-high {
+            margin-right: 0.5rem;
+        }
+        
+        .forecast-low {
+            opacity: 0.7;
+        }
+        
+        .events-card {
+            padding: 0;
+        }
+        
+        .events-header {
+            padding: 1.5rem 2rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .events-title {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 500;
             text-align: center;
         }
         
-        .event-item {
-            background: rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 1.5rem;
+        .events-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 2rem 2rem;
+        }
+        
+        .current-event, .upcoming-events {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
             margin-bottom: 1rem;
-            border-left: 4px solid #ACB8A4;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .event-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid #788C6B;
+            transition: all 0.3s ease;
+        }
+        
+        .event-item:hover {
+            background: rgba(255, 255, 255, 0.15);
         }
         
         .event-time {
-            font-size: 1rem;
+            font-size: 0.9rem;
             opacity: 0.8;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
         
         .event-title {
-            font-size: 1.3rem;
+            font-size: 1rem;
             font-weight: 500;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+        }
+        
+        .event-category {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
         }
         
         .event-location {
-            font-size: 1rem;
-            opacity: 0.7;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+        
+        .event-item.conference {
+            border-left-color: #ACB8A4;
+        }
+        
+        .event-item.visite {
+            border-left-color: #46513F;
+        }
+        
+        .event-item.activite {
+            border-left-color: #788C6B;
+        }
+        
+        .qr-section {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .qr-text {
+            color: #333;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        
+        .qr-code {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 4px;
         }
         
         .loading {
@@ -178,7 +299,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #788C6B 0%, #ACB8A4 100%);
+            background: #788C6B;
+            background-image: linear-gradient(135deg, #788C6B 0%, #ACB8A4 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -213,49 +335,28 @@
             100% { transform: rotate(360deg); }
         }
         
-        .status-bar {
-            position: fixed;
-            bottom: 1rem;
-            right: 1rem;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            backdrop-filter: blur(10px);
+        /* Scrollbar styling */
+        .events-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .events-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        
+        .events-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+        
+        .events-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
         }
         
         .focusable {
             outline: 3px solid #ff6b35;
             outline-offset: 2px;
-        }
-        
-        .qr-section {
-            position: fixed;
-            bottom: 2rem;
-            left: 2rem;
-            background: rgba(255,255,255,0.9);
-            padding: 1rem;
-            border-radius: 12px;
-            text-align: center;
-        }
-        
-        .qr-section p {
-            color: #333;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .qr-code {
-            width: 100px;
-            height: 100px;
-            background: white;
-            border: 2px solid #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            color: #333;
         }
     </style>
 </head>
@@ -270,25 +371,29 @@
         
         <!-- Main dashboard content -->
         <div class="container" id="dashboard" style="display: none;">
-            <div class="header">
-                <h1>Spa Eastman</h1>
-                <p id="current-time">Tableau de bord</p>
+            <div class="spa-header">
+                <div class="spa-logo">Spa Eastman</div>
+                <div class="current-time" id="current-time"></div>
             </div>
             
-            <div class="main-content">
-                <div class="weather-section">
+            <div class="main-grid">
+                <!-- Weather Card -->
+                <div class="weather-card">
                     <div class="weather-current">
-                        <div class="weather-temp" id="current-temp">--°</div>
-                        <div class="weather-condition" id="current-condition">Chargement...</div>
+                        <div class="current-temp" id="current-temp">--°</div>
+                        <div class="current-condition" id="current-condition">Chargement...</div>
                     </div>
                     <div class="weather-forecast" id="forecast-container">
                         <!-- Forecast will be populated here -->
                     </div>
                 </div>
                 
-                <div class="events-section">
-                    <h2 class="events-title">Événements du jour</h2>
-                    <div id="events-container">
+                <!-- Events Card -->
+                <div class="events-card">
+                    <div class="events-header">
+                        <div class="events-title">Événements du jour</div>
+                    </div>
+                    <div class="events-content" id="events-container">
                         <!-- Events will be populated here -->
                     </div>
                 </div>
@@ -297,13 +402,8 @@
         
         <!-- QR Code Section -->
         <div class="qr-section" id="qr-section" style="display: none;">
-            <p>Consulter sur votre appareil mobile</p>
-            <div class="qr-code">📱 QR</div>
-        </div>
-        
-        <!-- Status Bar -->
-        <div class="status-bar" id="status-bar" style="display: none;">
-            <span id="status-text">Connexion...</span>
+            <div class="qr-text">Consulter sur votre<br>appareil mobile</div>
+            <img class="qr-code" id="qr-code" alt="QR Code" />
         </div>
     </div>
 
@@ -364,13 +464,14 @@
                     currentEvents = eventsData;
                 }
                 
+                // Set up QR code
+                setupQRCode();
+                
                 // Hide loading screen and show dashboard
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
-                document.getElementById('status-bar').style.display = 'block';
                 document.getElementById('qr-section').style.display = 'block';
                 
-                updateStatus('Connecté - Données mises à jour');
                 startAutoRefresh();
                 
             } catch (error) {
@@ -403,29 +504,60 @@
             }
         }
         
-        // Display weather data
+        // Weather icon mapping
+        function getWeatherIcon(iconCode) {
+            const iconMap = {
+                '01d': '☀️', '01n': '🌙',
+                '02d': '⛅', '02n': '☁️',
+                '03d': '☁️', '03n': '☁️',
+                '04d': '☁️', '04n': '☁️',
+                '09d': '🌧️', '09n': '🌧️',
+                '10d': '🌦️', '10n': '🌧️',
+                '11d': '⛈️', '11n': '⛈️',
+                '13d': '❄️', '13n': '❄️',
+                '50d': '🌫️', '50n': '🌫️'
+            };
+            return iconMap[iconCode] || '☁️';
+        }
+        
+        // Display weather data exactly like the deployed app
         function displayWeather(weather) {
             if (!weather || !weather.current) return;
             
+            // Current weather
             document.getElementById('current-temp').textContent = `${Math.round(weather.current.temp)}°`;
             document.getElementById('current-condition').textContent = weather.current.condition;
             
-            // Display forecast
+            // Display forecast - match the deployed app format
             const forecastContainer = document.getElementById('forecast-container');
             forecastContainer.innerHTML = '';
             
             if (weather.forecast && weather.forecast.length > 0) {
-                weather.forecast.slice(0, 3).forEach(day => {
+                // Take first 4 days like the deployed app
+                weather.forecast.slice(0, 4).forEach((day, index) => {
                     const dayElement = document.createElement('div');
                     dayElement.className = 'forecast-day';
                     
                     const date = new Date(day.date);
-                    const dayName = date.toLocaleDateString('fr-FR', { weekday: 'short' });
+                    let dayName;
+                    
+                    if (index === 0) {
+                        dayName = 'AUJOURD\'HUI';
+                    } else if (index === 1) {
+                        dayName = 'DEMAIN';
+                    } else {
+                        dayName = date.toLocaleDateString('fr-FR', { weekday: 'short' }).toUpperCase();
+                    }
+                    
+                    const icon = getWeatherIcon(day.icon);
                     
                     dayElement.innerHTML = `
-                        <h4>${dayName}</h4>
-                        <div class="forecast-temp">${Math.round(day.temp)}°</div>
-                        <div style="font-size: 0.9rem; opacity: 0.8;">${day.condition}</div>
+                        <div class="forecast-day-name">${dayName}</div>
+                        <div class="forecast-icon">${icon}</div>
+                        <div class="forecast-temps">
+                            <span class="forecast-high">${Math.round(day.high)}°</span>
+                            <span class="forecast-low">${Math.round(day.low)}°</span>
+                        </div>
                     `;
                     
                     forecastContainer.appendChild(dayElement);
@@ -433,58 +565,169 @@
             }
         }
         
-        // Display events data
+        // Display events exactly like the deployed app
         function displayEvents(events) {
             const eventsContainer = document.getElementById('events-container');
             eventsContainer.innerHTML = '';
             
-            // Filter today's events
-            const today = new Date();
-            const todayStr = today.getFullYear() + '-' + 
-                           String(today.getMonth() + 1).padStart(2, '0') + '-' + 
-                           String(today.getDate()).padStart(2, '0');
-            
-            const todayEvents = events.filter(event => {
-                const eventDate = new Date(event.startTime);
-                const eventDateStr = eventDate.getFullYear() + '-' + 
-                                   String(eventDate.getMonth() + 1).padStart(2, '0') + '-' + 
-                                   String(eventDate.getDate()).padStart(2, '0');
-                return eventDateStr === todayStr;
-            }).slice(0, 5); // Show max 5 events
-            
-            if (todayEvents.length === 0) {
-                eventsContainer.innerHTML = '<div class="event-item"><div class="event-title">Aucun événement aujourd\'hui</div></div>';
+            if (!events || events.length === 0) {
+                eventsContainer.innerHTML = '<div class="event-item"><div class="event-title">Aucun événement disponible</div></div>';
                 return;
             }
             
-            todayEvents.forEach(event => {
-                const eventElement = document.createElement('div');
-                eventElement.className = 'event-item';
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            // Group events by date like the deployed app
+            const eventsByDate = {
+                current: [],
+                today: [],
+                tomorrow: [],
+                later: []
+            };
+            
+            events.forEach(event => {
+                const eventStart = new Date(event.startTime);
+                const eventEnd = new Date(event.endTime);
+                const eventDate = new Date(eventStart.getFullYear(), eventStart.getMonth(), eventStart.getDate());
                 
-                const startTime = new Date(event.startTime);
-                const endTime = new Date(event.endTime);
-                const timeStr = `${startTime.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})} - ${endTime.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}`;
-                
-                // Clean HTML from title
-                const cleanTitle = event.title.replace(/<[^>]*>/g, '').trim();
-                
-                eventElement.innerHTML = `
-                    <div class="event-time">${timeStr}</div>
-                    <div class="event-title">${cleanTitle}</div>
-                    ${event.location ? `<div class="event-location">${event.location}</div>` : ''}
-                `;
-                
-                // Color coding for different event types
-                if (cleanTitle.toLowerCase().includes('conférence')) {
-                    eventElement.style.borderLeftColor = '#ACB8A4';
-                } else if (cleanTitle.toLowerCase().includes('visite')) {
-                    eventElement.style.borderLeftColor = '#46513F';
-                } else {
-                    eventElement.style.borderLeftColor = '#788C6B';
+                // Check if event is currently happening
+                if (now >= eventStart && now <= eventEnd) {
+                    eventsByDate.current.push(event);
+                } else if (eventDate.getTime() === today.getTime()) {
+                    eventsByDate.today.push(event);
+                } else if (eventDate.getTime() === tomorrow.getTime()) {
+                    eventsByDate.tomorrow.push(event);
+                } else if (eventDate > tomorrow) {
+                    eventsByDate.later.push(event);
                 }
-                
-                eventsContainer.appendChild(eventElement);
             });
+            
+            // Display current events (À présent)
+            if (eventsByDate.current.length > 0) {
+                const currentSection = document.createElement('div');
+                currentSection.className = 'current-event';
+                currentSection.innerHTML = '<div class="section-title">À présent</div>';
+                
+                eventsByDate.current.forEach(event => {
+                    currentSection.appendChild(createEventElement(event, true));
+                });
+                
+                eventsContainer.appendChild(currentSection);
+            }
+            
+            // Display upcoming events section
+            const upcomingSection = document.createElement('div');
+            upcomingSection.className = 'upcoming-events';
+            upcomingSection.innerHTML = '<div class="section-title">Événements à venir</div>';
+            
+            // Today's remaining events
+            if (eventsByDate.today.length > 0) {
+                const todayHeader = document.createElement('div');
+                todayHeader.innerHTML = '<h3 style="font-size: 1.1rem; margin: 1rem 0 0.5rem 0; opacity: 0.9;">AUJOURD\'HUI</h3>';
+                upcomingSection.appendChild(todayHeader);
+                
+                eventsByDate.today.slice(0, 5).forEach(event => {
+                    upcomingSection.appendChild(createEventElement(event));
+                });
+            }
+            
+            // Tomorrow's events
+            if (eventsByDate.tomorrow.length > 0) {
+                const tomorrowHeader = document.createElement('div');
+                tomorrowHeader.innerHTML = '<h3 style="font-size: 1.1rem; margin: 1rem 0 0.5rem 0; opacity: 0.9;">DEMAIN</h3>';
+                upcomingSection.appendChild(tomorrowHeader);
+                
+                eventsByDate.tomorrow.slice(0, 5).forEach(event => {
+                    upcomingSection.appendChild(createEventElement(event));
+                });
+            }
+            
+            // Later events (show first few days)
+            if (eventsByDate.later.length > 0) {
+                const laterEvents = eventsByDate.later.slice(0, 10);
+                let currentDateHeader = null;
+                
+                laterEvents.forEach(event => {
+                    const eventDate = new Date(event.startTime);
+                    const dateStr = eventDate.toLocaleDateString('fr-FR', { 
+                        weekday: 'long', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    }).toUpperCase();
+                    
+                    if (dateStr !== currentDateHeader) {
+                        currentDateHeader = dateStr;
+                        const dateHeader = document.createElement('div');
+                        dateHeader.innerHTML = `<h3 style="font-size: 1.1rem; margin: 1rem 0 0.5rem 0; opacity: 0.9;">${dateStr}</h3>`;
+                        upcomingSection.appendChild(dateHeader);
+                    }
+                    
+                    upcomingSection.appendChild(createEventElement(event));
+                });
+            }
+            
+            eventsContainer.appendChild(upcomingSection);
+        }
+        
+        // Create event element matching the deployed app style
+        function createEventElement(event, isCurrent = false) {
+            const eventElement = document.createElement('div');
+            eventElement.className = 'event-item';
+            
+            const startTime = new Date(event.startTime);
+            const endTime = new Date(event.endTime);
+            
+            // Format time like the deployed app
+            const timeStr = isCurrent ? 
+                `${startTime.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}` :
+                `${startTime.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}`;
+            
+            // Clean HTML from title and get category
+            const cleanTitle = event.title.replace(/<[^>]*>/g, '').trim();
+            const category = getEventCategory(cleanTitle, event.description);
+            const categoryColor = getCategoryColor(category);
+            
+            eventElement.style.borderLeftColor = categoryColor;
+            eventElement.classList.add(category.toLowerCase());
+            
+            eventElement.innerHTML = `
+                <div class="event-time">${timeStr}${!isCurrent && endTime ? ' - ' + endTime.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'}) : ''}</div>
+                <div class="event-title">${cleanTitle}</div>
+                <div class="event-category">${category}</div>
+                ${event.location ? `<div class="event-location">${event.location}</div>` : ''}
+            `;
+            
+            return eventElement;
+        }
+        
+        // Get event category like the deployed app
+        function getEventCategory(title, description) {
+            const titleLower = title.toLowerCase();
+            const descLower = (description || '').toLowerCase();
+            
+            if (titleLower.includes('conférence') || descLower.includes('conférence')) {
+                return 'CONFÉRENCES';
+            } else if (titleLower.includes('visite') || descLower.includes('visite')) {
+                return 'VISITE';
+            } else {
+                return 'ACTIVITÉS';
+            }
+        }
+        
+        // Get category color like the deployed app
+        function getCategoryColor(category) {
+            switch (category) {
+                case 'CONFÉRENCES':
+                    return '#ACB8A4';
+                case 'VISITE':
+                    return '#46513F';
+                case 'ACTIVITÉS':
+                default:
+                    return '#788C6B';
+            }
         }
         
         // Update time display
@@ -502,9 +745,12 @@
             document.getElementById('current-time').textContent = timeStr;
         }
         
-        // Update status bar
-        function updateStatus(message) {
-            document.getElementById('status-text').textContent = message;
+        // Setup QR code for mobile access
+        function setupQRCode() {
+            const qrCodeImg = document.getElementById('qr-code');
+            const qrUrl = 'https://chrono-board-tarnrsps.replit.app/';
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(qrUrl)}`;
+            qrCodeImg.src = qrApiUrl;
         }
         
         // Show error message
@@ -516,8 +762,6 @@
                     Appuyez sur OK pour réessayer
                 </p>
             `;
-            
-            updateStatus('Erreur de connexion');
         }
         
         // Auto-refresh functionality
