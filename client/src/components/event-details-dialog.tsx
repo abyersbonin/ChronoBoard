@@ -59,63 +59,108 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     };
     
     const preventTouchMove = (e: TouchEvent) => {
-      e.preventDefault();
+      // Allow scrolling within dialog content, but prevent body scroll
+      const target = e.target as Element;
+      const dialogContent = target.closest('[data-scroll-allowed]');
+      if (!dialogContent) {
+        e.preventDefault();
+      }
     };
 
     if (open) {
       document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
-      // Additional scroll lock for mobile
+      
+      // Mobile-specific scroll prevention
       if (isMobile) {
         const currentScrollY = window.scrollY;
         setScrollPosition(currentScrollY);
-        document.documentElement.style.overflow = 'hidden';
+        
+        // Prevent all scrolling on mobile
+        document.body.style.overflow = 'hidden';
         document.body.style.position = 'fixed';
         document.body.style.width = '100%';
         document.body.style.top = `-${currentScrollY}px`;
-        document.body.style.touchAction = 'none';
-        // Prevent touch scrolling completely
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.documentElement.style.overflow = 'hidden';
+        document.documentElement.style.position = 'fixed';
+        document.documentElement.style.width = '100%';
+        document.documentElement.style.height = '100%';
+        
+        // Prevent touch scrolling
         document.addEventListener('touchmove', preventTouchMove, { passive: false });
+        document.addEventListener('touchstart', preventTouchMove, { passive: false });
+      } else {
+        // Desktop - just prevent body scroll
+        document.body.style.overflow = 'hidden';
       }
     } else {
-      // Ensure scroll is restored when dialog closes
-      document.body.style.overflow = '';
+      // Restore scroll when dialog closes
       if (isMobile) {
-        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
         document.body.style.position = '';
         document.body.style.width = '';
         document.body.style.top = '';
-        document.body.style.touchAction = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.documentElement.style.overflow = '';
+        document.documentElement.style.position = '';
+        document.documentElement.style.width = '';
+        document.documentElement.style.height = '';
+        
         // Remove touch prevention
         document.removeEventListener('touchmove', preventTouchMove);
+        document.removeEventListener('touchstart', preventTouchMove);
+        
         // Restore scroll position
         window.scrollTo(0, scrollPosition);
+      } else {
+        document.body.style.overflow = '';
       }
     }
     
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = '';
       if (isMobile) {
         document.removeEventListener('touchmove', preventTouchMove);
+        document.removeEventListener('touchstart', preventTouchMove);
       }
+      
+      // Clean up styles
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.documentElement.style.overflow = '';
+      document.documentElement.style.position = '';
+      document.documentElement.style.width = '';
+      document.documentElement.style.height = '';
     };
-  }, [open, onOpenChange]);
+  }, [open, onOpenChange, isMobile, scrollPosition]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
+      // Restore all styles on component unmount
       document.body.style.overflow = '';
-      if (isMobile) {
-        document.documentElement.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-        document.body.style.top = '';
-        // Restore scroll position on cleanup
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.documentElement.style.overflow = '';
+      document.documentElement.style.position = '';
+      document.documentElement.style.width = '';
+      document.documentElement.style.height = '';
+      
+      // Restore scroll position on cleanup if needed
+      if (isMobile && scrollPosition > 0) {
         window.scrollTo(0, scrollPosition);
       }
     };
-  }, [isMobile, scrollPosition]);
+  }, []);
 
   if (!event || !open) return null;
 
@@ -189,6 +234,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       {/* Modal Content */}
       <div 
         className={`relative z-[101] w-full ${isMobile ? 'max-w-full mx-0 h-[55vh] overflow-y-auto rounded-t-lg' : 'max-w-md mx-4 rounded-lg'} bg-white shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'}`}
+        data-scroll-allowed="true"
         onTouchMove={(e) => {
           // Allow scrolling within the modal content
           e.stopPropagation();
