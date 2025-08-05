@@ -1,0 +1,31 @@
+{
+  "id": "com.spaeastman.dashboard",
+  "version": "1.0.0",
+  "vendor": "Spa Eastman",
+  "type": "web",
+  "main": "index.html",
+  "title": "Spa Eastman Dashboard",
+  "icon": "icon.png",
+  "requiredPermissions": [
+    "time",
+    "activities.read"
+  ],
+  "supportedLocales": [
+    "fr-CA",
+    "en-US"
+  ],
+  "resolution": "1920x1080",
+  "tileSize": "normal",
+  "bgColor": "#788C6B",
+  "visible": true,
+  "accessibility": {
+    "supportsAudioGuidance": false
+  },
+  "trustLevel": "default",
+  "handlesRelaunch": false,
+  "removable": true,
+  "privileged": false,
+  "transparent": false,
+  "enyoVersion": "2.7.0",
+  "uiRevision": "2"
+}

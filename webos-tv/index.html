@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="webos-version" content="24">
+    <meta name="webos-device-type" content="tv">
+    <meta name="webos-app-type" content="web">
+    <title>Spa Eastman Dashboard</title>
+    
+    <!-- webOS specific meta tags -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="x-webos-accessibilityEnabled" content="false">
+    <meta name="x-webos-focusable" content="true">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #788C6B;
+            cursor: none; /* Hide cursor for TV interface */
+        }
+        
+        #app {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        
+        /* Loading screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #788C6B 0%, #ACB8A4 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+        }
+        
+        .loading h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .loading p {
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-top: 2rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Focus management for TV remote */
+        .focusable {
+            outline: 3px solid #ff6b35;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Loading screen -->
+        <div class="loading" id="loading">
+            <h1>Spa Eastman</h1>
+            <p>Chargement du tableau de bord...</p>
+            <div class="spinner"></div>
+        </div>
+        
+        <!-- Main dashboard iframe -->
+        <iframe 
+            id="dashboard" 
+            src="https://chrono-board-tarnrsps.replit.app/"
+            title="Spa Eastman Dashboard"
+            allow="fullscreen"
+            style="display: none;"
+        ></iframe>
+    </div>
+
+    <script>
+        // webOS TV remote control handling
+        let remoteKeyHandler = null;
+        
+        // Auto-refresh every 30 seconds for live data
+        const AUTO_REFRESH_INTERVAL = 30000;
+        let refreshTimer = null;
+        
+        // App initialization
+        function initApp() {
+            console.log('Spa Eastman Dashboard - webOS TV App starting...');
+            
+            const iframe = document.getElementById('dashboard');
+            const loading = document.getElementById('loading');
+            
+            // Show dashboard when loaded
+            iframe.onload = function() {
+                console.log('Dashboard loaded successfully');
+                loading.style.display = 'none';
+                iframe.style.display = 'block';
+                
+                // Start auto-refresh timer
+                startAutoRefresh();
+            };
+            
+            // Handle load errors
+            iframe.onerror = function() {
+                console.error('Failed to load dashboard');
+                loading.innerHTML = `
+                    <h1>Spa Eastman</h1>
+                    <p>Erreur de connexion</p>
+                    <p style="font-size: 1rem; margin-top: 1rem; opacity: 0.7;">
+                        Vérifiez la connexion internet
+                    </p>
+                `;
+            };
+            
+            // Setup TV remote controls
+            setupRemoteControl();
+            
+            // Handle app visibility changes
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    stopAutoRefresh();
+                } else {
+                    startAutoRefresh();
+                    refreshDashboard();
+                }
+            });
+        }
+        
+        // Auto-refresh functionality
+        function startAutoRefresh() {
+            if (refreshTimer) clearInterval(refreshTimer);
+            
+            refreshTimer = setInterval(refreshDashboard, AUTO_REFRESH_INTERVAL);
+            console.log('Auto-refresh started (30s interval)');
+        }
+        
+        function stopAutoRefresh() {
+            if (refreshTimer) {
+                clearInterval(refreshTimer);
+                refreshTimer = null;
+                console.log('Auto-refresh stopped');
+            }
+        }
+        
+        function refreshDashboard() {
+            const iframe = document.getElementById('dashboard');
+            if (iframe) {
+                console.log('Refreshing dashboard...');
+                const currentSrc = iframe.src;
+                iframe.src = currentSrc + (currentSrc.includes('?') ? '&' : '?') + 't=' + Date.now();
+            }
+        }
+        
+        // webOS TV remote control setup
+        function setupRemoteControl() {
+            // Register for remote key events
+            if (window.webOS && webOS.platform && webOS.platform.tv) {
+                // webOS TV specific remote handling
+                document.addEventListener('keydown', handleRemoteKey);
+                console.log('webOS TV remote control registered');
+            } else {
+                // Fallback for simulator/browser
+                document.addEventListener('keydown', handleRemoteKey);
+                console.log('Standard remote control registered');
+            }
+        }
+        
+        function handleRemoteKey(event) {
+            console.log('Remote key pressed:', event.keyCode, event.key);
+            
+            switch(event.keyCode) {
+                case 13: // OK/Enter button
+                case 32: // Space (OK alternative)
+                    event.preventDefault();
+                    refreshDashboard();
+                    break;
+                    
+                case 8: // Back button
+                case 27: // Escape
+                    event.preventDefault();
+                    // Handle back/exit
+                    if (window.webOS && webOS.platform && webOS.platform.tv) {
+                        // On real webOS TV, minimize app
+                        if (window.webOSSystem) {
+                            webOSSystem.platformBack();
+                        }
+                    } else {
+                        // In simulator, just refresh
+                        refreshDashboard();
+                    }
+                    break;
+                    
+                case 404: // Green button
+                    event.preventDefault();
+                    refreshDashboard();
+                    break;
+                    
+                case 405: // Yellow button
+                    event.preventDefault();
+                    // Toggle fullscreen if available
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    } else {
+                        document.documentElement.requestFullscreen();
+                    }
+                    break;
+                    
+                case 403: // Red button
+                    event.preventDefault();
+                    // Stop auto-refresh
+                    if (refreshTimer) {
+                        stopAutoRefresh();
+                        console.log('Auto-refresh stopped by user');
+                    } else {
+                        startAutoRefresh();
+                        console.log('Auto-refresh started by user');
+                    }
+                    break;
+                    
+                case 406: // Blue button
+                    event.preventDefault();
+                    // Force reload
+                    window.location.reload();
+                    break;
+                    
+                default:
+                    // Allow other keys to pass through
+                    break;
+            }
+        }
+        
+        // App lifecycle management
+        window.addEventListener('load', initApp);
+        
+        // Cleanup on unload
+        window.addEventListener('beforeunload', function() {
+            stopAutoRefresh();
+        });
+        
+        // webOS app lifecycle hooks
+        if (window.webOS) {
+            // App activated
+            window.addEventListener('webOSLaunch', function(event) {
+                console.log('webOS app launched with params:', event.detail);
+                refreshDashboard();
+            });
+            
+            // App reactivated
+            window.addEventListener('webOSRelaunch', function(event) {
+                console.log('webOS app relaunched with params:', event.detail);
+                refreshDashboard();
+            });
+        }
+        
+        console.log('Spa Eastman Dashboard - webOS TV App initialized');
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "spa-eastman-dashboard-webos",
+  "version": "1.0.0",
+  "description": "Spa Eastman Dashboard for webOS TV",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Build complete - ready for webOS deployment'",
+    "package": "ares-package .",
+    "install": "ares-install -d simulator spa-eastman-dashboard-webos_1.0.0_all.ipk",
+    "launch": "ares-launch -d simulator com.spaeastman.dashboard",
+    "deploy": "npm run package && npm run install && npm run launch"
+  },
+  "keywords": ["webos", "tv", "dashboard", "spa", "eastman"],
+  "author": "Spa Eastman",
+  "license": "MIT",
+  "webOS": {
+    "deviceProfile": "tv",
+    "resolution": "1920x1080"
+  }
+}
