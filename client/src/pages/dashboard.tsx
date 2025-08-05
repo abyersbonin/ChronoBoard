@@ -298,9 +298,15 @@ export default function Dashboard() {
           {!isMobile && (
             <div className="absolute bottom-6 left-16">
               <div className="relative">
-                {/* Text positioned above */}
-                <div className="text-white text-sm drop-shadow-md text-center mb-2">
-                  Consulter sur votre<br />appareil mobile
+                {/* Text positioned above with arrow */}
+                <div className="text-white text-sm drop-shadow-md text-center mb-2 flex items-center justify-center gap-2">
+                  <span>Consulter sur votre<br />appareil mobile</span>
+                  <img 
+                    src="https://www.spa-eastman.com/wp-content/uploads/2025/04/icones.png"
+                    alt="Arrow"
+                    className="w-4 h-4 rotate-90 drop-shadow-md"
+                    style={{ filter: 'brightness(0) invert(1)' }}
+                  />
                 </div>
                 
                 {/* QR Code centered below text */}
