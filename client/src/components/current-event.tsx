@@ -175,22 +175,6 @@ export function CurrentEvent({ event }: CurrentEventProps) {
               </span>
             </div>
           </div>
-          
-          {/* Description button - hide on mobile since the whole container is clickable */}
-          {!isMobile && event.description && (
-            <div className="absolute right-4 top-4">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowEventDetails(true);
-                }}
-                className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium px-3 py-1.5 rounded-full transition-colors"
-                style={{ fontFamily: 'Montserrat, sans-serif' }}
-              >
-                Description
-              </button>
-            </div>
-          )}
         </div>
       </div>
 

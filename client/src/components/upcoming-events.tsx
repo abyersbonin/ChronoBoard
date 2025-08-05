@@ -194,13 +194,19 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                           </div>
                         )}
                         
-                        {/* Shockwave animation - hide on mobile */}
-                        {!isMobile && (
+                        {/* Description button - hide on mobile since the whole container is clickable */}
+                        {!isMobile && event.description && (
                           <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                            <div className="relative">
-                              <div className="w-3 h-3 rounded-full border-2 border-blue-400 opacity-75" style={{ animation: 'ripple 1.8s infinite' }}></div>
-                              <div className="absolute top-0 left-0 w-3 h-3 rounded-full border-2 border-blue-300 opacity-50" style={{ animation: 'ripple 1.8s infinite 0.4s' }}></div>
-                            </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEventClick(event);
+                              }}
+                              className="bg-transparent border border-blue-500 text-blue-600 hover:bg-blue-50 text-xs font-medium px-3 py-1.5 rounded-full transition-colors"
+                              style={{ fontFamily: 'Montserrat, sans-serif' }}
+                            >
+                              Description
+                            </button>
                           </div>
                         )}
                       </div>
