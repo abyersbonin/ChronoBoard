@@ -87,20 +87,41 @@
     overflow: hidden;
   }
 
-  /* Custom Spa Eastman badge colors */
+  /* Custom Spa Eastman badge colors - force override for mobile */
   .spa-activites-badge {
     background-color: #788C6B !important;
     color: white !important;
+    border: none !important;
   }
 
   .spa-conferences-badge {
     background-color: #ACB8A4 !important;
     color: white !important;
+    border: none !important;
   }
 
   .spa-visite-badge {
     background-color: #46513F !important;
     color: white !important;
+    border: none !important;
+  }
+
+  /* Ensure badge styles work on mobile and desktop */
+  @media (max-width: 768px) {
+    .spa-activites-badge {
+      background-color: #788C6B !important;
+      color: white !important;
+    }
+
+    .spa-conferences-badge {
+      background-color: #ACB8A4 !important;
+      color: white !important;
+    }
+
+    .spa-visite-badge {
+      background-color: #46513F !important;
+      color: white !important;
+    }
   }
 }
 
