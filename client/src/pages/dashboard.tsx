@@ -298,23 +298,9 @@ export default function Dashboard() {
           {!isMobile && (
             <div className="absolute bottom-6 left-16">
               <div className="relative">
-                {/* Text positioned above with arrow */}
+                {/* Text positioned above */}
                 <div className="text-white text-sm drop-shadow-md text-center mb-2">
-                  <div>Consulter sur votre<br />appareil mobile</div>
-                  <div className="flex justify-center mt-1">
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      className="drop-shadow-md"
-                    >
-                      <path 
-                        d="M12 16l-6-6h12l-6 6z" 
-                        fill="white"
-                      />
-                    </svg>
-                  </div>
+                  Consulter sur votre<br />appareil mobile
                 </div>
                 
                 {/* QR Code centered below text */}
