@@ -147,12 +147,12 @@ export function CurrentEvent({ event }: CurrentEventProps) {
       >
         <div className="flex items-center justify-between mb-4">
           <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-semibold text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>À présent</h2>
-          <div className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold text-blue-600`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+          <div className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold`} style={{ fontFamily: 'Montserrat, sans-serif', color: '#788C6B' }}>
             {currentTime}
           </div>
         </div>
         
-        <div className="border-l-4 border-blue-500 pl-4 flex-1 relative">
+        <div className="border-l-4 pl-4 flex-1 relative" style={{ borderLeftColor: '#788C6B' }}>
           <div className="flex items-center gap-3 mb-3">
             <h3 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
               {cleanHtmlText(event.title)}

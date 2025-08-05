@@ -202,8 +202,14 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                                 e.stopPropagation();
                                 handleEventClick(event);
                               }}
-                              className="bg-transparent border border-blue-500 text-blue-600 hover:bg-blue-50 text-xs font-medium px-3 py-1.5 rounded-full transition-colors"
-                              style={{ fontFamily: 'Montserrat, sans-serif' }}
+                              className="bg-transparent border text-xs font-medium px-3 py-1.5 rounded-full transition-colors"
+                              style={{ 
+                                borderColor: '#788C6B', 
+                                color: '#788C6B',
+                                fontFamily: 'Montserrat, sans-serif'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#788C6B10'}
+                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                             >
                               Description
                             </button>
