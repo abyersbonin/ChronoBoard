@@ -60,10 +60,10 @@ export function CurrentEvent({ event }: CurrentEventProps) {
     
     // Assign consistent colors based on calendar name
     const colorMap: { [key: string]: string } = {
-      'ACTIVITÉS': 'bg-blue-500',
-      'CONFÉRENCES': 'bg-green-500',
+      'ACTIVITÉS': 'spa-activites-badge',
+      'CONFÉRENCES': 'spa-conferences-badge',
       'WORKSHOPS': 'bg-purple-500',
-      'VISITE': 'bg-orange-500',
+      'VISITE': 'spa-visite-badge',
       'GROUPE': 'bg-indigo-500',
       'GÉNÉRAL': 'bg-gray-500',
       'AUTRE': 'bg-red-500'

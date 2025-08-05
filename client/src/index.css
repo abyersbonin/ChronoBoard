@@ -86,6 +86,22 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  /* Custom Spa Eastman badge colors */
+  .spa-activites-badge {
+    background-color: #788C6B !important;
+    color: white !important;
+  }
+
+  .spa-conferences-badge {
+    background-color: #ACB8A4 !important;
+    color: white !important;
+  }
+
+  .spa-visite-badge {
+    background-color: #ACB8A4 !important;
+    color: white !important;
+  }
 }
 
 /* Hide scrollbar when in fullscreen mode but keep scroll functionality */
