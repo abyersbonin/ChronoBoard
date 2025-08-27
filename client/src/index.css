@@ -73,23 +73,7 @@
   animation: gentleParallax 25s ease-in-out infinite;
 }
 
-/* Modal overlay with maximum z-index for LG StanbyME tablet */
-.modal-overlay {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  z-index: 999999 !important;
-  pointer-events: all !important;
-}
 
-/* Modal content with top priority */
-.modal-content {
-  position: relative !important;
-  z-index: 1000000 !important;
-  pointer-events: all !important;
-}
 
 /* Loading skeleton styles */
 .skeleton {

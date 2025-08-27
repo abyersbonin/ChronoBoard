@@ -215,33 +215,36 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
 
   return (
     <div 
-      className="modal-overlay fixed inset-0"
-      style={{ 
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '5%'
-      }}
+      className={`fixed inset-0 z-[9999] flex ${isMobile ? 'items-end justify-center p-0' : 'items-center justify-center p-8'}`}
+      style={{ touchAction: isMobile ? 'none' : 'auto' }}
     >
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        onClick={() => onOpenChange(false)}
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm z-[9998]"
+        style={{ touchAction: isMobile ? 'none' : 'auto' }}
+        onClick={() => {
+          onOpenChange(false);
+        }}
+        onTouchMove={(e) => {
+          if (isMobile) {
+            // Only prevent scrolling on backdrop, not modal content
+            const target = e.target as HTMLElement;
+            if (target === e.currentTarget) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }
+        }}
       />
       
-      {/* Modal Content - LG StanbyME Tablet Centered */}
+      {/* Modal Content */}
       <div 
-        className="modal-content bg-white rounded-lg shadow-2xl border border-gray-300 animate-category-fade"
-        style={{
-          width: '70%',
-          maxWidth: '500px',
-          height: 'auto',
-          maxHeight: '70%',
-          overflow: 'hidden',
-          margin: '0',
-          padding: '2rem'
+        className={`relative z-[10000] w-full ${isMobile ? 'max-w-full mx-0 h-[60vh] overflow-y-auto rounded-t-lg' : 'max-w-lg mx-4 rounded-lg max-h-[80vh] overflow-y-auto'} bg-white shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'}`}
+        data-scroll-allowed="true"
+        onTouchMove={(e) => {
+          // Allow scrolling within the modal content
+          e.stopPropagation();
         }}
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
