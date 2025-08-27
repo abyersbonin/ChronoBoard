@@ -11,7 +11,7 @@ interface EventDetailsDialogProps {
 }
 
 export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDialogProps) {
-  const { translateEventContent } = useLanguage();
+  const { language } = useLanguage();
   // Mobile device detection (excluding TV browsers)
   const [isMobile, setIsMobile] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -168,14 +168,17 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
   if (!event || !open) return null;
 
   const formatTime = (date: Date) => {
-    return new Date(date).toLocaleTimeString('fr-FR', {
+    const locale = language === 'fr' ? 'fr-FR' : 'en-US';
+    return new Date(date).toLocaleTimeString(locale, {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: language === 'en'
     });
   };
 
   const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('fr-FR', {
+    const locale = language === 'fr' ? 'fr-FR' : 'en-US';
+    return new Date(date).toLocaleDateString(locale, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -300,7 +303,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
                 className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
               >
                 <CalendarPlus className="h-5 w-5" />
-                Ajouter à mon calendrier
+                {language === 'fr' ? 'Ajouter à mon calendrier' : 'Add to my calendar'}
               </button>
             </div>
           )}
