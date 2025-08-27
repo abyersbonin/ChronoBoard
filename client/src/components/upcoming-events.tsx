@@ -100,9 +100,11 @@ export function UpcomingEvents({ events, language = 'fr' }: UpcomingEventsProps)
     setShowEventDetails(true);
   };
   const formatTime = (date: Date) => {
-    return new Date(date).toLocaleTimeString('fr-FR', {
+    const locale = language === 'fr' ? 'fr-FR' : 'en-US';
+    return new Date(date).toLocaleTimeString(locale, {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: language === 'en'
     });
   };
 
@@ -113,13 +115,14 @@ export function UpcomingEvents({ events, language = 'fr' }: UpcomingEventsProps)
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     if (eventDate.toDateString() === today.toDateString()) {
-      return "{t('events.today')}";
+      return t('events.today');
     } else if (eventDate.toDateString() === tomorrow.toDateString()) {
-      return "{t('events.tomorrow')}";
+      return t('events.tomorrow');
     } else {
-      // Format as "DIMANCHE, AOÛT 3"
-      const weekday = eventDate.toLocaleDateString('fr-FR', { weekday: 'long' }).toUpperCase();
-      const month = eventDate.toLocaleDateString('fr-FR', { month: 'long' }).toUpperCase();
+      // Format using language-appropriate locale
+      const locale = language === 'fr' ? 'fr-FR' : 'en-US';
+      const weekday = eventDate.toLocaleDateString(locale, { weekday: 'long' }).toUpperCase();
+      const month = eventDate.toLocaleDateString(locale, { month: 'long' }).toUpperCase();
       const day = eventDate.getDate();
       return `${weekday}, ${month} ${day}`;
     }
@@ -146,8 +149,8 @@ export function UpcomingEvents({ events, language = 'fr' }: UpcomingEventsProps)
       <div className={`bg-gray-100 bg-opacity-60 rounded-xl ${isMobile ? 'p-4' : 'p-6'} border border-gray-300 shadow-lg`}>
         <h2 className={`${isMobile ? 'text-lg mb-4' : 'text-xl mb-6'} font-semibold text-gray-800`}>{t('events.upcoming')}</h2>
         <div className="text-center py-8">
-          <p className="text-gray-600 mb-2">Aucun événement à venir</p>
-          <p className="text-gray-500 text-sm">Les calendriers iCal se synchronisent automatiquement</p>
+          <p className="text-gray-600 mb-2">{language === 'fr' ? 'Aucun événement à venir' : 'No upcoming events'}</p>
+          <p className="text-gray-500 text-sm">{language === 'fr' ? 'Les calendriers iCal se synchronisent automatiquement' : 'iCal calendars sync automatically'}</p>
         </div>
       </div>
     );

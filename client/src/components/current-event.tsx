@@ -126,10 +126,10 @@ export function CurrentEvent({ event, language = 'fr' }: CurrentEventProps) {
         
         <div className="border-l-4 border-gray-300 pl-4">
           <h3 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-600 mb-3`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            Aucun événement en cours
+            {language === 'fr' ? 'Aucun événement en cours' : 'No current events'}
           </h3>
           <p className={`text-gray-500 ${isMobile ? 'text-sm mb-3' : 'mb-4'}`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            Profitez de ce moment libre dans votre emploi du temps.
+            {language === 'fr' ? 'Profitez de ce moment libre dans votre emploi du temps.' : 'Enjoy this free time in your schedule.'}
           </p>
         </div>
       </div>
@@ -137,9 +137,11 @@ export function CurrentEvent({ event, language = 'fr' }: CurrentEventProps) {
   }
 
   const formatTime = (date: Date) => {
-    return new Date(date).toLocaleTimeString('fr-FR', {
+    const locale = language === 'fr' ? 'fr-FR' : 'en-US';
+    return new Date(date).toLocaleTimeString(locale, {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: language === 'en'
     });
   };
 
