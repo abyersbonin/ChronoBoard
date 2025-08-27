@@ -270,7 +270,6 @@ export class DatabaseStorage implements IStorage {
             isAllDay: eventData.isAllDay,
             icalEventId: eventData.icalEventId,
             calendarSource: eventData.calendarSource,
-            createdAt: new Date(),
             lastSynced: new Date(),
           })
           .onConflictDoUpdate({

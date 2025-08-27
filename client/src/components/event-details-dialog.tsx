@@ -215,34 +215,20 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
 
   return (
     <div 
-      className={`fixed inset-0 z-[100] flex ${isMobile ? 'items-end justify-center p-0' : 'items-center justify-center p-8'}`}
+      className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
       style={{ touchAction: isMobile ? 'none' : 'auto' }}
-    >
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        style={{ touchAction: isMobile ? 'none' : 'auto' }}
-        onClick={() => {
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
           onOpenChange(false);
-        }}
-        onTouchMove={(e) => {
-          if (isMobile) {
-            // Only prevent scrolling on backdrop, not modal content
-            const target = e.target as HTMLElement;
-            if (target === e.currentTarget) {
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          }
-        }}
-      />
-      
+        }
+      }}
+    >
       {/* Modal Content */}
       <div 
-        className={`relative z-[101] w-full ${isMobile ? 'max-w-full mx-0 h-[60vh] overflow-y-auto rounded-t-lg' : 'max-w-lg mx-4 rounded-lg max-h-[80vh] overflow-y-auto'} bg-white shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'}`}
+        className={`relative w-full ${isMobile ? 'max-w-full h-[70vh] rounded-lg' : 'max-w-md rounded-lg max-h-[85vh]'} overflow-y-auto bg-white shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'} animate-category-fade`}
         data-scroll-allowed="true"
+        onClick={(e) => e.stopPropagation()}
         onTouchMove={(e) => {
-          // Allow scrolling within the modal content
           e.stopPropagation();
         }}
       >
