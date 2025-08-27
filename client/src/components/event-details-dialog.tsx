@@ -260,10 +260,25 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       >
         {/* Close Button */}
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
             onOpenChange(false);
           }}
-          className="absolute right-4 top-4 p-1 rounded-sm opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-opacity"
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onOpenChange(false);
+          }}
+          className="absolute right-4 top-4 p-2 rounded-sm opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-opacity bg-white/80 hover:bg-white"
+          style={{ 
+            zIndex: 1000001,
+            minWidth: '32px',
+            minHeight: '32px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
         >
           <X className="h-4 w-4 text-gray-600" />
           <span className="sr-only">Close</span>
@@ -313,8 +328,21 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
           {isMobile && (
             <div className="mt-4 pt-4 border-t border-gray-200">
               <button
-                onClick={handleAddToCalendar}
-                className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleAddToCalendar();
+                }}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleAddToCalendar();
+                }}
+                className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                style={{ 
+                  minHeight: '48px',
+                  touchAction: 'manipulation'
+                }}
               >
                 <CalendarPlus className="h-5 w-5" />
                 {language === 'fr' ? 'Ajouter à mon calendrier' : 'Add to my calendar'}
