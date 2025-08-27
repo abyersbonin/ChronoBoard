@@ -73,6 +73,32 @@
   animation: gentleParallax 25s ease-in-out infinite;
 }
 
+/* Fixed modal positioning - always centered regardless of scroll */
+.modal-fixed-center {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 999999 !important;
+  margin: 0 !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+.modal-overlay-fixed {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999998 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
 
 
 /* Loading skeleton styles */

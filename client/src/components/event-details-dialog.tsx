@@ -214,62 +214,23 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
   };
 
   return (
-    <div 
-      className="z-[9999] flex items-center justify-center"
-      style={{ 
-        position: 'fixed',
-        top: '0',
-        left: '0', 
-        right: '0',
-        bottom: '0',
-        width: '100vw',
-        height: '100vh',
-        touchAction: isMobile ? 'none' : 'auto'
-      }}
-    >
+    <div className="modal-overlay-fixed bg-black/80 backdrop-blur-sm">
       {/* Backdrop */}
       <div 
-        className="bg-black/80 backdrop-blur-sm z-[9998]"
-        style={{ 
-          position: 'absolute',
-          top: '0',
-          left: '0',
-          right: '0', 
-          bottom: '0',
-          width: '100%',
-          height: '100%',
-          touchAction: isMobile ? 'none' : 'auto'
-        }}
-        onClick={() => {
-          onOpenChange(false);
-        }}
-        onTouchMove={(e) => {
-          if (isMobile) {
-            // Only prevent scrolling on backdrop, not modal content
-            const target = e.target as HTMLElement;
-            if (target === e.currentTarget) {
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          }
-        }}
+        className="absolute inset-0"
+        onClick={() => onOpenChange(false)}
       />
       
       {/* Modal Content */}
       <div 
-        className={`z-[10000] bg-white shadow-2xl border border-gray-300 rounded-lg ${isMobile ? 'p-4' : 'p-6'} overflow-y-auto`}
+        className="modal-fixed-center bg-white shadow-2xl border border-gray-300 rounded-lg overflow-y-auto"
         style={{
-          position: 'relative',
-          width: isMobile ? '90%' : '500px',
+          width: isMobile ? '90vw' : '500px',
           maxWidth: '90vw',
           maxHeight: '80vh',
-          margin: '0 auto'
+          padding: isMobile ? '1rem' : '2rem'
         }}
-        data-scroll-allowed="true"
-        onTouchMove={(e) => {
-          // Allow scrolling within the modal content
-          e.stopPropagation();
-        }}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
