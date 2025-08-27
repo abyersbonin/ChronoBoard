@@ -72,11 +72,11 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       }
     };
     
-    const preventTouchMove = (e: TouchEvent) => {
-      // Allow scrolling within dialog content, but prevent body scroll
+    const preventBodyScroll = (e: TouchEvent) => {
+      // Allow scrolling within modal content, prevent background scroll
       const target = e.target as Element;
-      const dialogContent = target.closest('[data-scroll-allowed]');
-      if (!dialogContent) {
+      const modalContent = target.closest('[data-modal-content]');
+      if (!modalContent) {
         e.preventDefault();
       }
     };
@@ -84,49 +84,35 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     if (open) {
       document.addEventListener('keydown', handleEscape);
       
-      // Mobile-specific scroll prevention
+      // Save current scroll position when opening
+      const currentScrollY = window.scrollY;
+      setScrollPosition(currentScrollY);
+      
       if (isMobile) {
-        const currentScrollY = window.scrollY;
-        setScrollPosition(currentScrollY);
-        
-        // Prevent all scrolling on mobile
+        // Mobile: prevent background scroll while preserving modal scroll
         document.body.style.overflow = 'hidden';
         document.body.style.position = 'fixed';
         document.body.style.width = '100%';
         document.body.style.top = `-${currentScrollY}px`;
-        document.body.style.left = '0';
-        document.body.style.right = '0';
-        document.documentElement.style.overflow = 'hidden';
-        document.documentElement.style.position = 'fixed';
-        document.documentElement.style.width = '100%';
-        document.documentElement.style.height = '100%';
         
-        // Prevent touch scrolling
-        document.addEventListener('touchmove', preventTouchMove, { passive: false });
-        document.addEventListener('touchstart', preventTouchMove, { passive: false });
+        // Add touch event listeners to prevent background scroll
+        document.addEventListener('touchmove', preventBodyScroll, { passive: false });
       } else {
-        // Desktop - just prevent body scroll
+        // Desktop: just prevent body scroll
         document.body.style.overflow = 'hidden';
       }
     } else {
-      // Restore scroll when dialog closes
+      // Restore scroll when dialog closes - preserve exact position
       if (isMobile) {
         document.body.style.overflow = '';
         document.body.style.position = '';
         document.body.style.width = '';
         document.body.style.top = '';
-        document.body.style.left = '';
-        document.body.style.right = '';
-        document.documentElement.style.overflow = '';
-        document.documentElement.style.position = '';
-        document.documentElement.style.width = '';
-        document.documentElement.style.height = '';
         
         // Remove touch prevention
-        document.removeEventListener('touchmove', preventTouchMove);
-        document.removeEventListener('touchstart', preventTouchMove);
+        document.removeEventListener('touchmove', preventBodyScroll);
         
-        // Restore scroll position
+        // Restore exact scroll position without animation
         window.scrollTo(0, scrollPosition);
       } else {
         document.body.style.overflow = '';
@@ -136,8 +122,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     return () => {
       document.removeEventListener('keydown', handleEscape);
       if (isMobile) {
-        document.removeEventListener('touchmove', preventTouchMove);
-        document.removeEventListener('touchstart', preventTouchMove);
+        document.removeEventListener('touchmove', preventBodyScroll);
       }
       
       // Clean up styles
@@ -145,12 +130,6 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       document.body.style.position = '';
       document.body.style.width = '';
       document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.documentElement.style.overflow = '';
-      document.documentElement.style.position = '';
-      document.documentElement.style.width = '';
-      document.documentElement.style.height = '';
     };
   }, [open, onOpenChange, isMobile, scrollPosition]);
 
@@ -162,17 +141,6 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       document.body.style.position = '';
       document.body.style.width = '';
       document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.documentElement.style.overflow = '';
-      document.documentElement.style.position = '';
-      document.documentElement.style.width = '';
-      document.documentElement.style.height = '';
-      
-      // Restore scroll position on cleanup if needed
-      if (isMobile && scrollPosition > 0) {
-        window.scrollTo(0, scrollPosition);
-      }
     };
   }, []);
 
@@ -257,17 +225,57 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       
       {/* Modal Content */}
       <div 
-        className="bg-white shadow-2xl border border-gray-300 rounded-lg overflow-y-auto"
+        className="bg-white shadow-2xl border border-gray-300 rounded-lg"
         style={{
           position: 'relative',
           zIndex: 1000000,
           width: isMobile ? '90vw' : '500px',
           maxWidth: '90vw',
-          maxHeight: '80vh',
-          padding: isMobile ? '1rem' : '2rem'
+          maxHeight: isMobile ? '85vh' : '80vh',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden'
         }}
         onClick={(e) => e.stopPropagation()}
+        data-modal-content="true"
       >
+        {/* Scrollable Content Area */}
+        <div 
+          style={{
+            padding: isMobile ? '1rem' : '2rem',
+            overflowY: 'auto',
+            flex: 1,
+            // Hide scrollbar on mobile while keeping scroll functionality
+            scrollbarWidth: isMobile ? 'none' : 'thin',
+            msOverflowStyle: isMobile ? 'none' : 'auto'
+          }}
+          className={isMobile ? 'scrollbar-hide' : ''}
+        >
+        {/* Close Button */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onOpenChange(false);
+          }}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onOpenChange(false);
+          }}
+          className="absolute right-4 top-4 p-2 rounded-sm opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-opacity bg-white/80 hover:bg-white"
+          style={{ 
+            zIndex: 1000001,
+            minWidth: '32px',
+            minHeight: '32px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <X className="h-4 w-4 text-gray-600" />
+          <span className="sr-only">Close</span>
+        </button>
         {/* Close Button */}
         <button
           onClick={(e) => {
@@ -359,6 +367,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
               </button>
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>,

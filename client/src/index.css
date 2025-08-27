@@ -412,3 +412,14 @@
     opacity: 0.8;
   }
 }
+
+/* Hide scrollbar on mobile while preserving scroll functionality */
+.scrollbar-hide {
+  /* For Webkit browsers (Chrome, Safari, Edge) */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
