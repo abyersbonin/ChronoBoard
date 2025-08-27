@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
 import { Thermometer } from "lucide-react";
 import { type WeatherData } from "@shared/schema";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useDeviceDetection } from "@/utils/deviceDetection";
 
 interface WeatherWidgetProps {
   location: string;
@@ -11,42 +11,11 @@ interface WeatherWidgetProps {
 
 export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps) {
   const { t } = useLanguage();
-  // Mobile device detection (excluding TV browsers)
-  const [isMobile, setIsMobile] = useState(false);
+  const deviceInfo = useDeviceDetection();
   
-  useEffect(() => {
-    const detectMobile = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const userAgent = navigator.userAgent.toLowerCase();
-      
-      // Exclude TV browsers (webOS, Tizen, etc.)
-      const isTVBrowser = /webos|tizen|smart-tv|smarttv/.test(userAgent);
-      
-      // Mobile viewport ranges covering 95% of phones from last 5 years
-      const isMobileViewport = (
-        // Portrait: narrow to wide mobile range
-        (width >= 280 && width <= 430 && height >= 640) ||
-        // Landscape: typical mobile landscape orientations  
-        (width >= 568 && width <= 932 && height >= 320 && height <= 430) ||
-        // Foldable edge cases
-        (width >= 280 && width <= 360 && height >= 653)
-      ) && width < 600; // Small tablet breakpoint
-      
-      // Touch capability check
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      
-      // Mobile if: viewport matches mobile ranges AND touch capable AND NOT TV browser
-      const mobile = isMobileViewport && isTouchDevice && !isTVBrowser;
-      
-      setIsMobile(mobile);
-    };
-    
-    detectMobile();
-    window.addEventListener('resize', detectMobile);
-    
-    return () => window.removeEventListener('resize', detectMobile);
-  }, []);
+  // Extract device-specific layout preferences
+  const { isMobile, isTablet, deviceType, brand, layoutPreferences } = deviceInfo;
+  const { weatherLayout, fontScale, spacingScale } = layoutPreferences;
 
   const { data: weather, isLoading, error } = useQuery({
     queryKey: ['/api/weather', location],
@@ -184,92 +153,96 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
       style={{
         fontFamily: 'Montserrat, sans-serif',
         display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        gap: isMobile ? '8px' : '8px',
+        flexDirection: weatherLayout === 'vertical' ? 'column' : 'row',
+        gap: `${8 * spacingScale}px`,
         zIndex: 30,
         width: '100%',
         maxWidth: isMobile ? '100vw' : 'none'
       }}
     >
-      {/* Current weather */}
+      {/* Current weather - device-specific sizing */}
       <div style={{ 
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         borderRadius: '8px',
-        width: isMobile ? '100%' : '200px',
-        height: isMobile ? '80px' : '110px',
+        width: weatherLayout === 'vertical' ? '100%' : 
+               weatherLayout === 'compact' ? '180px' : '200px',
+        height: `${(weatherLayout === 'vertical' ? 80 : 110) * spacingScale}px`,
         textAlign: 'center', 
         display: 'flex', 
         flexDirection: 'row',
         justifyContent: 'center', 
         alignItems: 'center',
-        padding: isMobile ? '12px' : '20px',
-        gap: isMobile ? '10px' : '12px',
-        minWidth: isMobile ? '280px' : 'auto'
+        padding: `${12 * spacingScale}px`,
+        gap: `${10 * spacingScale}px`,
+        minWidth: brand === 'Samsung' ? '280px' : 'auto'
       }}>
         <div style={{ 
-          fontSize: isMobile ? '36px' : '60px', 
+          fontSize: `${(weatherLayout === 'vertical' ? 36 : 60) * fontScale}px`, 
           fontFamily: 'Montserrat, sans-serif', 
           color: 'white', 
           fontWeight: 'bold',
           lineHeight: '1',
-          letterSpacing: isMobile ? '2px' : '4px'
+          letterSpacing: `${(weatherLayout === 'vertical' ? 2 : 4) * fontScale}px`
         }}>
           {Math.round(weather.current.temp)}°
         </div>
         <div style={{ 
-          fontSize: isMobile ? '28px' : '48px', 
+          fontSize: `${(weatherLayout === 'vertical' ? 28 : 48) * fontScale}px`, 
           lineHeight: '1',
           color: 'white',
           fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif',
           fontVariantEmoji: 'unicode',
           textRendering: 'optimizeQuality',
           WebkitFontSmoothing: 'antialiased',
-          transform: isMobile ? 'translateY(-1px)' : 'translateY(-2px)'
+          transform: `translateY(${-(weatherLayout === 'vertical' ? 1 : 2) * fontScale}px)`
         } as any}>
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
       </div>
 
-      {/* Forecast - responsive layout for mobile */}
+      {/* Forecast - device-specific layout */}
       <div style={{
         display: 'flex',
         flexDirection: 'row',
-        gap: isMobile ? '4px' : '8px',
-        flexWrap: isMobile ? 'nowrap' : 'wrap',
-        overflowX: isMobile ? 'auto' : 'visible',
+        gap: `${4 * spacingScale}px`,
+        flexWrap: weatherLayout === 'vertical' ? 'nowrap' : 'wrap',
+        overflowX: weatherLayout === 'vertical' ? 'auto' : 'visible',
         width: '100%',
         scrollbarWidth: 'none',
         msOverflowStyle: 'none'
-      }} className={isMobile ? 'scrollbar-hide' : ''}>
-        {authentiForecast.slice(0, isMobile ? 4 : 4).map((day, index) => (
+      }} className={weatherLayout === 'vertical' ? 'scrollbar-hide' : ''}>
+        {authentiForecast.slice(0, weatherLayout === 'vertical' ? 4 : 4).map((day, index) => (
           <div key={index} style={{
             backgroundColor: 'rgba(0, 0, 0, 0.4)',
             borderRadius: '8px',
-            width: isMobile ? '70px' : '120px',
-            height: isMobile ? '90px' : '110px',
+            width: weatherLayout === 'vertical' ? `${70 * fontScale}px` : 
+                   weatherLayout === 'compact' ? `${90 * fontScale}px` : '120px',
+            height: `${(weatherLayout === 'vertical' ? 90 : 110) * spacingScale}px`,
             textAlign: 'center',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            padding: isMobile ? '6px 3px' : '12px 8px',
+            padding: `${6 * spacingScale}px ${3 * spacingScale}px`,
             flexShrink: 0
           }}>
             <div style={{ 
-              fontSize: isMobile ? '9px' : (getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '12px' : '14px'), 
+              fontSize: `${(weatherLayout === 'vertical' ? 9 : 
+                           getDayName(day.date, index).includes('AUJOURD') || 
+                           getDayName(day.date, index).includes('DEMAIN') ? 12 : 14) * fontScale}px`, 
               fontFamily: 'Montserrat, sans-serif', 
               color: 'white', 
               fontWeight: '500',
               lineHeight: '1',
-              marginBottom: isMobile ? '4px' : '8px'
+              marginBottom: `${4 * spacingScale}px`
             }}>
               {getDayName(day.date, index)}
             </div>
             <div style={{ 
-              fontSize: isMobile ? '20px' : '32px', 
+              fontSize: `${(weatherLayout === 'vertical' ? 20 : 32) * fontScale}px`, 
               lineHeight: '1',
               color: 'white',
-              marginBottom: isMobile ? '4px' : '8px',
+              marginBottom: `${4 * spacingScale}px`,
               fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif',
               fontVariantEmoji: 'unicode',
               textRendering: 'optimizeQuality',
@@ -278,13 +251,13 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
               {getWeatherIcon(day.condition || '', day.icon)}
             </div>
             <div style={{ 
-              fontSize: isMobile ? '10px' : '13px', 
+              fontSize: `${(weatherLayout === 'vertical' ? 10 : 13) * fontScale}px`, 
               fontFamily: 'Montserrat, sans-serif', 
               color: 'white',
               fontWeight: '500',
               lineHeight: '1.2'
             }}>
-              <div style={{ marginBottom: isMobile ? '1px' : '2px' }}>{Math.round(day.high)}°</div>
+              <div style={{ marginBottom: `${1 * spacingScale}px` }}>{Math.round(day.high)}°</div>
               <div style={{ color: '#93c5fd' }}>{Math.round(day.low)}°</div>
             </div>
           </div>
