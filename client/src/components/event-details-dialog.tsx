@@ -215,34 +215,48 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
 
   return (
     <div 
-      className="fixed inset-0 flex items-center justify-center"
+      className="fixed inset-0"
       style={{ 
-        position: 'fixed !important',
-        top: '0 !important',
-        left: '0 !important',
-        right: '0 !important',
-        bottom: '0 !important',
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        right: '0',
+        bottom: '0',
         zIndex: 999999,
-        padding: '2rem'
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '5%'
       }}
     >
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        style={{ zIndex: 999998 }}
+        style={{ 
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 999998 
+        }}
         onClick={() => onOpenChange(false)}
       />
       
-      {/* Modal Content - Optimized for LG StanbyME */}
+      {/* Modal Content - LG StanbyME Tablet Centered */}
       <div 
-        className="relative bg-white rounded-lg shadow-2xl border border-gray-300 p-6 overflow-y-auto animate-category-fade"
+        className="relative bg-white rounded-lg shadow-2xl border border-gray-300 animate-category-fade"
         style={{
-          position: 'relative !important',
+          position: 'relative',
           zIndex: 999999,
-          width: '90%',
-          maxWidth: '600px',
-          maxHeight: '80vh',
-          margin: 'auto'
+          width: '70%',
+          maxWidth: '500px',
+          height: 'auto',
+          maxHeight: '70%',
+          overflow: 'hidden',
+          margin: '0',
+          padding: '2rem',
+          transform: 'translate(0, 0)'
         }}
         onClick={(e) => e.stopPropagation()}
       >
