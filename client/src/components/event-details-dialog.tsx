@@ -215,36 +215,35 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
 
   return (
     <div 
-      className={`fixed inset-0 z-[100] flex ${isMobile ? 'items-end justify-center p-0' : 'items-center justify-center p-8'}`}
-      style={{ touchAction: isMobile ? 'none' : 'auto' }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center"
+      style={{ 
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 9999,
+        padding: '2rem'
+      }}
     >
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        style={{ touchAction: isMobile ? 'none' : 'auto' }}
-        onClick={() => {
-          onOpenChange(false);
-        }}
-        onTouchMove={(e) => {
-          if (isMobile) {
-            // Only prevent scrolling on backdrop, not modal content
-            const target = e.target as HTMLElement;
-            if (target === e.currentTarget) {
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          }
-        }}
+        onClick={() => onOpenChange(false)}
       />
       
-      {/* Modal Content */}
+      {/* Modal Content - Optimized for LG StanbyME */}
       <div 
-        className={`relative z-[101] w-full ${isMobile ? 'max-w-full mx-0 h-[60vh] overflow-y-auto rounded-t-lg' : 'max-w-lg mx-4 rounded-lg max-h-[80vh] overflow-y-auto'} bg-white shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'}`}
-        data-scroll-allowed="true"
-        onTouchMove={(e) => {
-          // Allow scrolling within the modal content
-          e.stopPropagation();
+        className="relative z-[10000] bg-white rounded-lg shadow-2xl border border-gray-300 p-6 overflow-y-auto animate-category-fade"
+        style={{
+          position: 'relative',
+          zIndex: 10000,
+          width: '90%',
+          maxWidth: '600px',
+          maxHeight: '80vh',
+          margin: 'auto'
         }}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
