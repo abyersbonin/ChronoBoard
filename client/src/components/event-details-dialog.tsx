@@ -2,6 +2,7 @@ import { MapPin, Clock, Calendar, X, CalendarPlus } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import { TranslatedText } from "@/components/translated-text";
 
 interface EventDetailsDialogProps {
   event: CalendarEvent | null;
@@ -193,10 +194,10 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     
     const params = new URLSearchParams({
       action: 'TEMPLATE',
-      text: translateEventContent(cleanHtmlText(event.title)),
+      text: cleanHtmlText(event.title), // Will be translated by Google Calendar
       dates: `${startTime}/${endTime}`,
-      details: event.description ? translateEventContent(cleanHtmlText(event.description)) : '',
-      location: event.location ? translateEventContent(cleanHtmlText(event.location)) : ''
+      details: event.description ? cleanHtmlText(event.description) : '',
+      location: event.location ? cleanHtmlText(event.location) : ''
     });
 
     return `https://calendar.google.com/calendar/render?${params.toString()}`;
@@ -256,7 +257,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
         {/* Header */}
         <div className={`${isMobile ? 'mb-4 pr-6' : 'mb-6 pr-8'}`}>
           <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold text-gray-800`}>
-            {translateEventContent(cleanHtmlText(event.title))}
+            <TranslatedText text={cleanHtmlText(event.title)} />
           </h2>
         </div>
         
@@ -277,16 +278,16 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
           {event.location && (
             <div className="flex items-center space-x-3 text-gray-700">
               <MapPin className="h-5 w-5 text-green-600 flex-shrink-0" />
-              <span>{translateEventContent(cleanHtmlText(event.location))}</span>
+              <span><TranslatedText text={cleanHtmlText(event.location)} /></span>
             </div>
           )}
 
           {/* Description */}
           {event.description && (
             <div className="mt-4 pt-4 border-t border-gray-200">
-              <h4 className="font-medium text-gray-800 mb-2">{translateEventContent('Description')}</h4>
+              <h4 className="font-medium text-gray-800 mb-2">Description</h4>
               <p className="text-gray-600 leading-relaxed mb-4">
-                {translateEventContent(cleanHtmlText(event.description))}
+                <TranslatedText text={cleanHtmlText(event.description)} />
               </p>
             </div>
           )}

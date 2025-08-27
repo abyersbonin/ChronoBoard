@@ -1,6 +1,7 @@
 import { MapPin, Clock } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { EventDetailsDialog } from "./event-details-dialog";
+import { TranslatedText } from "@/components/translated-text";
 import { useState, useEffect } from "react";
 import { useLanguage, formatTime } from "@/hooks/useLanguage";
 
@@ -162,7 +163,7 @@ export function CurrentEvent({ event, language = 'fr' }: CurrentEventProps) {
         <div className="border-l-4 pl-4 flex-1 relative" style={{ borderLeftColor: '#788C6B' }}>
           <div className="flex items-center gap-3 mb-3">
             <h3 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
-              {translateEventContent(cleanHtmlText(event.title))}
+              <TranslatedText text={cleanHtmlText(event.title)} />
             </h3>
             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)}`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
               {getCalendarName(event.calendarSource)}
@@ -172,7 +173,7 @@ export function CurrentEvent({ event, language = 'fr' }: CurrentEventProps) {
             {event.location && (
               <div className="flex items-center">
                 <MapPin className="mr-2 h-4 w-4" />
-                <span>{cleanHtmlText(event.location)}</span>
+                <span><TranslatedText text={cleanHtmlText(event.location)} /></span>
               </div>
             )}
             <div className="flex items-center">

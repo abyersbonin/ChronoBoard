@@ -17,23 +17,33 @@ export function TranslatedText({ text, className }: TranslatedTextProps) {
       return;
     }
     
-    // Use MyMemory API directly for translation
-    fetch('/api/translate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: text, fromLang: 'fr', toLang: 'en' })
-    })
-    .then(response => response.json())
-    .then(result => {
-      if (result.translated) {
-        setTranslatedText(result.translated);
+    // Use MyMemory API directly for translation - no fallback
+    const translateText = async () => {
+      try {
+        const response = await fetch('/api/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: text, fromLang: 'fr', toLang: 'en' })
+        });
+        
+        if (response.ok) {
+          const result = await response.json();
+          if (result.translated) {
+            setTranslatedText(result.translated);
+          } else {
+            setTranslatedText(text); // Keep original if no translation
+          }
+        } else {
+          console.warn('Translation API failed:', response.status);
+          setTranslatedText(text); // Keep original if API fails
+        }
+      } catch (error) {
+        console.warn('Translation error:', error);
+        setTranslatedText(text); // Keep original if network fails
       }
-    })
-    .catch(error => {
-      console.warn('Translation failed:', error);
-      // Keep original text if translation fails
-      setTranslatedText(text);
-    });
+    };
+    
+    translateText();
   }, [text, language]);
   
   return <span className={className}>{translatedText}</span>;
