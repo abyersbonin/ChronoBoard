@@ -215,8 +215,15 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
 
   return (
     <div 
-      className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
-      style={{ touchAction: isMobile ? 'none' : 'auto' }}
+      className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+      style={{ 
+        touchAction: isMobile ? 'none' : 'auto',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onOpenChange(false);
@@ -225,11 +232,15 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     >
       {/* Modal Content */}
       <div 
-        className={`relative w-full ${isMobile ? 'max-w-full h-[70vh] rounded-lg' : 'max-w-md rounded-lg max-h-[85vh]'} overflow-y-auto bg-white shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'} animate-category-fade`}
+        className={`relative w-full ${isMobile ? 'max-w-full h-[70vh] rounded-lg' : 'max-w-md rounded-lg max-h-[85vh]'} overflow-y-auto bg-white shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'} animate-category-fade z-[10000]`}
         data-scroll-allowed="true"
         onClick={(e) => e.stopPropagation()}
         onTouchMove={(e) => {
           e.stopPropagation();
+        }}
+        style={{
+          position: 'relative',
+          zIndex: 10000
         }}
       >
         {/* Close Button */}
