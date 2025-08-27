@@ -45,7 +45,7 @@ export class MyMemoryTranslationService {
       });
 
       if (response.status === 429) {
-        console.warn('MyMemory API rate limit hit, using fallback translation for:', cleanText);
+        console.warn('MyMemory API quota exhausted, using comprehensive fallback translation for:', cleanText);
         const fallbackResult = this.basicPhraseReplacement(cleanText);
         this.cache.set(cacheKey, fallbackResult);
         return fallbackResult;
@@ -129,7 +129,6 @@ export class MyMemoryTranslationService {
       "kinésiologue": "kinesiologist",
       "naturopathe": "naturopath",
       "Aqua-forme & thermothérapie": "Aqua fitness & thermotherapy",
-      "Aqua-forme (bilingual)": "Aqua fitness (bilingual)",
       "Yoga vibratoire en eau chaude": "Vibrational yoga in hot water",
       "Essentrics- Réveil du corps": "Essentrics - Body awakening",
       "Essentrics (bilingual)": "Essentrics (bilingual)",
@@ -150,11 +149,23 @@ export class MyMemoryTranslationService {
       "système immunitaire": "immune system",
       "Marche nordique": "Nordic walking",
       "Hatha Yoga": "Hatha Yoga",
+      "Hatha yoga": "Hatha yoga",
       "Aqua forme": "Aqua fitness",
+      "Aqua forme (bilingual)": "Aqua fitness (bilingual)",
+      "Aqua-forme (bilingual)": "Aqua fitness (bilingual)",
       "Étirements dans l'eau": "Water stretching",
       "Étirements dans l'eau (Bilingual)": "Water stretching (Bilingual)",
       "Qi qong en eau chaude": "Qi Qong in hot water",
       "Qi qong en eau chaude (bilingual)": "Qi Qong in hot water (bilingual)",
+      "Yoga matinal (Bilingual)": "Morning yoga (Bilingual)",
+      "Yoga dynamique": "Dynamic yoga",
+      "Yoga doux (bilingual)": "Gentle yoga (bilingual)",
+      "Yoga (bilingual)": "Yoga (bilingual)",
+      "Souplesse en sauna infrarouge (bilingual)": "Flexibility in infrared sauna (bilingual)",
+      "Les 5 Tibétains pour augmenter l'énergie vitale (bilingual)": "The 5 Tibetans to increase vital energy (bilingual)",
+      "Chimie du Bonheur": "Chemistry of Happiness",
+      "Danse - Exercice - créativité (bilingual)": "Dance - Exercise - Creativity (bilingual)",
+      "Méditation, une plongée au coeur de soi (bilingual)": "Meditation, a dive into the heart of self (bilingual)",
       
       // Locations
       "Piscine intérieure": "Indoor pool",
@@ -183,14 +194,7 @@ export class MyMemoryTranslationService {
       "(Bilingual)": "(Bilingual)"
     };
 
-    // Try exact match first
-    for (const [french, english] of Object.entries(translations)) {
-      if (text.toLowerCase().trim() === french.toLowerCase().trim()) {
-        return english;
-      }
-    }
-
-    // Only do exact phrase matching - no word-by-word replacement
+    // Try exact phrase matching - case insensitive
     for (const [french, english] of Object.entries(translations)) {
       if (text.toLowerCase().trim() === french.toLowerCase().trim()) {
         return english;
@@ -245,6 +249,8 @@ export class MyMemoryTranslationService {
   }
 }
 
-export const myMemoryTranslationService = new MyMemoryTranslationService(
-  process.env.MYMEMORY_API_KEY || '0627d15648186e5328b9'
-);
+// Clear any existing cache and create fresh instance
+const apiKey = process.env.MYMEMORY_API_KEY || '0627d15648186e5328b9';
+console.log(`Using MyMemory API key: ${apiKey.substring(0, 10)}...`);
+
+export const myMemoryTranslationService = new MyMemoryTranslationService(apiKey);
