@@ -168,6 +168,65 @@ const contentTranslations: Record<string, string> = {
   'mobilité': 'mobility'
 };
 
+// Advanced phrase and sentence translations for full French content
+const phraseTranslations: Record<string, string> = {
+  // Common French phrases and sentence structures
+  'Une activité de': 'An activity of',
+  'Cette activité': 'This activity',
+  'Cette séance': 'This session',
+  'Cette pratique': 'This practice',
+  'Ce cours': 'This class',
+  'Cet atelier': 'This workshop',
+  'Cette conférence': 'This conference',
+  'Venez découvrir': 'Come discover',
+  'Venez apprendre': 'Come learn',
+  'Rejoignez-nous': 'Join us',
+  'Participez à': 'Participate in',
+  'Profitez de': 'Enjoy',
+  'Découvrez les': 'Discover the',
+  'Apprenez les': 'Learn the',
+  'Explorez les': 'Explore the',
+  'Bénéficiez des': 'Benefit from the',
+  'Ressentez les': 'Feel the',
+  'Expérimentez': 'Experience',
+  'Pratiquez': 'Practice',
+  'Développez': 'Develop',
+  'Renforcez': 'Strengthen',
+  'Améliorez': 'Improve',
+  'Libérez': 'Release',
+  'Détendez': 'Relax',
+  'Apaisez': 'Soothe',
+  'Stimulez': 'Stimulate',
+  'Revitalisez': 'Revitalize',
+  'Retrouvez': 'Rediscover',
+  'Cultivez': 'Cultivate',
+  'pour vous': 'for you',
+  'pour votre': 'for your',
+  'de votre': 'of your',
+  'dans votre': 'in your',
+  'avec votre': 'with your',
+  'sur votre': 'on your',
+  'vers votre': 'towards your',
+  'selon votre': 'according to your',
+  'grâce à': 'thanks to',
+  'à travers': 'through',
+  'au cours de': 'during',
+  'pendant': 'during',
+  'tout en': 'while',
+  'ainsi que': 'as well as',
+  'en même temps': 'at the same time',
+  'permettra de': 'will allow to',
+  'va vous aider': 'will help you',
+  'vous aide à': 'helps you to',
+  'vous permet de': 'allows you to',
+  'idéal pour': 'ideal for',
+  'parfait pour': 'perfect for',
+  'excellent pour': 'excellent for',
+  'recommandé pour': 'recommended for',
+  'adapté à': 'adapted to',
+  'convient à': 'suitable for'
+};
+
 // Function to translate event content
 function translateEventContent(text: string, language: Language): string {
   if (language === 'fr') return text; // Return original French text
@@ -184,7 +243,18 @@ function translateEventContent(text: string, language: Language): string {
     return contentTranslations[exactMatch];
   }
   
-  // Then try partial matches for common terms (sort by length, longest first for better matching)
+  // Apply phrase-level translations first (longer phrases)
+  const sortedPhrases = Object.entries(phraseTranslations)
+    .sort(([a], [b]) => b.length - a.length);
+    
+  sortedPhrases.forEach(([french, english]) => {
+    if (translatedText.toLowerCase().includes(french.toLowerCase())) {
+      const regex = new RegExp(french.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+      translatedText = translatedText.replace(regex, english);
+    }
+  });
+  
+  // Then apply word-level translations (sort by length, longest first for better matching)
   const sortedTranslations = Object.entries(contentTranslations)
     .sort(([a], [b]) => b.length - a.length);
     
@@ -196,7 +266,157 @@ function translateEventContent(text: string, language: Language): string {
     }
   });
   
-  return translatedText;
+  // Comprehensive French-to-English translation for common words and grammar
+  translatedText = translatedText
+    // Articles
+    .replace(/\ble\s+/gi, 'the ')
+    .replace(/\bla\s+/gi, 'the ')
+    .replace(/\bles\s+/gi, 'the ')
+    .replace(/\bun\s+/gi, 'a ')
+    .replace(/\bune\s+/gi, 'a ')
+    .replace(/\bdes\s+/gi, 'some ')
+    .replace(/\bdu\s+/gi, 'of the ')
+    .replace(/\bde la\s+/gi, 'of the ')
+    .replace(/\bde l'\s*/gi, 'of the ')
+    .replace(/\bd'\s*/gi, 'of ')
+    // Prepositions
+    .replace(/\bet\s+/gi, 'and ')
+    .replace(/\bou\s+/gi, 'or ')
+    .replace(/\bavec\s+/gi, 'with ')
+    .replace(/\bsans\s+/gi, 'without ')
+    .replace(/\bpour\s+/gi, 'for ')
+    .replace(/\bpar\s+/gi, 'by ')
+    .replace(/\bsur\s+/gi, 'on ')
+    .replace(/\bsous\s+/gi, 'under ')
+    .replace(/\bdans\s+/gi, 'in ')
+    .replace(/\bvers\s+/gi, 'towards ')
+    .replace(/\bchez\s+/gi, 'at ')
+    .replace(/\bentre\s+/gi, 'between ')
+    .replace(/\bcontre\s+/gi, 'against ')
+    .replace(/\bde\s+/gi, 'of ')
+    .replace(/\bà\s+/gi, 'to ')
+    // Common verbs (infinitive and conjugated forms)
+    .replace(/\best\s+/gi, 'is ')
+    .replace(/\bsont\s+/gi, 'are ')
+    .replace(/\bêtre\s+/gi, 'to be ')
+    .replace(/\bavoir\s+/gi, 'to have ')
+    .replace(/\bfaire\s+/gi, 'to do ')
+    .replace(/\baller\s+/gi, 'to go ')
+    .replace(/\bvenir\s+/gi, 'to come ')
+    .replace(/\bvoir\s+/gi, 'to see ')
+    .replace(/\bsavoir\s+/gi, 'to know ')
+    .replace(/\bpouvoir\s+/gi, 'to be able ')
+    .replace(/\bvouloir\s+/gi, 'to want ')
+    .replace(/\bdevoir\s+/gi, 'must ')
+    .replace(/\bprendre\s+/gi, 'to take ')
+    .replace(/\bdonner\s+/gi, 'to give ')
+    .replace(/\bmettre\s+/gi, 'to put ')
+    .replace(/\bparler\s+/gi, 'to speak ')
+    .replace(/\baider\s+/gi, 'to help ')
+    .replace(/\btrouver\s+/gi, 'to find ')
+    .replace(/\bpenser\s+/gi, 'to think ')
+    .replace(/\bpasser\s+/gi, 'to pass ')
+    .replace(/\bsentir\s+/gi, 'to feel ')
+    .replace(/\btenir\s+/gi, 'to hold ')
+    .replace(/\bjouer\s+/gi, 'to play ')
+    .replace(/\bvivre\s+/gi, 'to live ')
+    .replace(/\bmourir\s+/gi, 'to die ')
+    .replace(/\bchercher\s+/gi, 'to search ')
+    .replace(/\btravailler\s+/gi, 'to work ')
+    .replace(/\bapprendre\s+/gi, 'to learn ')
+    .replace(/\bcomprendre\s+/gi, 'to understand ')
+    .replace(/\boutiliser\s+/gi, 'to use ')
+    .replace(/\baméliorer\s+/gi, 'to improve ')
+    .replace(/\baugmenter\s+/gi, 'to increase ')
+    .replace(/\bdiminuer\s+/gi, 'to decrease ')
+    .replace(/\breduire\s+/gi, 'to reduce ')
+    .replace(/\bobtenir\s+/gi, 'to obtain ')
+    .replace(/\batteindre\s+/gi, 'to reach ')
+    .replace(/\bréaliser\s+/gi, 'to achieve ')
+    .replace(/\bmaintenir\s+/gi, 'to maintain ')
+    // Body and wellness terms
+    .replace(/\btête\s+/gi, 'head ')
+    .replace(/\bcou\s+/gi, 'neck ')
+    .replace(/\bépaules\s+/gi, 'shoulders ')
+    .replace(/\bépaule\s+/gi, 'shoulder ')
+    .replace(/\bbras\s+/gi, 'arms ')
+    .replace(/\bmains\s+/gi, 'hands ')
+    .replace(/\bmain\s+/gi, 'hand ')
+    .replace(/\bdoigts\s+/gi, 'fingers ')
+    .replace(/\bpoitrine\s+/gi, 'chest ')
+    .replace(/\bdos\s+/gi, 'back ')
+    .replace(/\bventre\s+/gi, 'stomach ')
+    .replace(/\bjambes\s+/gi, 'legs ')
+    .replace(/\bjambe\s+/gi, 'leg ')
+    .replace(/\bpieds\s+/gi, 'feet ')
+    .replace(/\bpied\s+/gi, 'foot ')
+    .replace(/\byeux\s+/gi, 'eyes ')
+    .replace(/\boeil\s+/gi, 'eye ')
+    // Adjectives
+    .replace(/\bbon\s+/gi, 'good ')
+    .replace(/\bbonne\s+/gi, 'good ')
+    .replace(/\bmauvais\s+/gi, 'bad ')
+    .replace(/\bmauvaise\s+/gi, 'bad ')
+    .replace(/\bgrand\s+/gi, 'big ')
+    .replace(/\bgrande\s+/gi, 'big ')
+    .replace(/\bpetit\s+/gi, 'small ')
+    .replace(/\bpetite\s+/gi, 'small ')
+    .replace(/\bnouveau\s+/gi, 'new ')
+    .replace(/\bnouvelle\s+/gi, 'new ')
+    .replace(/\bvieux\s+/gi, 'old ')
+    .replace(/\bvieille\s+/gi, 'old ')
+    .replace(/\bjeune\s+/gi, 'young ')
+    .replace(/\bfort\s+/gi, 'strong ')
+    .replace(/\bforte\s+/gi, 'strong ')
+    .replace(/\bfaible\s+/gi, 'weak ')
+    .replace(/\brapide\s+/gi, 'fast ')
+    .replace(/\blent\s+/gi, 'slow ')
+    .replace(/\blente\s+/gi, 'slow ')
+    .replace(/\bfacile\s+/gi, 'easy ')
+    .replace(/\bdifficile\s+/gi, 'difficult ')
+    .replace(/\bimportant\s+/gi, 'important ')
+    .replace(/\bimportante\s+/gi, 'important ')
+    .replace(/\bnécessaire\s+/gi, 'necessary ')
+    .replace(/\bpossible\s+/gi, 'possible ')
+    .replace(/\bimpossible\s+/gi, 'impossible ')
+    .replace(/\butile\s+/gi, 'useful ')
+    .replace(/\binutile\s+/gi, 'useless ')
+    .replace(/\beffectif\s+/gi, 'effective ')
+    .replace(/\befficace\s+/gi, 'efficient ')
+    .replace(/\bcomplet\s+/gi, 'complete ')
+    .replace(/\bcomplète\s+/gi, 'complete ')
+    .replace(/\bpartiel\s+/gi, 'partial ')
+    .replace(/\bpartielle\s+/gi, 'partial ')
+    .replace(/\bprofond\s+/gi, 'deep ')
+    .replace(/\bprofonde\s+/gi, 'deep ')
+    .replace(/\bsuperficiel\s+/gi, 'superficial ')
+    .replace(/\bsuperficielle\s+/gi, 'superficial ')
+    // Time and frequency
+    .replace(/\bmaintenant\s+/gi, 'now ')
+    .replace(/\baujourd'hui\s+/gi, 'today ')
+    .replace(/\bhier\s+/gi, 'yesterday ')
+    .replace(/\bdemain\s+/gi, 'tomorrow ')
+    .replace(/\btoujours\s+/gi, 'always ')
+    .replace(/\bjamais\s+/gi, 'never ')
+    .replace(/\bsouvent\s+/gi, 'often ')
+    .replace(/\brarement\s+/gi, 'rarely ')
+    .replace(/\bparfois\s+/gi, 'sometimes ')
+    .replace(/\bquand\s+/gi, 'when ')
+    .replace(/\bavant\s+/gi, 'before ')
+    .replace(/\baprès\s+/gi, 'after ')
+    // Numbers
+    .replace(/\bun\b/gi, 'one')
+    .replace(/\bdeux\b/gi, 'two')
+    .replace(/\btrois\b/gi, 'three')
+    .replace(/\bquatre\b/gi, 'four')
+    .replace(/\bcinq\b/gi, 'five')
+    .replace(/\bsix\b/gi, 'six')
+    .replace(/\bsept\b/gi, 'seven')
+    .replace(/\bhuit\b/gi, 'eight')
+    .replace(/\bneuf\b/gi, 'nine')
+    .replace(/\bdix\b/gi, 'ten')
+  
+  return translatedText.trim();
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
