@@ -295,7 +295,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
         <div className={isMobile ? 'space-y-3' : 'space-y-4'}>
           {/* Date and Time */}
           <div className="flex items-center space-x-3 text-gray-700">
-            <Calendar className="h-5 w-5 text-blue-600 flex-shrink-0" />
+            <Calendar className="h-5 w-5 flex-shrink-0" style={{ color: '#36455c' }} />
             <div>
               <div className="font-medium">{formatDate(event.startTime)}</div>
               <div className="text-sm text-gray-600">
@@ -307,7 +307,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
           {/* Location */}
           {event.location && (
             <div className="flex items-center space-x-3 text-gray-700">
-              <MapPin className="h-5 w-5 text-green-600 flex-shrink-0" />
+              <MapPin className="h-5 w-5 flex-shrink-0" style={{ color: '#85a1ab' }} />
               <span><TranslatedText text={cleanHtmlText(event.location)} /></span>
             </div>
           )}
