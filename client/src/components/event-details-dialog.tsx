@@ -214,100 +214,99 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div 
+      className={`fixed inset-0 z-[100] flex ${isMobile ? 'items-end justify-center p-0' : 'items-center justify-center p-8'}`}
+      style={{ touchAction: isMobile ? 'none' : 'auto' }}
+    >
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        onClick={() => onOpenChange(false)}
+        style={{ touchAction: isMobile ? 'none' : 'auto' }}
+        onClick={() => {
+          onOpenChange(false);
+        }}
+        onTouchMove={(e) => {
+          if (isMobile) {
+            // Only prevent scrolling on backdrop, not modal content
+            const target = e.target as HTMLElement;
+            if (target === e.currentTarget) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }
+        }}
       />
       
-      {/* Enhanced Modal Content with device-specific sizing */}
-      <div className={`
-        relative z-[101] w-full bg-white/95 backdrop-blur-sm shadow-2xl border border-white/20 overflow-hidden
-        ${isMobile 
-          ? 'max-w-[95vw] max-h-[85vh] rounded-xl p-6' 
-          : 'max-w-[90vw] max-h-[90vh] rounded-2xl'
-        }
-        sm:max-w-3xl sm:p-8
-        md:max-w-4xl md:p-10
-        lg:max-w-5xl lg:p-12
-        xl:max-w-6xl xl:p-16
-        2xl:max-w-7xl 2xl:p-20
-      `}>
+      {/* Modal Content */}
+      <div 
+        className={`relative z-[101] w-full ${isMobile ? 'max-w-full mx-0 h-[55vh] overflow-y-auto rounded-t-lg' : 'max-w-md mx-4 rounded-lg'} bg-white shadow-2xl border border-gray-300 ${isMobile ? 'p-4' : 'p-6'}`}
+        data-scroll-allowed="true"
+        onTouchMove={(e) => {
+          // Allow scrolling within the modal content
+          e.stopPropagation();
+        }}
+      >
         {/* Close Button */}
         <button
-          onClick={() => onOpenChange(false)}
-          className="absolute right-4 top-4 p-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 sm:right-6 sm:top-6 lg:right-8 lg:top-8"
+          onClick={() => {
+            onOpenChange(false);
+          }}
+          className="absolute right-4 top-4 p-1 rounded-sm opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-opacity"
         >
-          <X className="h-5 w-5 text-gray-700 sm:h-6 sm:w-6 lg:h-7 lg:w-7" />
+          <X className="h-4 w-4 text-gray-600" />
           <span className="sr-only">Close</span>
         </button>
         
-        {/* Scrollable Content Area */}
-        <div className="overflow-y-auto max-h-full pr-2" data-scroll-allowed="true">
-          {/* Header */}
-          <div className="mb-6 pr-12 sm:pr-16 lg:pr-20">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-800 leading-tight">
-              <TranslatedText text={cleanHtmlText(event.title)} />
-            </h2>
-          </div>
-          
-          {/* Content Grid */}
-          <div className="grid gap-6 sm:gap-8 lg:gap-10">
-            {/* Date and Time Card */}
-            <div className="flex items-start space-x-4 p-4 sm:p-6 bg-blue-50/50 rounded-xl border border-blue-100">
-              <Calendar className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-blue-600 flex-shrink-0 mt-1" />
-              <div className="flex-1">
-                <div className="font-semibold text-lg sm:text-xl lg:text-2xl text-gray-800 mb-2">
-                  {formatDate(event.startTime)}
-                </div>
-                <div className="text-base sm:text-lg lg:text-xl text-gray-600">
-                  {formatTime(event.startTime)} - {formatTime(event.endTime)}
-                </div>
+        {/* Header */}
+        <div className={`${isMobile ? 'mb-4 pr-6' : 'mb-6 pr-8'}`}>
+          <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold text-gray-800`}>
+            <TranslatedText text={cleanHtmlText(event.title)} />
+          </h2>
+        </div>
+        
+        {/* Content */}
+        <div className={isMobile ? 'space-y-3' : 'space-y-4'}>
+          {/* Date and Time */}
+          <div className="flex items-center space-x-3 text-gray-700">
+            <Calendar className="h-5 w-5 text-blue-600 flex-shrink-0" />
+            <div>
+              <div className="font-medium">{formatDate(event.startTime)}</div>
+              <div className="text-sm text-gray-600">
+                {formatTime(event.startTime)} - {formatTime(event.endTime)}
               </div>
             </div>
+          </div>
 
-            {/* Location Card */}
-            {event.location && (
-              <div className="flex items-start space-x-4 p-4 sm:p-6 bg-green-50/50 rounded-xl border border-green-100">
-                <MapPin className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-green-600 flex-shrink-0 mt-1" />
-                <div className="flex-1">
-                  <div className="font-semibold text-lg sm:text-xl lg:text-2xl text-gray-800 mb-2">
-                    {language === 'fr' ? 'Lieu' : 'Location'}
-                  </div>
-                  <div className="text-base sm:text-lg lg:text-xl text-gray-700">
-                    <TranslatedText text={cleanHtmlText(event.location)} />
-                  </div>
-                </div>
-              </div>
-            )}
+          {/* Location */}
+          {event.location && (
+            <div className="flex items-center space-x-3 text-gray-700">
+              <MapPin className="h-5 w-5 text-green-600 flex-shrink-0" />
+              <span><TranslatedText text={cleanHtmlText(event.location)} /></span>
+            </div>
+          )}
 
-            {/* Description Card */}
-            {event.description && (
-              <div className="p-4 sm:p-6 bg-purple-50/50 rounded-xl border border-purple-100">
-                <h4 className="font-semibold text-lg sm:text-xl lg:text-2xl text-gray-800 mb-4 flex items-center">
-                  <Clock className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-purple-600 mr-3" />
-                  {language === 'fr' ? 'Description' : 'Description'}
-                </h4>
-                <div className="text-base sm:text-lg lg:text-xl text-gray-700 leading-relaxed">
-                  <TranslatedText text={cleanHtmlText(event.description)} />
-                </div>
-              </div>
-            )}
+          {/* Description */}
+          {event.description && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <h4 className="font-medium text-gray-800 mb-2">Description</h4>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                <TranslatedText text={cleanHtmlText(event.description)} />
+              </p>
+            </div>
+          )}
 
-            {/* Add to Calendar Button */}
-            <div className="pt-4 border-t border-gray-200">
+          {/* Add to Calendar Button - Mobile Only */}
+          {isMobile && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
               <button
                 onClick={handleAddToCalendar}
-                className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 sm:py-5 lg:py-6 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+                className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
               >
-                <CalendarPlus className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7" />
-                <span className="text-base sm:text-lg lg:text-xl">
-                  {language === 'fr' ? 'Ajouter à mon calendrier' : 'Add to my calendar'}
-                </span>
+                <CalendarPlus className="h-5 w-5" />
+                {language === 'fr' ? 'Ajouter à mon calendrier' : 'Add to my calendar'}
               </button>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
