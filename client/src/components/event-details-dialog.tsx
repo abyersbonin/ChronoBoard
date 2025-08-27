@@ -215,14 +215,8 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
 
   return (
     <div 
-      className="fixed inset-0"
+      className="modal-overlay fixed inset-0"
       style={{ 
-        position: 'fixed',
-        top: '0',
-        left: '0',
-        right: '0',
-        bottom: '0',
-        zIndex: 999999,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -232,31 +226,20 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        style={{ 
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 999998 
-        }}
         onClick={() => onOpenChange(false)}
       />
       
       {/* Modal Content - LG StanbyME Tablet Centered */}
       <div 
-        className="relative bg-white rounded-lg shadow-2xl border border-gray-300 animate-category-fade"
+        className="modal-content bg-white rounded-lg shadow-2xl border border-gray-300 animate-category-fade"
         style={{
-          position: 'relative',
-          zIndex: 999999,
           width: '70%',
           maxWidth: '500px',
           height: 'auto',
           maxHeight: '70%',
           overflow: 'hidden',
           margin: '0',
-          padding: '2rem',
-          transform: 'translate(0, 0)'
+          padding: '2rem'
         }}
         onClick={(e) => e.stopPropagation()}
       >
