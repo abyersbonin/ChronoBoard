@@ -583,8 +583,8 @@ export function useTranslation(text: string, targetLanguage: Language): string {
       return;
     }
     
-    // Start translation and update when complete
-    setTranslatedText(fallbackTranslateEventContent(text, targetLanguage)); // Show fallback immediately
+    // Show original text while translation loads
+    setTranslatedText(text);
     
     fetchTranslation(text, 'fr', 'en').then(translated => {
       setTranslatedText(translated);
@@ -616,8 +616,8 @@ function translateEventContent(text: string, language: Language): string {
     }
   });
   
-  // Return fallback immediately
-  return fallbackTranslateEventContent(text, language);
+  // Return original text immediately while API translation loads in background
+  return text;
 }
 
 // Fallback translation function for when API is unavailable
