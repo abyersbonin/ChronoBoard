@@ -552,12 +552,13 @@ async function fetchTranslation(text: string, fromLang: string = 'fr', toLang: s
       } else {
         console.warn('Translation API failed, using fallback');
         translationPromises.delete(cacheKey); // Clean up
-        return fallbackTranslateEventContent(text, toLang === 'en' ? 'en' : 'fr');
+        // Just return original text if API fails - better than bad word-by-word translation
+        return text;
       }
     } catch (error) {
-      console.warn('Translation error, using fallback:', error);
+      console.warn('Translation error:', error);
       translationPromises.delete(cacheKey); // Clean up
-      return fallbackTranslateEventContent(text, toLang === 'en' ? 'en' : 'fr');
+      return text;
     }
   })();
   

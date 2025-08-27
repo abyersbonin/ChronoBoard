@@ -51,18 +51,19 @@ export class MyMemoryTranslationService {
 
       if (!response.ok) {
         console.error('MyMemory API error:', response.status, response.statusText);
-        return this.fallbackTranslation(cleanText);
+        return this.basicPhraseReplacement(cleanText);
       }
 
       const result = await response.json();
       if (result.responseStatus === 200 && result.responseData) {
         const translatedText = result.responseData.translatedText || cleanText;
         
-        // If MyMemory returns the same text (no translation), try fallback
+        // If MyMemory returns the same text, just return it (don't use terrible fallback)
         if (translatedText.toLowerCase().trim() === cleanText.toLowerCase().trim()) {
-          const fallbackResult = this.fallbackTranslation(cleanText);
-          this.cache.set(cacheKey, fallbackResult);
-          return fallbackResult;
+          // For French text that wasn't translated, try basic phrase replacement only
+          const basicResult = this.basicPhraseReplacement(cleanText);
+          this.cache.set(cacheKey, basicResult);
+          return basicResult;
         }
         
         // Cache the result
@@ -71,16 +72,16 @@ export class MyMemoryTranslationService {
         return translatedText;
       } else {
         console.error('MyMemory translation failed:', result);
-        return this.fallbackTranslation(cleanText);
+        return this.basicPhraseReplacement(cleanText);
       }
     } catch (error) {
       console.error('MyMemory translation service error:', error);
-      return this.fallbackTranslation(cleanText);
+      return this.basicPhraseReplacement(cleanText);
     }
   }
 
-  // Enhanced fallback translation for spa-specific content
-  private fallbackTranslation(text: string): string {
+  // Basic phrase replacement - only replace obvious spa terms, no word-by-word
+  private basicPhraseReplacement(text: string): string {
     const translations: Record<string, string> = {
       // Complete phrases
       "Qu'est-ce que le Shinrin Yoku?": "What is Shinrin Yoku?",
@@ -115,18 +116,15 @@ export class MyMemoryTranslationService {
       }
     }
 
-    // Apply partial matching for longer texts
-    let result = text;
-    const sortedPhrases = Object.entries(translations).sort(([a], [b]) => b.length - a.length);
-    
-    for (const [french, english] of sortedPhrases) {
-      if (french.length > 3 && result.toLowerCase().includes(french.toLowerCase())) {
-        const regex = new RegExp(french.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-        result = result.replace(regex, english);
+    // Only do exact phrase matching - no word-by-word replacement
+    for (const [french, english] of Object.entries(translations)) {
+      if (text.toLowerCase().trim() === french.toLowerCase().trim()) {
+        return english;
       }
     }
 
-    return result;
+    // If no exact match, return original text (better than terrible word-by-word)
+    return text;
   }
 
   async translateBatch(texts: string[], fromLang: string = 'fr', toLang: string = 'en'): Promise<string[]> {
