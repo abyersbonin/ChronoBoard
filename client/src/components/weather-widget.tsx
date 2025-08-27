@@ -184,24 +184,27 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
       style={{
         fontFamily: 'Montserrat, sans-serif',
         display: 'flex',
-        flexDirection: 'row',
-        gap: isMobile ? '4px' : '8px',
-        zIndex: 30
+        flexDirection: isMobile ? 'column' : 'row',
+        gap: isMobile ? '8px' : '8px',
+        zIndex: 30,
+        width: '100%',
+        maxWidth: isMobile ? '100vw' : 'none'
       }}
     >
       {/* Current weather */}
       <div style={{ 
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         borderRadius: '8px',
-        width: isMobile ? '150px' : '200px',
-        height: isMobile ? '100px' : '110px',
+        width: isMobile ? '100%' : '200px',
+        height: isMobile ? '80px' : '110px',
         textAlign: 'center', 
         display: 'flex', 
         flexDirection: 'row',
         justifyContent: 'center', 
         alignItems: 'center',
-        padding: isMobile ? '8px' : '20px',
-        gap: isMobile ? '6px' : '12px'
+        padding: isMobile ? '12px' : '20px',
+        gap: isMobile ? '10px' : '12px',
+        minWidth: isMobile ? '280px' : 'auto'
       }}>
         <div style={{ 
           fontSize: isMobile ? '36px' : '60px', 
@@ -227,54 +230,66 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
         </div>
       </div>
 
-      {/* Authentic forecast data only - show fewer items on mobile, limit to 4 days on desktop */}
-      {authentiForecast.slice(0, isMobile ? 3 : 4).map((day, index) => (
-        <div key={index} style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.4)',
-          borderRadius: '8px',
-          width: isMobile ? '85px' : '120px',
-          height: isMobile ? '95px' : '110px',
-          textAlign: 'center',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: isMobile ? '6px 4px' : '12px 8px'
-        }}>
-          <div style={{ 
-            fontSize: isMobile ? '10px' : (getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '12px' : '14px'), 
-            fontFamily: 'Montserrat, sans-serif', 
-            color: 'white', 
-            fontWeight: '500',
-            lineHeight: '1',
-            marginBottom: isMobile ? '5px' : '8px'
+      {/* Forecast - responsive layout for mobile */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        gap: isMobile ? '4px' : '8px',
+        flexWrap: isMobile ? 'nowrap' : 'wrap',
+        overflowX: isMobile ? 'auto' : 'visible',
+        width: '100%',
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none'
+      }} className={isMobile ? 'scrollbar-hide' : ''}>
+        {authentiForecast.slice(0, isMobile ? 4 : 4).map((day, index) => (
+          <div key={index} style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            borderRadius: '8px',
+            width: isMobile ? '70px' : '120px',
+            height: isMobile ? '90px' : '110px',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: isMobile ? '6px 3px' : '12px 8px',
+            flexShrink: 0
           }}>
-            {getDayName(day.date, index)}
+            <div style={{ 
+              fontSize: isMobile ? '9px' : (getDayName(day.date, index).includes('AUJOURD') || getDayName(day.date, index).includes('DEMAIN') ? '12px' : '14px'), 
+              fontFamily: 'Montserrat, sans-serif', 
+              color: 'white', 
+              fontWeight: '500',
+              lineHeight: '1',
+              marginBottom: isMobile ? '4px' : '8px'
+            }}>
+              {getDayName(day.date, index)}
+            </div>
+            <div style={{ 
+              fontSize: isMobile ? '20px' : '32px', 
+              lineHeight: '1',
+              color: 'white',
+              marginBottom: isMobile ? '4px' : '8px',
+              fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif',
+              fontVariantEmoji: 'unicode',
+              textRendering: 'optimizeQuality',
+              WebkitFontSmoothing: 'antialiased'
+            } as any}>
+              {getWeatherIcon(day.condition || '', day.icon)}
+            </div>
+            <div style={{ 
+              fontSize: isMobile ? '10px' : '13px', 
+              fontFamily: 'Montserrat, sans-serif', 
+              color: 'white',
+              fontWeight: '500',
+              lineHeight: '1.2'
+            }}>
+              <div style={{ marginBottom: isMobile ? '1px' : '2px' }}>{Math.round(day.high)}°</div>
+              <div style={{ color: '#93c5fd' }}>{Math.round(day.low)}°</div>
+            </div>
           </div>
-          <div style={{ 
-            fontSize: isMobile ? '24px' : '32px', 
-            lineHeight: '1',
-            color: 'white',
-            marginBottom: isMobile ? '5px' : '8px',
-            fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif',
-            fontVariantEmoji: 'unicode',
-            textRendering: 'optimizeQuality',
-            WebkitFontSmoothing: 'antialiased'
-          } as any}>
-            {getWeatherIcon(day.condition || '', day.icon)}
-          </div>
-          <div style={{ 
-            fontSize: isMobile ? '11px' : '13px', 
-            fontFamily: 'Montserrat, sans-serif', 
-            color: 'white',
-            fontWeight: '500',
-            lineHeight: '1.2'
-          }}>
-            <div style={{ marginBottom: isMobile ? '1px' : '2px' }}>{Math.round(day.high)}°</div>
-            <div style={{ color: '#93c5fd' }}>{Math.round(day.low)}°</div>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
