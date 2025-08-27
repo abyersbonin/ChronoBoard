@@ -55,9 +55,15 @@ export class MyMemoryTranslationService {
       }
 
       const result = await response.json();
-      
       if (result.responseStatus === 200 && result.responseData) {
         const translatedText = result.responseData.translatedText || cleanText;
+        
+        // If MyMemory returns the same text (no translation), try fallback
+        if (translatedText.toLowerCase().trim() === cleanText.toLowerCase().trim()) {
+          const fallbackResult = this.fallbackTranslation(cleanText);
+          this.cache.set(cacheKey, fallbackResult);
+          return fallbackResult;
+        }
         
         // Cache the result
         this.cache.set(cacheKey, translatedText);

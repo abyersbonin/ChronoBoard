@@ -7,6 +7,7 @@ interface LanguageContextType {
   setLanguage: (lang: Language) => void;
   t: (key: string) => string;
   translateEventContent: (text: string) => string;
+  useTranslation: (text: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -592,6 +593,9 @@ export function useTranslation(text: string, targetLanguage: Language): string {
   return translatedText;
 }
 
+// Cache to trigger re-renders when translations complete
+const translationUpdateListeners = new Map<string, Set<() => void>>();
+
 // Synchronous translation function for backward compatibility
 function translateEventContent(text: string, language: Language): string {
   if (language === 'fr') return text;
@@ -603,7 +607,13 @@ function translateEventContent(text: string, language: Language): string {
   }
   
   // Start async translation in background
-  fetchTranslation(text, 'fr', 'en');
+  fetchTranslation(text, 'fr', 'en').then(translatedText => {
+    // Notify listeners that translation is complete
+    const listeners = translationUpdateListeners.get(cacheKey);
+    if (listeners) {
+      listeners.forEach(callback => callback());
+    }
+  });
   
   // Return fallback immediately
   return fallbackTranslateEventContent(text, language);
@@ -792,7 +802,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     language,
     setLanguage,
     t,
-    translateEventContent: (text: string) => translateEventContent(text, language)
+    translateEventContent: (text: string) => translateEventContent(text, language),
+    useTranslation: (text: string) => useTranslation(text, language)
   };
 
   return (

@@ -189,7 +189,7 @@ export function UpcomingEvents({ events, language: propLanguage = 'fr' }: Upcomi
                       <div className="flex-1 min-w-0 relative">
                         <div className="flex items-center gap-2 mb-2">
                           <h4 className="text-lg font-semibold text-gray-800">
-                            {translateEventContent(cleanHtmlText(event.title))}
+                            <TranslatedText text={cleanHtmlText(event.title)} />
                           </h4>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)}`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
                             {getCalendarName(event.calendarSource)}
@@ -198,7 +198,7 @@ export function UpcomingEvents({ events, language: propLanguage = 'fr' }: Upcomi
                         {event.location && (
                           <div className="flex items-center text-gray-500 text-sm">
                             <MapPin className="mr-1 h-3 w-3" />
-                            <span>{cleanHtmlText(event.location)}</span>
+                            <span><TranslatedText text={cleanHtmlText(event.location)} /></span>
                           </div>
                         )}
                         
