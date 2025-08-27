@@ -666,7 +666,21 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     language,
     setLanguage,
     t,
-    translateEventContent: (text: string) => translateEventContent(text, language),
+    translateEventContent: (text: string) => {
+      if (language === 'fr') return text;
+      
+      // Check cache for instant return
+      const cacheKey = `fr-en-${text}`;
+      if (translationCache.has(cacheKey)) {
+        return translationCache.get(cacheKey)!;
+      }
+      
+      // Trigger async translation
+      fetchTranslation(text, 'fr', 'en');
+      
+      // Return original text while translation loads (better than bad fallback)
+      return text;
+    },
     useTranslation: (text: string) => useTranslation(text, language)
   };
 
