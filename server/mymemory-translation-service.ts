@@ -108,13 +108,18 @@ export class MyMemoryTranslationService {
     const translations: Record<string, string> = {
       // Event titles and descriptions
       "Nos 6 piliers mieux-être - Visite de 3 de nos sites": "Our 6 wellness pillars - Visit to 3 of our sites",
+      "Nos 6 piliers mieux-être - Visite de bienvenue": "Our 6 wellness pillars - Welcome visit",
+      "Le pouvoir créateur de nos pensées": "The creative power of our thoughts",
       "Cette rencontre a pour but de partager notre philosophie et de vous familiariser avec nos 6 piliers mieux-être.": "This meeting aims to share our philosophy and familiarize you with our 6 wellness pillars.",
+      "Cette rencontre a pour but de vous familiariser avec les lieux et de vous donner les informations nécessaires afin de maximiser les bienfaits et le plaisir de votre séjour au Spa Eastman.": "This meeting aims to familiarize you with the facilities and give you the necessary information to maximize the benefits and pleasure of your stay at Spa Eastman.",
       "Qu'est-ce que le Shinrin Yoku?": "What is Shinrin Yoku?",
       "Qu est-ce que le Shinrin Yoku?": "What is Shinrin Yoku?",
       "En compagnie d'Anne-Marie Laforest": "With Anne-Marie Laforest",
       "En compagnie d Anne-Marie Laforest": "With Anne-Marie Laforest",
       "L'influence positive des lettres et des sons": "The positive influence of letters and sounds",
       "L'influence de la numérologie sur votre quotidien": "The influence of numerology on your daily life",
+      "Nicole Dumont": "Nicole Dumont",
+      "Animée par Nicole Dumont": "Led by Nicole Dumont",
       
       // Activity names
       "Animé par": "Led by",
@@ -134,8 +139,9 @@ export class MyMemoryTranslationService {
       "Relâchement des tensions profondes avec balles (bilingual)": "Release of deep tensions with balls (bilingual)",
       "Renforcez votre corps et boostez votre système immunitaire avec  le mouvement,  le chaud et le froid (Bilingual)": "Strengthen your body and boost your immune system with movement, heat and cold (Bilingual)",
       
-      // Conference topics
+      // Conference topics  
       "Conférence: Si peu pour tant": "Conference: So little for so much",
+      "Conférence: Connaître et comprendre comment mon corps, mon esprit, sont des alliers pour la vie": "Conference: Knowing and understanding how my body and mind are allies for life",
       "L'importance des oligo-éléments": "The importance of trace elements",
       "L'importance des oligo-éléments & des minéraux pour la santé": "The importance of trace elements & minerals for health",
       "Si peu pour tant... L'importance des oligo-éléments & des minéraux pour la santé": "So little for so much... The importance of trace elements & minerals for health",
@@ -152,8 +158,18 @@ export class MyMemoryTranslationService {
       
       // Locations
       "Piscine intérieure": "Indoor pool",
+      "Piscine intérieure- Billets à la boutique": "Indoor pool - Tickets at the boutique",
       "Départ de la réception": "Departure from reception",
       "Salle lac Stukely": "Lac Stukely room",
+      "Salle Lac d'Argent": "Lac d'Argent room",
+      "Pergola extérieure": "Outdoor pergola",
+      "Pergola extérieure * salle lac d'Argent en cas de pluie": "Outdoor pergola * Lac d'Argent room in case of rain",
+      "Pergola * Salle lac d'Argent en cas de pluie": "Pergola * Lac d'Argent room in case of rain",
+      "Bassin Oval": "Oval pool",
+      "Bassin Oval * Billets à la boutique": "Oval pool * Tickets at the boutique",
+      "Sauna Namaste": "Namaste Sauna",
+      "Bistro et Corrid'Art": "Bistro and Corrid'Art",
+      "Aper'Art": "Aper'Art",
       "lac Stukely": "Lac Stukely",
       "Lac d'Argent": "Lac d'Argent",
       "lac d'Argent": "Lac d'Argent", 
@@ -229,4 +245,6 @@ export class MyMemoryTranslationService {
   }
 }
 
-export const myMemoryTranslationService = new MyMemoryTranslationService('0627d15648186e5328b9');
+export const myMemoryTranslationService = new MyMemoryTranslationService(
+  process.env.MYMEMORY_API_KEY || '0627d15648186e5328b9'
+);
