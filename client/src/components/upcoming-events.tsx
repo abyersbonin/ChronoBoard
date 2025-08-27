@@ -74,25 +74,25 @@ export function UpcomingEvents({ events, language = 'fr' }: UpcomingEventsProps)
 
   // Get calendar display name from source
   const getCalendarName = (calendarSource: string | null) => {
-    if (!calendarSource) return 'GÉNÉRAL';
+    if (!calendarSource) return t('categories.general');
     
     // Extract a short name from the calendar source
-    if (calendarSource.includes('spaeastman')) return 'ACTIVITÉS';
+    if (calendarSource.includes('spaeastman')) return t('categories.activities');
     if (calendarSource.includes('group.calendar.google.com')) {
       // Try to extract meaningful name from group calendar ID
       const match = calendarSource.match(/([a-f0-9]{64})/);
       if (match) {
         const id = match[1];
         // Map known calendar IDs to names
-        if (id.startsWith('8d3d8be7')) return 'ACTIVITÉS';
-        if (id.startsWith('9402bc30')) return 'CONFÉRENCES';
-        if (id.startsWith('c3e052be')) return 'WORKSHOPS';
-        if (id.startsWith('4dfbddf3')) return 'VISITE';
+        if (id.startsWith('8d3d8be7')) return t('categories.activities');
+        if (id.startsWith('9402bc30')) return t('categories.conference');
+        if (id.startsWith('c3e052be')) return t('categories.workshops');
+        if (id.startsWith('4dfbddf3')) return t('categories.visit');
       }
-      return 'GROUPE';
+      return t('categories.groupe');
     }
     
-    return 'AUTRE';
+    return t('categories.other');
   };
 
   const handleEventClick = (event: CalendarEvent) => {
@@ -149,8 +149,8 @@ export function UpcomingEvents({ events, language = 'fr' }: UpcomingEventsProps)
       <div className={`bg-gray-100 bg-opacity-60 rounded-xl ${isMobile ? 'p-4' : 'p-6'} border border-gray-300 shadow-lg`}>
         <h2 className={`${isMobile ? 'text-lg mb-4' : 'text-xl mb-6'} font-semibold text-gray-800`}>{t('events.upcoming')}</h2>
         <div className="text-center py-8">
-          <p className="text-gray-600 mb-2">{language === 'fr' ? 'Aucun événement à venir' : 'No upcoming events'}</p>
-          <p className="text-gray-500 text-sm">{language === 'fr' ? 'Les calendriers iCal se synchronisent automatiquement' : 'iCal calendars sync automatically'}</p>
+          <p className="text-gray-600 mb-2">{t('events.none.upcoming')}</p>
+          <p className="text-gray-500 text-sm">{t('events.sync.message')}</p>
         </div>
       </div>
     );
@@ -218,7 +218,7 @@ export function UpcomingEvents({ events, language = 'fr' }: UpcomingEventsProps)
                               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#788C6B10'}
                               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                             >
-                              Description
+                              {t('events.description')}
                             </button>
                           </div>
                         )}

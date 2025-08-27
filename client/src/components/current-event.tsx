@@ -78,25 +78,25 @@ export function CurrentEvent({ event, language = 'fr' }: CurrentEventProps) {
 
   // Get calendar display name from source
   const getCalendarName = (calendarSource: string | null) => {
-    if (!calendarSource) return 'GÉNÉRAL';
+    if (!calendarSource) return t('categories.general');
     
     // Extract a short name from the calendar source
-    if (calendarSource.includes('spaeastman')) return 'ACTIVITÉS';
+    if (calendarSource.includes('spaeastman')) return t('categories.activities');
     if (calendarSource.includes('group.calendar.google.com')) {
       // Try to extract meaningful name from group calendar ID
       const match = calendarSource.match(/([a-f0-9]{64})/);
       if (match) {
         const id = match[1];
         // Map known calendar IDs to names
-        if (id.startsWith('8d3d8be7')) return 'ACTIVITÉS';
-        if (id.startsWith('9402bc30')) return 'CONFÉRENCES';
-        if (id.startsWith('c3e052be')) return 'WORKSHOPS';
-        if (id.startsWith('4dfbddf3')) return 'VISITE';
+        if (id.startsWith('8d3d8be7')) return t('categories.activities');
+        if (id.startsWith('9402bc30')) return t('categories.conference');
+        if (id.startsWith('c3e052be')) return t('categories.workshops');
+        if (id.startsWith('4dfbddf3')) return t('categories.visit');
       }
-      return 'GROUPE';
+      return t('categories.groupe');
     }
     
-    return 'AUTRE';
+    return t('categories.other');
   };
 
   // Update current time every 10 seconds - TV optimized
@@ -126,10 +126,10 @@ export function CurrentEvent({ event, language = 'fr' }: CurrentEventProps) {
         
         <div className="border-l-4 border-gray-300 pl-4">
           <h3 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-600 mb-3`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            {language === 'fr' ? 'Aucun événement en cours' : 'No current events'}
+            {t('events.none.current')}
           </h3>
           <p className={`text-gray-500 ${isMobile ? 'text-sm mb-3' : 'mb-4'}`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            {language === 'fr' ? 'Profitez de ce moment libre dans votre emploi du temps.' : 'Enjoy this free time in your schedule.'}
+            {t('events.none.message')}
           </p>
         </div>
       </div>

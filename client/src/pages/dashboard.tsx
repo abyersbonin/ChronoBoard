@@ -258,7 +258,7 @@ export default function Dashboard() {
   if (settingsLoading) {
     return (
       <div className="min-h-screen bg-dashboard-dark flex items-center justify-center">
-        <div className="text-white">Chargement...</div>
+        <div className="text-white">{t ? t('loading') : 'Chargement...'}</div>
       </div>
     );
   }

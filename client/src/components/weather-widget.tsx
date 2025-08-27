@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { Thermometer } from "lucide-react";
 import { type WeatherData } from "@shared/schema";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface WeatherWidgetProps {
   location: string;
@@ -9,6 +10,7 @@ interface WeatherWidgetProps {
 }
 
 export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps) {
+  const { t } = useLanguage();
   // Mobile device detection (excluding TV browsers)
   const [isMobile, setIsMobile] = useState(false);
   
@@ -124,7 +126,7 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
         <div className="flex items-center justify-center text-white/70">
           <Thermometer className="w-3 h-3 mr-2" />
           <span className="text-xs" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            Météo indisponible
+            {t('weather.unavailable')}
           </span>
         </div>
       </div>
@@ -142,11 +144,12 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
     
     const dayDiff = Math.round((forecastDateOnly.getTime() - todayDateOnly.getTime()) / (1000 * 60 * 60 * 24));
     
-    if (dayDiff === 0) return "AUJOURD'HUI";
-    if (dayDiff === 1) return "DEMAIN";
+    if (dayDiff === 0) return t('events.today');
+    if (dayDiff === 1) return t('events.tomorrow');
     
-    // For any other day, return the day name
-    return days[forecastDate.getDay()];
+    // For any other day, return the day name in the appropriate language
+    const locale = language === 'fr' ? 'fr-FR' : 'en-US';
+    return forecastDate.toLocaleDateString(locale, { weekday: 'short' }).toUpperCase();
   };
 
   // Use only authentic weather forecast data
