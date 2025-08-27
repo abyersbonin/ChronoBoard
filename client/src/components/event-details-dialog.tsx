@@ -298,7 +298,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
             <Calendar className="h-5 w-5 text-blue-600 flex-shrink-0" />
             <div>
               <div className="font-medium">{formatDate(event.startTime)}</div>
-              <div className="text-sm" style={{ color: '#788C6B' }}>
+              <div className="text-sm text-gray-600">
                 {formatTime(event.startTime)} - {formatTime(event.endTime)}
               </div>
             </div>
