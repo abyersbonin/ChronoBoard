@@ -120,7 +120,7 @@ export function CurrentEvent({ event, language = 'fr' }: CurrentEventProps) {
       <div className={`bg-gray-100 bg-opacity-60 rounded-xl ${isMobile ? 'p-4 mb-6' : 'p-6 mb-8'} border border-gray-300 shadow-lg dashboard-transition animate-category-fade`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-semibold text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>{t('events.current')}</h2>
-          <div className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold text-blue-600`} style={{ fontFamily: 'Montserrat, sans-serif' }}>{currentTime}</div>
+          <div className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold`} style={{ fontFamily: 'Montserrat, sans-serif', color: '#788C6B' }}>{currentTime}</div>
         </div>
         
         <div className="border-l-4 border-gray-300 pl-4">
