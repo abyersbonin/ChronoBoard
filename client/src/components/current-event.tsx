@@ -10,7 +10,7 @@ interface CurrentEventProps {
 }
 
 export function CurrentEvent({ event, language = 'fr' }: CurrentEventProps) {
-  const { t } = useLanguage();
+  const { t, translateEventContent } = useLanguage();
   const [showEventDetails, setShowEventDetails] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString(language === 'fr' ? 'fr-FR' : 'en-US', {
     hour: '2-digit',
@@ -162,7 +162,7 @@ export function CurrentEvent({ event, language = 'fr' }: CurrentEventProps) {
         <div className="border-l-4 pl-4 flex-1 relative" style={{ borderLeftColor: '#788C6B' }}>
           <div className="flex items-center gap-3 mb-3">
             <h3 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
-              {cleanHtmlText(event.title)}
+              {translateEventContent(cleanHtmlText(event.title))}
             </h3>
             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)}`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
               {getCalendarName(event.calendarSource)}

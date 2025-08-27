@@ -6,6 +6,7 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: string) => string;
+  translateEventContent: (text: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -78,6 +79,67 @@ const translations = {
   }
 };
 
+// Content translation dictionary for event titles and descriptions
+const contentTranslations: Record<string, string> = {
+  // Activities and wellness
+  'Qi qong en eau chaude (bilingual)': 'Hot Water Qi Gong (bilingual)',
+  'Qi qong en eau chaude': 'Hot Water Qi Gong',
+  'Étirements dans l\'eau (Bilingual)': 'Water Stretching (Bilingual)',
+  'Étirements dans l\'eau': 'Water Stretching',
+  'Les pouvoirs extraordinaires du froid (bilingual)': 'The Extraordinary Powers of Cold (bilingual)',
+  'Les pouvoirs extraordinaires du froid': 'The Extraordinary Powers of Cold',
+  'Essentrics (bilingual)': 'Essentrics (bilingual)',
+  'Essentrics': 'Essentrics',
+  'Relâchement des tensions profondes avec balles (bilingual)': 'Deep Tension Release with Balls (bilingual)',
+  'Relâchement des tensions profondes avec balles': 'Deep Tension Release with Balls',
+  'Renforcez votre corps et boostez votre système immunitaire avec  le mouvement,  le chaud et le froid (Bilingual)': 'Strengthen Your Body and Boost Your Immune System with Movement, Heat and Cold (Bilingual)',
+  'Renforcez votre corps et boostez votre système immunitaire avec le mouvement, le chaud et le froid': 'Strengthen Your Body and Boost Your Immune System with Movement, Heat and Cold',
+  'Marche nordique': 'Nordic Walking',
+  
+  // Conferences
+  'Conférence: Si peu pour tant... L\'importance des oligo-éléments & des minéraux pour la santé': 'Conference: So Little for So Much... The Importance of Trace Elements & Minerals for Health',
+  
+  // Common terms for partial matching
+  'en eau chaude': 'in hot water',
+  'dans l\'eau': 'in water',
+  'avec balles': 'with balls',
+  'système immunitaire': 'immune system',
+  'oligo-éléments': 'trace elements',
+  'minéraux': 'minerals',
+  'santé': 'health',
+  'mouvement': 'movement',
+  'chaud et froid': 'heat and cold',
+  'tensions profondes': 'deep tension',
+  'extraordinaires': 'extraordinary',
+  'pouvoirs': 'powers',
+  'importance': 'importance'
+};
+
+// Function to translate event content
+function translateEventContent(text: string, language: Language): string {
+  if (language === 'fr') return text; // Return original French text
+  
+  // For English, try to translate
+  let translatedText = text;
+  
+  // First try exact match (case-insensitive)
+  const exactMatch = Object.keys(contentTranslations).find(
+    key => key.toLowerCase() === text.toLowerCase()
+  );
+  if (exactMatch) {
+    return contentTranslations[exactMatch];
+  }
+  
+  // Then try partial matches for common terms
+  Object.entries(contentTranslations).forEach(([french, english]) => {
+    if (text.toLowerCase().includes(french.toLowerCase())) {
+      translatedText = translatedText.replace(new RegExp(french, 'gi'), english);
+    }
+  });
+  
+  return translatedText;
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     // Check localStorage for saved preference
@@ -97,7 +159,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const value = {
     language,
     setLanguage,
-    t
+    t,
+    translateEventContent: (text: string) => translateEventContent(text, language)
   };
 
   return (

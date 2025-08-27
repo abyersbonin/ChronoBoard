@@ -9,8 +9,8 @@ interface UpcomingEventsProps {
   language?: 'fr' | 'en';
 }
 
-export function UpcomingEvents({ events, language = 'fr' }: UpcomingEventsProps) {
-  const { t } = useLanguage();
+export function UpcomingEvents({ events, language: propLanguage = 'fr' }: UpcomingEventsProps) {
+  const { t, language, translateEventContent } = useLanguage();
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [showEventDetails, setShowEventDetails] = useState(false);
   
@@ -188,7 +188,7 @@ export function UpcomingEvents({ events, language = 'fr' }: UpcomingEventsProps)
                       <div className="flex-1 min-w-0 relative">
                         <div className="flex items-center gap-2 mb-2">
                           <h4 className="text-lg font-semibold text-gray-800">
-                            {cleanHtmlText(event.title)}
+                            {translateEventContent(cleanHtmlText(event.title))}
                           </h4>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)}`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
                             {getCalendarName(event.calendarSource)}
