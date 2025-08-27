@@ -3,6 +3,7 @@ import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { translationService } from "./translation-service";
+import { enhancedTranslationService } from "./enhanced-translation-service";
 import { insertSettingsSchema, insertCalendarEventSchema, type WeatherData } from "@shared/schema";
 import multer from "multer";
 import path from "path";
@@ -605,7 +606,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Text is required" });
       }
 
-      const translatedText = await translationService.translateText(text, fromLang, toLang);
+      const translatedText = await enhancedTranslationService.translateText(text, fromLang, toLang);
       res.json({ 
         original: text,
         translated: translatedText,
