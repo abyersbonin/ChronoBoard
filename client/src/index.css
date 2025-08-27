@@ -64,6 +64,32 @@
   animation: pulseGlow 2s ease-in-out infinite;
 }
 
+/* Enhanced animation classes for smooth transitions */
+.animate-category-fade {
+  animation: categoryFadeIn 0.4s ease-out forwards;
+}
+
+.animate-gentle-parallax {
+  animation: gentleParallax 25s ease-in-out infinite;
+}
+
+/* Loading skeleton styles */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 0px,
+    rgba(255, 255, 255, 0.3) 40px,
+    rgba(255, 255, 255, 0.1) 80px
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.skeleton-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 /* Smooth transitions for all dashboard elements */
 .dashboard-transition {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -305,5 +331,56 @@
   100% {
     transform: scale(2.5);
     opacity: 0;
+  }
+}
+
+/* Gentle parallax background animation */
+@keyframes gentleParallax {
+  0%, 100% {
+    background-position: 0% 0%;
+    transform: scale(1);
+  }
+  25% {
+    background-position: 5% 5%;
+    transform: scale(1.02);
+  }
+  50% {
+    background-position: 10% 10%;
+    transform: scale(1.01);
+  }
+  75% {
+    background-position: 5% 15%;
+    transform: scale(1.02);
+  }
+}
+
+/* Smooth category transition animation */
+@keyframes categoryFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Loading skeleton animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
   }
 }

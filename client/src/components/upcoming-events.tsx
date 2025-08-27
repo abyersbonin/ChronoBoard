@@ -1,6 +1,7 @@
 import { MapPin } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { EventDetailsDialog } from "./event-details-dialog";
+import { LoadingSkeleton } from "./loading-skeleton";
 import { useState, useEffect } from "react";
 import { useLanguage, formatTime, formatDate } from "@/hooks/useLanguage";
 import { TranslatedText } from "./translated-text";
@@ -170,11 +171,11 @@ export function UpcomingEvents({ events, language: propLanguage = 'fr' }: Upcomi
                 <h3 className={`${(isToday || isTomorrow) ? 'text-base' : 'text-lg'} font-semibold mb-4 text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
                   {formatDate(date)}
                 </h3>
-                <div className="space-y-4">
+                <div className="space-y-4 animate-category-fade">
                   {dayEvents.map((event, index) => (
                     <div
                       key={event.id}
-                      className="event-item event-card flex items-start space-x-4 p-4 bg-gray-200/40 rounded-lg hover:bg-gray-200/60 transition-colors duration-200 border border-gray-300/40 cursor-pointer animate-fade-in-up"
+                      className="event-item event-card flex items-start space-x-4 p-4 bg-gray-200/40 rounded-lg hover:bg-gray-200/60 dashboard-transition border border-gray-300/40 cursor-pointer animate-fade-in-up"
                       style={{ animationDelay: `${index * 0.1}s` }}
                       onClick={() => handleEventClick(event)}
                     >

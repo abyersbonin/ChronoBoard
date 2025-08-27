@@ -1,6 +1,7 @@
 import { MapPin, Clock } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { EventDetailsDialog } from "./event-details-dialog";
+import { LoadingSkeleton } from "./loading-skeleton";
 import { TranslatedText } from "@/components/translated-text";
 import { useState, useEffect } from "react";
 import { useLanguage, formatTime } from "@/hooks/useLanguage";
@@ -116,7 +117,7 @@ export function CurrentEvent({ event, language = 'fr' }: CurrentEventProps) {
 
   if (!event) {
     return (
-      <div className={`bg-gray-100 bg-opacity-60 rounded-xl ${isMobile ? 'p-4 mb-6' : 'p-6 mb-8'} border border-gray-300 shadow-lg`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+      <div className={`bg-gray-100 bg-opacity-60 rounded-xl ${isMobile ? 'p-4 mb-6' : 'p-6 mb-8'} border border-gray-300 shadow-lg dashboard-transition animate-category-fade`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-semibold text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>{t('events.current')}</h2>
           <div className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold text-blue-600`} style={{ fontFamily: 'Montserrat, sans-serif' }}>{currentTime}</div>
@@ -146,7 +147,7 @@ export function CurrentEvent({ event, language = 'fr' }: CurrentEventProps) {
   return (
     <>
       <div 
-        className={`bg-gray-100 bg-opacity-60 rounded-xl ${isMobile ? 'p-4 mb-6' : 'p-6 mb-8'} border border-gray-300 shadow-lg cursor-pointer hover:bg-gray-100 hover:bg-opacity-70`}
+        className={`bg-gray-100 bg-opacity-60 rounded-xl ${isMobile ? 'p-4 mb-6' : 'p-6 mb-8'} border border-gray-300 shadow-lg cursor-pointer hover:bg-gray-100 hover:bg-opacity-70 dashboard-transition animate-category-fade`}
         onClick={() => setShowEventDetails(true)}
         style={{ fontFamily: 'Montserrat, sans-serif' }}
       >

@@ -264,7 +264,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-white font-sans relative">
+    <div className="min-h-screen bg-white text-white font-sans relative animate-gentle-parallax">
       {/* Fixed Header with Spa Image Background */}
       <div className="fixed top-0 left-0 right-0 z-50">
         <div 
