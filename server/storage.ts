@@ -252,11 +252,46 @@ export class DatabaseStorage implements IStorage {
   }
 
   async syncCalendarEvents(userId: string, events: InsertCalendarEvent[]): Promise<CalendarEvent[]> {
-    // Add new events (clearing is handled separately now)
+    // Use upsert (INSERT ... ON CONFLICT ... DO UPDATE) to handle duplicates
     const syncedEvents: CalendarEvent[] = [];
+    
     for (const eventData of events) {
-      const event = await this.createCalendarEvent(userId, eventData);
-      syncedEvents.push(event);
+      try {
+        // Try to insert the event with proper field mapping
+        const [event] = await db
+          .insert(calendarEvents)
+          .values({
+            id: eventData.id,
+            title: eventData.title,
+            description: eventData.description,
+            startTime: eventData.startTime,
+            endTime: eventData.endTime,
+            location: eventData.location,
+            isAllDay: eventData.isAllDay,
+            icalEventId: eventData.icalEventId,
+            calendarSource: eventData.calendarSource,
+            createdAt: new Date(),
+            lastSynced: new Date(),
+          })
+          .onConflictDoUpdate({
+            target: calendarEvents.id,
+            set: {
+              title: eventData.title,
+              description: eventData.description,
+              startTime: eventData.startTime,
+              endTime: eventData.endTime,
+              location: eventData.location,
+              calendarSource: eventData.calendarSource,
+              lastSynced: new Date(),
+            }
+          })
+          .returning();
+        
+        syncedEvents.push(event);
+      } catch (error) {
+        console.error(`Error syncing event ${eventData.id}:`, error);
+        // Continue with other events even if one fails
+      }
     }
 
     return syncedEvents;
