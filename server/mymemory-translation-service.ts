@@ -3,7 +3,9 @@ export class MyMemoryTranslationService {
   private apiKey: string;
   private baseUrl = 'https://api.mymemory.translated.net';
   private cache = new Map<string, string>();
-  private requestQueue: Promise<any>[] = [];
+  private lastRequestTime = 0;
+  private requestDelay = 250; // Start with 250ms delay between requests
+  private maxDelay = 5000; // Maximum delay of 5 seconds
 
   constructor(apiKey: string) {
     this.apiKey = apiKey;
@@ -23,11 +25,8 @@ export class MyMemoryTranslationService {
     if (!cleanText) return text;
 
     try {
-      // Rate limiting - wait between requests
-      if (this.requestQueue.length > 0) {
-        await Promise.all(this.requestQueue);
-        this.requestQueue = [];
-      }
+      // Enhanced rate limiting with exponential backoff
+      await this.waitWithBackoff();
 
       const params = new URLSearchParams({
         q: cleanText,
@@ -37,7 +36,7 @@ export class MyMemoryTranslationService {
         de: 'spa-eastman-dashboard@example.com' // Developer email for high volume usage
       });
 
-      const translationPromise = fetch(`${this.baseUrl}/get?${params.toString()}`, {
+      const response = await fetch(`${this.baseUrl}/get?${params.toString()}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -45,22 +44,29 @@ export class MyMemoryTranslationService {
         }
       });
 
-      this.requestQueue.push(translationPromise);
-
-      const response = await translationPromise;
+      if (response.status === 429) {
+        console.warn('MyMemory API rate limit hit, using fallback translation for:', cleanText);
+        const fallbackResult = this.basicPhraseReplacement(cleanText);
+        this.cache.set(cacheKey, fallbackResult);
+        return fallbackResult;
+      }
 
       if (!response.ok) {
         console.error('MyMemory API error:', response.status, response.statusText);
-        return this.basicPhraseReplacement(cleanText);
+        const fallbackResult = this.basicPhraseReplacement(cleanText);
+        this.cache.set(cacheKey, fallbackResult);
+        return fallbackResult;
       }
 
       const result = await response.json();
       if (result.responseStatus === 200 && result.responseData) {
         const translatedText = result.responseData.translatedText || cleanText;
         
-        // If MyMemory returns the same text, just return it (don't use terrible fallback)
+        // Reset delay on successful response
+        this.resetDelay();
+        
+        // If MyMemory returns the same text, use enhanced phrase replacement
         if (translatedText.toLowerCase().trim() === cleanText.toLowerCase().trim()) {
-          // For French text that wasn't translated, try basic phrase replacement only
           const basicResult = this.basicPhraseReplacement(cleanText);
           this.cache.set(cacheKey, basicResult);
           return basicResult;
@@ -83,48 +89,82 @@ export class MyMemoryTranslationService {
         return postProcessed;
       } else {
         console.error('MyMemory translation failed:', result);
-        return this.basicPhraseReplacement(cleanText);
+        this.increaseDelay();
+        const fallbackResult = this.basicPhraseReplacement(cleanText);
+        this.cache.set(cacheKey, fallbackResult);
+        return fallbackResult;
       }
     } catch (error) {
       console.error('MyMemory translation service error:', error);
-      return this.basicPhraseReplacement(cleanText);
+      this.increaseDelay();
+      const fallbackResult = this.basicPhraseReplacement(cleanText);
+      this.cache.set(cacheKey, fallbackResult);
+      return fallbackResult;
     }
   }
 
-  // Basic phrase replacement - only replace obvious spa terms, no word-by-word
+  // Enhanced phrase replacement for better fallback translations
   private basicPhraseReplacement(text: string): string {
     const translations: Record<string, string> = {
-      // Complete phrases
+      // Event titles and descriptions
+      "Nos 6 piliers mieux-être - Visite de 3 de nos sites": "Our 6 wellness pillars - Visit to 3 of our sites",
+      "Cette rencontre a pour but de partager notre philosophie et de vous familiariser avec nos 6 piliers mieux-être.": "This meeting aims to share our philosophy and familiarize you with our 6 wellness pillars.",
       "Qu'est-ce que le Shinrin Yoku?": "What is Shinrin Yoku?",
-      "Qu est-ce que le Shinrin Yoku?": "What is Shinrin Yoku?", 
+      "Qu est-ce que le Shinrin Yoku?": "What is Shinrin Yoku?",
       "En compagnie d'Anne-Marie Laforest": "With Anne-Marie Laforest",
       "En compagnie d Anne-Marie Laforest": "With Anne-Marie Laforest",
+      "L'influence positive des lettres et des sons": "The positive influence of letters and sounds",
+      "L'influence de la numérologie sur votre quotidien": "The influence of numerology on your daily life",
+      
+      // Activity names
       "Animé par": "Led by",
-      "Animée par": "Led by",
+      "Animée par": "Led by", 
       "professeure de yoga": "yoga teacher",
       "professeur de yoga": "yoga teacher",
       "kinésiologue": "kinesiologist",
       "naturopathe": "naturopath",
       "Aqua-forme & thermothérapie": "Aqua fitness & thermotherapy",
-      "Yoga vibratoire en eau chaude": "Vibrational yoga in hot water", 
+      "Aqua-forme (bilingual)": "Aqua fitness (bilingual)",
+      "Yoga vibratoire en eau chaude": "Vibrational yoga in hot water",
       "Essentrics- Réveil du corps": "Essentrics - Body awakening",
+      "Essentrics (bilingual)": "Essentrics (bilingual)",
       "Les pouvoirs extraordinaires du froid": "The extraordinary powers of cold",
+      "Les pouvoirs extraordinaires du froid (bilingual)": "The extraordinary powers of cold (bilingual)",
       "Relâchement des tensions profondes avec balles": "Deep tension release with balls",
       "Relâchement des tensions profondes avec balles (bilingual)": "Release of deep tensions with balls (bilingual)",
-      // Keep only specific lake names in French
-      "lac Stukely": "Lac Stukely",
-      "Lac d'Argent": "Lac d'Argent", 
-      "lac d'Argent": "Lac d'Argent",
-      "Lac Orford": "Lac Orford",
-      "lac Orford": "Lac Orford",
+      "Renforcez votre corps et boostez votre système immunitaire avec  le mouvement,  le chaud et le froid (Bilingual)": "Strengthen your body and boost your immune system with movement, heat and cold (Bilingual)",
+      
+      // Conference topics
       "Conférence: Si peu pour tant": "Conference: So little for so much",
       "L'importance des oligo-éléments": "The importance of trace elements",
+      "L'importance des oligo-éléments & des minéraux pour la santé": "The importance of trace elements & minerals for health",
+      "Si peu pour tant... L'importance des oligo-éléments & des minéraux pour la santé": "So little for so much... The importance of trace elements & minerals for health",
+      
+      // Activities  
       "système immunitaire": "immune system",
       "Marche nordique": "Nordic walking",
       "Hatha Yoga": "Hatha Yoga",
       "Aqua forme": "Aqua fitness",
       "Étirements dans l'eau": "Water stretching",
-      "Qi qong en eau chaude": "Qi Qong in hot water"
+      "Étirements dans l'eau (Bilingual)": "Water stretching (Bilingual)",
+      "Qi qong en eau chaude": "Qi Qong in hot water",
+      "Qi qong en eau chaude (bilingual)": "Qi Qong in hot water (bilingual)",
+      
+      // Locations
+      "Piscine intérieure": "Indoor pool",
+      "Départ de la réception": "Departure from reception",
+      "Salle lac Stukely": "Lac Stukely room",
+      "lac Stukely": "Lac Stukely",
+      "Lac d'Argent": "Lac d'Argent",
+      "lac d'Argent": "Lac d'Argent", 
+      "Lac Orford": "Lac Orford",
+      "lac Orford": "Lac Orford",
+      
+      // Common terms
+      "Description": "Description",
+      "bilingual": "bilingual",
+      "(bilingual)": "(bilingual)",
+      "(Bilingual)": "(Bilingual)"
     };
 
     // Try exact match first
@@ -158,6 +198,30 @@ export class MyMemoryTranslationService {
       )
     );
     return translations;
+  }
+
+  // Enhanced rate limiting with exponential backoff
+  private async waitWithBackoff() {
+    const now = Date.now();
+    const timeSinceLastRequest = now - this.lastRequestTime;
+    
+    if (timeSinceLastRequest < this.requestDelay) {
+      const waitTime = this.requestDelay - timeSinceLastRequest;
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+    
+    this.lastRequestTime = Date.now();
+  }
+
+  // Increase delay on rate limit hit
+  private increaseDelay() {
+    this.requestDelay = Math.min(this.requestDelay * 2, this.maxDelay);
+    console.log(`Increased translation delay to ${this.requestDelay}ms due to rate limiting`);
+  }
+
+  // Reset delay on successful request
+  private resetDelay() {
+    this.requestDelay = 250;
   }
 
   clearCache() {
