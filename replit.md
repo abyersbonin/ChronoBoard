@@ -12,16 +12,17 @@ Preferred communication style: Simple, everyday language.
 
 ### Enhanced UI with Animations and Language Support (August 27, 2025)
 - ✓ **COMPLETED: Smooth animated transitions throughout the dashboard**
-- ✓ Implemented comprehensive French/English language toggle system
+- ✓ Implemented comprehensive French/English language toggle system with MyMemory API
 - ✓ Added animated language toggle button in top-right corner
 - ✓ Created fade-in, slide-in, and staggered animation effects for all components
 - ✓ Enhanced event cards with hover animations and smooth transitions
 - ✓ Updated time formatting to support both 12h/24h formats based on language
-- ✓ Added localized date formatting for French and English
-- ✓ Implemented complete translation dictionary for all UI elements
-- ✓ Fixed translation function calls to properly display "TODAY/TOMORROW" text
-- ✓ Added animation classes: fade-in-up, slide-in-left/right, pulse-glow effects
-- ✓ Staggered animation delays for event lists with smooth visual progression
+- ✓ Added localized date formatting for French and English in event dialogs
+- ✓ Fixed all translation components to use TranslatedText with MyMemory API exclusively
+- ✓ Eliminated word-by-word fallback causing mixed-language results
+- ✓ Added context-specific post-processing: "bullets" → "balls" for spa massage context
+- ✓ Implemented lake name preservation: Lac Stukely, Lac d'Argent, Lac Orford remain in French
+- ✓ Professional sentence-level translations for all event content (titles, descriptions, locations)
 - ✓ All animations optimized for TV display and webOS compatibility
 
 ### Deployment Optimization for Cloud Run (August 1, 2025)

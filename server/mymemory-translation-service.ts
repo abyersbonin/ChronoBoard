@@ -66,17 +66,16 @@ export class MyMemoryTranslationService {
           return basicResult;
         }
         
-        // Post-process common translation issues and preserve French room names
+        // Post-process common translation issues and preserve specific French lake names
         const postProcessed = translatedText
           .replace(/\bbullets\b/gi, 'balls') // "balles" should be "balls" not "bullets" in spa context
           .replace(/\bBullets\b/gi, 'Balls') // Same for capitalized
-          .replace(/Silver Lake/gi, "Lac d'Argent") // Preserve French room name
-          .replace(/Lake Stukely/gi, "lac Stukely") // Preserve French room name
-          .replace(/Stukely Lake/gi, "lac Stukely") // Alternative translation
-          .replace(/Silver Lake Room/gi, "Salle Lac d'Argent") // Full room name
-          .replace(/Stukely Lake Room/gi, "Salle lac Stukely") // Full room name
-          .replace(/\bNamaste Sauna\b/gi, 'Sauna Namaste') // Preserve French order
-          .replace(/\bOval Pool\b/gi, 'Bassin Oval'); // Preserve French pool name
+          // Only preserve specific lake names as requested
+          .replace(/Silver Lake/gi, "Lac d'Argent") // Preserve French lake name
+          .replace(/Lake Stukely/gi, "Lac Stukely") // Preserve French lake name  
+          .replace(/Stukely Lake/gi, "Lac Stukely") // Alternative translation
+          .replace(/Orford Lake/gi, "Lac Orford") // Preserve French lake name
+          .replace(/Lake Orford/gi, "Lac Orford"); // Alternative translation
         
         // Cache the result
         this.cache.set(cacheKey, postProcessed);
@@ -112,15 +111,12 @@ export class MyMemoryTranslationService {
       "Les pouvoirs extraordinaires du froid": "The extraordinary powers of cold",
       "Relâchement des tensions profondes avec balles": "Deep tension release with balls",
       "Relâchement des tensions profondes avec balles (bilingual)": "Release of deep tensions with balls (bilingual)",
-      // Room names - keep in French
-      "Salle lac Stukely": "Salle lac Stukely",
-      "Salle Lac d'Argent": "Salle Lac d'Argent", 
-      "Pergola extérieure": "Pergola extérieure",
-      "Pergola extérieure * Salle lac d'Argent en cas de pluie": "Pergola extérieure * Salle Lac d'Argent en cas de pluie",
-      "Pergola * Salle lac d'Argent en cas de pluie": "Pergola * Salle Lac d'Argent en cas de pluie",
-      "Bassin Oval": "Bassin Oval",
-      "Sauna Namaste": "Sauna Namaste",
-      "Piscine intérieure": "Piscine intérieure",
+      // Keep only specific lake names in French
+      "lac Stukely": "Lac Stukely",
+      "Lac d'Argent": "Lac d'Argent", 
+      "lac d'Argent": "Lac d'Argent",
+      "Lac Orford": "Lac Orford",
+      "lac Orford": "Lac Orford",
       "Conférence: Si peu pour tant": "Conference: So little for so much",
       "L'importance des oligo-éléments": "The importance of trace elements",
       "système immunitaire": "immune system",
