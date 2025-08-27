@@ -1,6 +1,7 @@
 import { MapPin, Clock, Calendar, X, CalendarPlus } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 import { TranslatedText } from "@/components/translated-text";
 
@@ -213,18 +214,43 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     }
   };
 
-  return (
-    <div className="modal-overlay-fixed bg-black/80 backdrop-blur-sm">
+  // Use React portal to render modal at document.body level, completely outside scroll context
+  return createPortal(
+    <div 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 999999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backdropFilter: 'blur(4px)'
+      }}
+    >
       {/* Backdrop */}
       <div 
-        className="absolute inset-0"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100%',
+          height: '100%'
+        }}
         onClick={() => onOpenChange(false)}
       />
       
       {/* Modal Content */}
       <div 
-        className="modal-fixed-center bg-white shadow-2xl border border-gray-300 rounded-lg overflow-y-auto"
+        className="bg-white shadow-2xl border border-gray-300 rounded-lg overflow-y-auto"
         style={{
+          position: 'relative',
+          zIndex: 1000000,
           width: isMobile ? '90vw' : '500px',
           maxWidth: '90vw',
           maxHeight: '80vh',
@@ -297,6 +323,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
