@@ -620,167 +620,30 @@ function translateEventContent(text: string, language: Language): string {
   return text;
 }
 
-// Fallback translation function for when API is unavailable
+// Simple phrase replacement - only for exact matches, no word-by-word
 function fallbackTranslateEventContent(text: string, language: Language): string {
-  if (language === 'fr') return text; // Return original French text
-  if (!text || text.trim() === '') return text; // Return empty text as-is
+  if (language === 'fr') return text;
+  if (!text || text.trim() === '') return text;
   
-  // Clean HTML tags from text for comparison
-  const cleanText = text.replace(/<[^>]*>/g, '').trim();
+  // Only translate complete exact phrases we're confident about
+  const exactTranslations: Record<string, string> = {
+    "Qu'est-ce que le Shinrin Yoku?": "What is Shinrin Yoku?",
+    "Salle Lac d'Argent": "Silver Lake Room",
+    "Piscine intérieure": "Indoor pool",
+    "Sauna Namaste": "Namaste Sauna",
+    "Pergola extérieure": "Outdoor pergola",
+    "Bassin Oval": "Oval basin"
+  };
   
-  // First try exact match for complete descriptions
-  const exactMatch = Object.keys(fullDescriptionTranslations).find(
-    key => key.toLowerCase() === cleanText.toLowerCase()
-  );
-  if (exactMatch) {
-    return fullDescriptionTranslations[exactMatch];
-  }
-  
-  // Try exact match for titles
-  const titleMatch = Object.keys(contentTranslations).find(
-    key => key.toLowerCase() === cleanText.toLowerCase()
-  );
-  if (titleMatch) {
-    return contentTranslations[titleMatch];
-  }
-  
-  // Apply comprehensive translation patterns
-  let translatedText = text;
-  
-  // Apply phrase-level translations first (longer phrases)
-  const allTranslations = { ...phraseTranslations, ...contentTranslations };
-  const sortedPhrases = Object.entries(allTranslations)
-    .sort(([a], [b]) => b.length - a.length);
-    
-  sortedPhrases.forEach(([french, english]) => {
-    if (french.length > 3 && translatedText.toLowerCase().includes(french.toLowerCase())) {
-      const regex = new RegExp(french.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-      translatedText = translatedText.replace(regex, english);
+  // Try exact match first
+  for (const [french, english] of Object.entries(exactTranslations)) {
+    if (text.toLowerCase().trim() === french.toLowerCase().trim()) {
+      return english;
     }
-  });
+  }
   
-  // Apply comprehensive word-level translation with better word boundaries
-  translatedText = translatedText
-    // Essential French words - comprehensive coverage
-    .replace(/\banime par\b/gi, 'led by')
-    .replace(/\banimé par\b/gi, 'led by')
-    .replace(/\banimée par\b/gi, 'led by')
-    .replace(/\bprofesseure de yoga\b/gi, 'yoga teacher')
-    .replace(/\bprofesseur de yoga\b/gi, 'yoga teacher')
-    .replace(/\bkinésiologue\b/gi, 'kinesiologist')
-    .replace(/\bnaturopathe\b/gi, 'naturopath')
-    .replace(/\bcoach en focusing\b/gi, 'focusing coach')
-    .replace(/\bce cours\b/gi, 'this class')
-    .replace(/\bcette conférence\b/gi, 'this conference')
-    .replace(/\bcette séance\b/gi, 'this session')
-    .replace(/\bcette rencontre\b/gi, 'this meeting')
-    .replace(/\baccessible à tous\b/gi, 'accessible to all')
-    .replace(/\bvous propose\b/gi, 'offers you')
-    .replace(/\bvoyage intérieur\b/gi, 'inner journey')
-    .replace(/\bmêlant\b/gi, 'blending')
-    .replace(/\bméditation sensorielle\b/gi, 'sensory meditation')
-    .replace(/\bpostures fluides\b/gi, 'fluid postures')
-    .replace(/\bmusique apaisante\b/gi, 'soothing music')
-    .replace(/\bà votre rythme\b/gi, 'at your own pace')
-    .replace(/\bprofonde connexion\b/gi, 'deep connection')
-    .replace(/\bà soi\b/gi, 'to oneself')
-    .replace(/\bdemande d'être\b/gi, 'requires being')
-    .replace(/\bà l'aise\b/gi, 'comfortable')
-    .replace(/\bsur les genoux\b/gi, 'on the knees')
-    .replace(/\btenue recommandée\b/gi, 'recommended attire')
-    .replace(/\bvêtements de sport\b/gi, 'sportswear')
-    .replace(/\bconfortables\b/gi, 'comfortable')
-    .replace(/\bconfortable\b/gi, 'comfortable')
-    .replace(/\bmaillot de bain\b/gi, 'swimsuit')
-    .replace(/\bvous initie aux\b/gi, 'introduces you to')
-    .replace(/\bbienfaits méconnus\b/gi, 'unknown benefits')
-    .replace(/\boligoéléments\b/gi, 'trace elements')
-    .replace(/\boutil d'analyse innovant\b/gi, 'innovative analysis tool')
-    .replace(/\bcapital santé\b/gi, 'health capital')
-    .replace(/\bsolide\b/gi, 'solid')
-    .replace(/\bdécouvrez\b/gi, 'discover')
-    .replace(/\baquaforme\b/gi, 'aqua fitness')
-    .replace(/\bmise en forme en douceur\b/gi, 'gentle fitness')
-    .replace(/\baméliore\b/gi, 'improves')
-    .replace(/\bflexibilité\b/gi, 'flexibility')
-    .replace(/\bendurance\b/gi, 'endurance')
-    .replace(/\btonus musculaire\b/gi, 'muscle tone')
-    .replace(/\btout en respectant\b/gi, 'while respecting')
-    .replace(/\brythme du corps\b/gi, 'body rhythm')
-    .replace(/\ba pour but de\b/gi, 'aims to')
-    .replace(/\bvous familiariser avec\b/gi, 'familiarize you with')
-    .replace(/\blieux\b/gi, 'places')
-    .replace(/\bvous donner\b/gi, 'give you')
-    .replace(/\binformations nécessaires\b/gi, 'necessary information')
-    .replace(/\bafin de maximiser\b/gi, 'in order to maximize')
-    .replace(/\bbienfaits\b/gi, 'benefits')
-    .replace(/\bplaisir de votre séjour\b/gi, 'pleasure of your stay')
-    .replace(/\ben compagnie de\b/gi, 'in the company of')
-    .replace(/\bvenez en apprendre\b/gi, 'come learn')
-    .replace(/\bdavantage sur\b/gi, 'more about')
-    .replace(/\bprincipes du\b/gi, 'principles of')
-    .replace(/\bmarche lente\b/gi, 'slow walk')
-    .replace(/\bcontemplative\b/gi, 'contemplative')
-    .replace(/\binvite aux\b/gi, 'invites to')
-    .replace(/\bmouvements justes\b/gi, 'right movements')
-    .replace(/\bsans tensions\b/gi, 'without tension')
-    .replace(/\beutonie\b/gi, 'eutony')
-    .replace(/\bcorps habité\b/gi, 'inhabited body')
-    .replace(/\bconscience\b/gi, 'consciousness')
-    .replace(/\bprésence\b/gi, 'presence')
-    .replace(/\bvous fait découvrir\b/gi, 'makes you discover')
-    .replace(/\bthéorie polyvagale\b/gi, 'polyvagal theory')
-    .replace(/\ben explorant\b/gi, 'by exploring')
-    .replace(/\bcomment\b/gi, 'how')
-    .replace(/\bsystème nerveux autonome\b/gi, 'autonomic nervous system')
-    .replace(/\binfluence\b/gi, 'influences')
-    .replace(/\bnotre quête\b/gi, 'our quest')
-    .replace(/\bsécurité intérieure\b/gi, 'inner security')
-    .replace(/\brelationnelle\b/gi, 'relational')
-    .replace(/\ballie\b/gi, 'combines')
-    .replace(/\brenforcement\b/gi, 'strengthening')
-    .replace(/\bétirements dynamiques\b/gi, 'dynamic stretching')
-    .replace(/\bposture\b/gi, 'posture')
-    .replace(/\bmobilité\b/gi, 'mobility')
-    .replace(/\bvitalité\b/gi, 'vitality')
-    .replace(/\blibérant les fascias\b/gi, 'releasing the fascia')
-    .replace(/\bvous guide dans\b/gi, 'guides you in')
-    .replace(/\bséance de yoga vibratoire\b/gi, 'vibrational yoga session')
-    .replace(/\bposture assise\b/gi, 'seated posture')
-    .replace(/\bpratiquerez\b/gi, 'will practice')
-    .replace(/\btechniques qui\b/gi, 'techniques that')
-    .replace(/\bs'appuie sur\b/gi, 'relies on')
-    .replace(/\bsouffle\b/gi, 'breath')
-    .replace(/\bsons\b/gi, 'sounds')
-    .replace(/\bvibrations\b/gi, 'vibrations')
-    .replace(/\bélèvent la fréquence\b/gi, 'raise the frequency')
-    .replace(/\bvibratoire\b/gi, 'vibrational')
-    .replace(/\bénergisent\b/gi, 'energize')
-    // Basic French grammar
-    .replace(/\ble\s+/gi, 'the ')
-    .replace(/\bla\s+/gi, 'the ')
-    .replace(/\bles\s+/gi, 'the ')
-    .replace(/\bun\s+/gi, 'a ')
-    .replace(/\bune\s+/gi, 'a ')
-    .replace(/\bdes\s+/gi, 'some ')
-    .replace(/\bdu\s+/gi, 'of the ')
-    .replace(/\bde la\s+/gi, 'of the ')
-    .replace(/\bde l'\s*/gi, 'of the ')
-    .replace(/\bd'\s*/gi, 'of ')
-    .replace(/\bet\s+/gi, 'and ')
-    .replace(/\bou\s+/gi, 'or ')
-    .replace(/\bavec\s+/gi, 'with ')
-    .replace(/\bsans\s+/gi, 'without ')
-    .replace(/\bpour\s+/gi, 'for ')
-    .replace(/\bpar\s+/gi, 'by ')
-    .replace(/\bsur\s+/gi, 'on ')
-    .replace(/\bdans\s+/gi, 'in ')
-    .replace(/\bde\s+/gi, 'of ')
-    .replace(/\bà\s+/gi, 'to ')
-    // Clean up multiple spaces
-    .replace(/\s+/g, ' ');
-  
-  return translatedText.trim();
+  // If no exact match, return original text (better than bad word-by-word)
+  return text;
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
