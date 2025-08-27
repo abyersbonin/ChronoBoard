@@ -22,6 +22,7 @@ export class ArMLTranslationService {
       const cleanText = text.replace(/<[^>]*>/g, '').trim();
       if (!cleanText) return text;
 
+      // Try the free endpoint without authentication first
       const response = await fetch(`${this.baseUrl}/v1/translate`, {
         method: 'POST',
         headers: {
@@ -30,8 +31,7 @@ export class ArMLTranslationService {
         body: JSON.stringify({
           text: cleanText,
           source_lang: fromLang,
-          target_lang: toLang,
-          api_key: this.apiKey
+          target_lang: toLang
         })
       });
 
