@@ -215,29 +215,30 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
 
   return (
     <div 
-      className="fixed inset-0 z-[9999] flex items-center justify-center"
+      className="fixed inset-0 flex items-center justify-center"
       style={{ 
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 9999,
+        position: 'fixed !important',
+        top: '0 !important',
+        left: '0 !important',
+        right: '0 !important',
+        bottom: '0 !important',
+        zIndex: 999999,
         padding: '2rem'
       }}
     >
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        style={{ zIndex: 999998 }}
         onClick={() => onOpenChange(false)}
       />
       
       {/* Modal Content - Optimized for LG StanbyME */}
       <div 
-        className="relative z-[10000] bg-white rounded-lg shadow-2xl border border-gray-300 p-6 overflow-y-auto animate-category-fade"
+        className="relative bg-white rounded-lg shadow-2xl border border-gray-300 p-6 overflow-y-auto animate-category-fade"
         style={{
-          position: 'relative',
-          zIndex: 10000,
+          position: 'relative !important',
+          zIndex: 999999,
           width: '90%',
           maxWidth: '600px',
           maxHeight: '80vh',
