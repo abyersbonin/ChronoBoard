@@ -6,11 +6,17 @@ export class EnhancedTranslationService {
   private phraseDict: Record<string, string> = {
     // Complete questions and common phrases
     "Qu'est-ce que le Shinrin Yoku?": "What is Shinrin Yoku?",
+    "Qu est-ce que le Shinrin Yoku?": "What is Shinrin Yoku?",
     "Qu'est-ce que le": "What is the",
+    "Qu est-ce que le": "What is the", 
     "Qu'est-ce que": "What is",
+    "Qu est-ce que": "What is",
     "Comment faire": "How to do",
     "Pourquoi est-ce important": "Why is it important",
     "En compagnie d'Anne-Marie Laforest": "With Anne-Marie Laforest",
+    "En compagnie d Anne-Marie Laforest": "With Anne-Marie Laforest",
+    "En compagnie de": "With",
+    "En compagnie d": "With",
     
     // Spa and wellness complete phrases
     "Aqua-forme & thermothérapie": "Aqua fitness & thermotherapy",
@@ -194,10 +200,12 @@ export class EnhancedTranslationService {
       }
     }
     
-    // Try partial phrase matching for longer texts
+    // Try partial phrase matching for longer texts - sort by length (longest first)
     let result = text;
-    for (const [french, english] of Object.entries(this.phraseDict)) {
-      if (result.toLowerCase().includes(french.toLowerCase())) {
+    const sortedPhrases = Object.entries(this.phraseDict).sort(([a], [b]) => b.length - a.length);
+    
+    for (const [french, english] of sortedPhrases) {
+      if (french.length > 2 && result.toLowerCase().includes(french.toLowerCase())) {
         const regex = new RegExp(french.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
         result = result.replace(regex, english);
       }
@@ -241,6 +249,12 @@ export class EnhancedTranslationService {
 
   clearCache() {
     this.cache.clear();
+  }
+  
+  // Force clear cache for testing
+  forceClearCache() {
+    this.cache.clear();
+    console.log('Translation cache cleared');
   }
 }
 

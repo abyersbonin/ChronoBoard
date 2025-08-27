@@ -606,6 +606,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Text is required" });
       }
 
+      // Clear cache for this specific text to ensure fresh translation
+      const cacheKey = `${fromLang}-${toLang}-${text}`;
+      enhancedTranslationService.clearCache();
+      
       const translatedText = await enhancedTranslationService.translateText(text, fromLang, toLang);
       res.json({ 
         original: text,
