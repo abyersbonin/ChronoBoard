@@ -17,6 +17,12 @@ export class EnhancedTranslationService {
     "En compagnie d Anne-Marie Laforest": "With Anne-Marie Laforest",
     "En compagnie de": "With",
     "En compagnie d": "With",
+    "Animé par": "Led by",
+    "Animée par": "Led by", 
+    "professeure de yoga": "yoga teacher",
+    "professeur de yoga": "yoga teacher",
+    "kinésiologue": "kinesiologist",
+    "naturopathe": "naturopath",
     
     // Spa and wellness complete phrases
     "Aqua-forme & thermothérapie": "Aqua fitness & thermotherapy",
@@ -195,7 +201,8 @@ export class EnhancedTranslationService {
   private translateWithPhraseDict(text: string): string {
     // First try exact phrase match (case insensitive)
     for (const [french, english] of Object.entries(this.phraseDict)) {
-      if (text.toLowerCase() === french.toLowerCase()) {
+      if (text.toLowerCase().trim() === french.toLowerCase().trim()) {
+        // Exact match found
         return english;
       }
     }
@@ -206,15 +213,20 @@ export class EnhancedTranslationService {
     
     for (const [french, english] of sortedPhrases) {
       if (french.length > 2 && result.toLowerCase().includes(french.toLowerCase())) {
+        // Partial match found
         const regex = new RegExp(french.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
         result = result.replace(regex, english);
       }
     }
     
-    // If no phrase matches found, try word-by-word translation as fallback
-    if (result === text) {
-      result = this.translateWordByWord(text);
+    // If significant changes were made, return result
+    if (result !== text) {
+      // Translation complete
+      return result;
     }
+    
+    // Otherwise, try word-by-word translation as fallback
+    result = this.translateWordByWord(text);
     
     return result;
   }
