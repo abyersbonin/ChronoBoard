@@ -21,18 +21,28 @@ export function UpcomingEvents({ events, language: propLanguage = 'fr' }: Upcomi
   
   useEffect(() => {
     const detectMobile = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
       const userAgent = navigator.userAgent.toLowerCase();
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      const isSmallScreen = window.innerWidth <= 768;
       
       // Exclude TV browsers (webOS, Tizen, etc.)
       const isTVBrowser = /webos|tizen|smart-tv|smarttv/.test(userAgent);
       
-      // Check for mobile user agents
-      const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
+      // Mobile viewport ranges covering 95% of phones from last 5 years
+      const isMobileViewport = (
+        // Portrait: narrow to wide mobile range
+        (width >= 280 && width <= 430 && height >= 640) ||
+        // Landscape: typical mobile landscape orientations  
+        (width >= 568 && width <= 932 && height >= 320 && height <= 430) ||
+        // Foldable edge cases
+        (width >= 280 && width <= 360 && height >= 653)
+      ) && width < 600; // Small tablet breakpoint
       
-      // Mobile if: (touch device AND small screen AND mobile UA) AND NOT TV browser
-      const mobile = (isTouchDevice && isSmallScreen && isMobileUA) && !isTVBrowser;
+      // Touch capability check
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      
+      // Mobile if: viewport matches mobile ranges AND touch capable AND NOT TV browser
+      const mobile = isMobileViewport && isTouchDevice && !isTVBrowser;
       
       setIsMobile(mobile);
     };
