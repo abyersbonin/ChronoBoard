@@ -55,22 +55,19 @@ export function UpcomingEvents({ events, language: propLanguage = 'fr' }: Upcomi
     return textarea.value.trim();
   };
 
-  // Get badge color based on calendar name (not source)
+  // Get badge color based on calendar source (language-independent)
   const getBadgeColor = (calendarSource: string | null) => {
-    const calendarName = getCalendarName(calendarSource);
+    if (!calendarSource) return 'bg-gray-500';
     
-    // Assign consistent colors based on calendar name
-    const colorMap: { [key: string]: string } = {
-      'ACTIVITÉS': 'spa-activites-badge',
-      'CONFÉRENCES': 'spa-conferences-badge',
-      'WORKSHOPS': 'bg-purple-500',
-      'VISITE': 'spa-visite-badge',
-      'GROUPE': 'bg-indigo-500',
-      'GÉNÉRAL': 'bg-gray-500',
-      'AUTRE': 'bg-red-500'
-    };
+    // Assign colors based on calendar source ID, not translated names
+    if (calendarSource.includes('spaeastman')) return 'spa-activites-badge';
+    if (calendarSource.includes('8d3d8be7')) return 'spa-activites-badge';
+    if (calendarSource.includes('9402bc30')) return 'spa-conferences-badge';
+    if (calendarSource.includes('c3e052be')) return 'bg-purple-500';
+    if (calendarSource.includes('4dfbddf3')) return 'spa-visite-badge';
+    if (calendarSource.includes('group.calendar.google.com')) return 'bg-indigo-500';
     
-    return colorMap[calendarName] || 'bg-gray-500';
+    return 'bg-gray-500';
   };
 
   // Get calendar display name from source
