@@ -224,7 +224,83 @@ const phraseTranslations: Record<string, string> = {
   'excellent pour': 'excellent for',
   'recommandé pour': 'recommended for',
   'adapté à': 'adapted to',
-  'convient à': 'suitable for'
+  'convient à': 'suitable for',
+  
+  // Complete sentence structures and common spa descriptions
+  'Une expérience unique': 'A unique experience',
+  'Une occasion de': 'An opportunity to',
+  'L\'occasion de': 'The opportunity to',
+  'Une façon de': 'A way to',
+  'La façon de': 'The way to',
+  'Un moyen de': 'A way to',
+  'Le moyen de': 'The way to',
+  'Une méthode pour': 'A method to',
+  'La méthode pour': 'The method to',
+  'Une technique pour': 'A technique to',
+  'La technique pour': 'The technique to',
+  'Une approche pour': 'An approach to',
+  'L\'approche pour': 'The approach to',
+  'permet de vous': 'allows you to',
+  'permet de se': 'allows to',
+  'aide à vous': 'helps you to',
+  'aide à se': 'helps to',
+  'contribue à': 'contributes to',
+  'favorise la': 'promotes the',
+  'favorise le': 'promotes the',
+  'stimule la': 'stimulates the',
+  'stimule le': 'stimulates the',
+  'améliore la': 'improves the',
+  'améliore le': 'improves the',
+  'renforce la': 'strengthens the',
+  'renforce le': 'strengthens the',
+  'développe la': 'develops the',
+  'développe le': 'develops the',
+  'augmente la': 'increases the',
+  'augmente le': 'increases the',
+  'réduit la': 'reduces the',
+  'réduit le': 'reduces the',
+  'diminue la': 'decreases the',
+  'diminue le': 'decreases the',
+  'libère la': 'releases the',
+  'libère le': 'releases the',
+  'soulage la': 'relieves the',
+  'soulage le': 'relieves the',
+  'apaise la': 'soothes the',
+  'apaise le': 'soothes the',
+  'calme la': 'calms the',
+  'calme le': 'calms the',
+  'relaxe la': 'relaxes the',
+  'relaxe le': 'relaxes the',
+  'détend la': 'relaxes the',
+  'détend le': 'relaxes the',
+  'tonifie la': 'tones the',
+  'tonifie le': 'tones the',
+  'étire la': 'stretches the',
+  'étire le': 'stretches the',
+  'assouplit la': 'makes flexible the',
+  'assouplit le': 'makes flexible the',
+  'harmonise la': 'harmonizes the',
+  'harmonise le': 'harmonizes the',
+  'équilibre la': 'balances the',
+  'équilibre le': 'balances the',
+  'régénère la': 'regenerates the',
+  'régénère le': 'regenerates the',
+  'revitalise la': 'revitalizes the',
+  'revitalise le': 'revitalizes the',
+  'purifie la': 'purifies the',
+  'purifie le': 'purifies the',
+  'nettoie la': 'cleanses the',
+  'nettoie le': 'cleanses the',
+  'nourrit la': 'nourishes the',
+  'nourrit le': 'nourishes the',
+  'hydrate la': 'hydrates the',
+  'hydrate le': 'hydrates the',
+  'protège la': 'protects the',
+  'protège le': 'protects the',
+  'répare la': 'repairs the',
+  'répare le': 'repairs the',
+  'guérit la': 'heals the',
+  'guérit le': 'heals the'
 };
 
 // Function to translate event content
@@ -415,6 +491,79 @@ function translateEventContent(text: string, language: Language): string {
     .replace(/\bhuit\b/gi, 'eight')
     .replace(/\bneuf\b/gi, 'nine')
     .replace(/\bdix\b/gi, 'ten')
+    // Additional common words that might be missed
+    .replace(/\bce\s+/gi, 'this ')
+    .replace(/\bcette\s+/gi, 'this ')
+    .replace(/\bces\s+/gi, 'these ')
+    .replace(/\bqui\s+/gi, 'which ')
+    .replace(/\bque\s+/gi, 'that ')
+    .replace(/\bcomme\s+/gi, 'like ')
+    .replace(/\btout\s+/gi, 'all ')
+    .replace(/\btoute\s+/gi, 'all ')
+    .replace(/\btous\s+/gi, 'all ')
+    .replace(/\btoutes\s+/gi, 'all ')
+    .replace(/\bmême\s+/gi, 'same ')
+    .replace(/\baussi\s+/gi, 'also ')
+    .replace(/\bencore\s+/gi, 'still ')
+    .replace(/\bdéjà\s+/gi, 'already ')
+    .replace(/\bplus\s+/gi, 'more ')
+    .replace(/\bmoins\s+/gi, 'less ')
+    .replace(/\btrès\s+/gi, 'very ')
+    .replace(/\bassez\s+/gi, 'quite ')
+    .replace(/\btrop\s+/gi, 'too ')
+    .replace(/\bbien\s+/gi, 'well ')
+    .replace(/\bmal\s+/gi, 'badly ')
+    .replace(/\bici\s+/gi, 'here ')
+    .replace(/\blà\s+/gi, 'there ')
+    .replace(/\boù\s+/gi, 'where ')
+    .replace(/\bcomment\s+/gi, 'how ')
+    .replace(/\bpourquoi\s+/gi, 'why ')
+    .replace(/\bcombien\s+/gi, 'how much ')
+    .replace(/\bsi\s+/gi, 'if ')
+    .replace(/\bmais\s+/gi, 'but ')
+    .replace(/\bcar\s+/gi, 'because ')
+    .replace(/\bdonc\s+/gi, 'so ')
+    .replace(/\balors\s+/gi, 'then ')
+    .replace(/\bpuis\s+/gi, 'then ')
+    .replace(/\bensuite\s+/gi, 'then ')
+    .replace(/\benfin\s+/gi, 'finally ')
+    .replace(/\bd'abord\s+/gi, 'first ')
+    .replace(/\ben effet\s+/gi, 'indeed ')
+    .replace(/\ben fait\s+/gi, 'actually ')
+    .replace(/\bpar exemple\s+/gi, 'for example ')
+    .replace(/\bc'est-à-dire\s+/gi, 'that is ')
+    .replace(/\bautrement dit\s+/gi, 'in other words ')
+    .replace(/\bde plus\s+/gi, 'moreover ')
+    .replace(/\bd'ailleurs\s+/gi, 'besides ')
+    .replace(/\ben plus\s+/gi, 'in addition ')
+    .replace(/\bcependant\s+/gi, 'however ')
+    .replace(/\btoutefois\s+/gi, 'however ')
+    .replace(/\bnéanmoins\s+/gi, 'nevertheless ')
+    .replace(/\bpourtant\s+/gi, 'yet ')
+    .replace(/\bmalgré\s+/gi, 'despite ')
+    .replace(/\bgrâce à\s+/gi, 'thanks to ')
+    .replace(/\bà cause de\s+/gi, 'because of ')
+    .replace(/\ben raison de\s+/gi, 'due to ')
+    .replace(/\bau lieu de\s+/gi, 'instead of ')
+    .replace(/\bsauf\s+/gi, 'except ')
+    .replace(/\bsauf si\s+/gi, 'unless ')
+    .replace(/\bà condition que\s+/gi, 'provided that ')
+    .replace(/\bpour que\s+/gi, 'so that ')
+    .replace(/\bafin que\s+/gi, 'in order that ')
+    .replace(/\bbien que\s+/gi, 'although ')
+    .replace(/\bquoique\s+/gi, 'although ')
+    .replace(/\btandis que\s+/gi, 'while ')
+    .replace(/\balors que\s+/gi, 'while ')
+    .replace(/\bdès que\s+/gi, 'as soon as ')
+    .replace(/\bdepuis que\s+/gi, 'since ')
+    .replace(/\bjusqu'à ce que\s+/gi, 'until ')
+    .replace(/\bavant que\s+/gi, 'before ')
+    .replace(/\baprès que\s+/gi, 'after ')
+    .replace(/\bpendant que\s+/gi, 'while ')
+    .replace(/\bau moment où\s+/gi, 'when ')
+    .replace(/\bchaque fois que\s+/gi, 'every time ')
+    // Cleanup multiple spaces and trim
+    .replace(/\s+/g, ' ');
   
   return translatedText.trim();
 }
