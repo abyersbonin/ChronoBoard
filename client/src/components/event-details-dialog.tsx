@@ -284,7 +284,7 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
           {/* Description */}
           {event.description && (
             <div className="mt-4 pt-4 border-t border-gray-200">
-              <h4 className="font-medium text-gray-800 mb-2">Description</h4>
+              <h4 className="font-medium text-gray-800 mb-2">{translateEventContent('Description')}</h4>
               <p className="text-gray-600 leading-relaxed mb-4">
                 {translateEventContent(cleanHtmlText(event.description))}
               </p>

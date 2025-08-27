@@ -112,12 +112,66 @@ const contentTranslations: Record<string, string> = {
   'tensions profondes': 'deep tension',
   'extraordinaires': 'extraordinary',
   'pouvoirs': 'powers',
-  'importance': 'importance'
+  'importance': 'importance',
+  
+  // Additional description terms
+  'Description': 'Description',
+  'activité': 'activity',
+  'activités': 'activities',
+  'détente': 'relaxation',
+  'relaxation': 'relaxation',
+  'bien-être': 'wellness',
+  'bienfaits': 'benefits',
+  'exercice': 'exercise',
+  'exercices': 'exercises',
+  'étirement': 'stretching',
+  'étirements': 'stretching',
+  'respiration': 'breathing',
+  'méditation': 'meditation',
+  'concentration': 'concentration',
+  'équilibre': 'balance',
+  'posture': 'posture',
+  'postures': 'postures',
+  'corps': 'body',
+  'esprit': 'mind',
+  'énergie': 'energy',
+  'vitalité': 'vitality',
+  'thérapie': 'therapy',
+  'thérapeutique': 'therapeutic',
+  'soin': 'treatment',
+  'soins': 'treatments',
+  'massage': 'massage',
+  'massages': 'massages',
+  'muscle': 'muscle',
+  'muscles': 'muscles',
+  'articulation': 'joint',
+  'articulations': 'joints',
+  'circulation': 'circulation',
+  'stress': 'stress',
+  'anxiété': 'anxiety',
+  'fatigue': 'fatigue',
+  'douleur': 'pain',
+  'douleurs': 'pain',
+  'inflammation': 'inflammation',
+  'récupération': 'recovery',
+  'guérison': 'healing',
+  'prévention': 'prevention',
+  'amélioration': 'improvement',
+  'renforcement': 'strengthening',
+  'assouplissement': 'flexibility',
+  'souplesse': 'flexibility',
+  'endurance': 'endurance',
+  'résistance': 'resistance',
+  'force': 'strength',
+  'coordination': 'coordination',
+  'stabilité': 'stability',
+  'mobilité': 'mobility'
 };
 
 // Function to translate event content
 function translateEventContent(text: string, language: Language): string {
   if (language === 'fr') return text; // Return original French text
+  if (!text || text.trim() === '') return text; // Return empty text as-is
   
   // For English, try to translate
   let translatedText = text;
@@ -130,10 +184,15 @@ function translateEventContent(text: string, language: Language): string {
     return contentTranslations[exactMatch];
   }
   
-  // Then try partial matches for common terms
-  Object.entries(contentTranslations).forEach(([french, english]) => {
-    if (text.toLowerCase().includes(french.toLowerCase())) {
-      translatedText = translatedText.replace(new RegExp(french, 'gi'), english);
+  // Then try partial matches for common terms (sort by length, longest first for better matching)
+  const sortedTranslations = Object.entries(contentTranslations)
+    .sort(([a], [b]) => b.length - a.length);
+    
+  sortedTranslations.forEach(([french, english]) => {
+    if (french.length > 2 && translatedText.toLowerCase().includes(french.toLowerCase())) {
+      // Use word boundaries for better matching
+      const regex = new RegExp(french.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+      translatedText = translatedText.replace(regex, english);
     }
   });
   
