@@ -2,6 +2,7 @@ import type { Express, Request } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { translationService } from "./translation-service";
 import { insertSettingsSchema, insertCalendarEventSchema, type WeatherData } from "@shared/schema";
 import multer from "multer";
 import path from "path";
@@ -595,7 +596,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Translation API endpoint using ArML
+  app.post("/api/translate", async (req, res) => {
+    try {
+      const { text, fromLang = 'fr', toLang = 'en' } = req.body;
+      
+      if (!text) {
+        return res.status(400).json({ error: "Text is required" });
+      }
 
+      const translatedText = await translationService.translateText(text, fromLang, toLang);
+      res.json({ 
+        original: text,
+        translated: translatedText,
+        fromLang,
+        toLang
+      });
+    } catch (error) {
+      console.error('Translation error:', error);
+      res.status(500).json({ error: "Translation failed" });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;

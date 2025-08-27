@@ -3,6 +3,7 @@ import { type CalendarEvent } from "@shared/schema";
 import { EventDetailsDialog } from "./event-details-dialog";
 import { useState, useEffect } from "react";
 import { useLanguage, formatTime, formatDate } from "@/hooks/useLanguage";
+import { TranslatedText } from "./translated-text";
 
 interface UpcomingEventsProps {
   events: CalendarEvent[];
