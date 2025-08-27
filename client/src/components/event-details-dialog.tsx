@@ -214,47 +214,37 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     }
   };
 
-  // Use React portal to render modal at document.body level, completely outside scroll context
+  // Use React portal with absolute viewport positioning
   return createPortal(
     <div 
       style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+        top: '0px',
+        left: '0px',
+        width: '100vw',
+        height: '100vh',
         zIndex: 999999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        backdropFilter: 'blur(4px)'
+        backdropFilter: 'blur(4px)',
+        margin: '0',
+        padding: '0'
       }}
+      onClick={() => onOpenChange(false)}
     >
-      {/* Backdrop */}
-      <div 
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          width: '100%',
-          height: '100%'
-        }}
-        onClick={() => onOpenChange(false)}
-      />
-      
-      {/* Modal Content */}
+      {/* Modal Content - Absolutely centered */}
       <div 
         className="bg-white shadow-2xl border border-gray-300 rounded-lg overflow-y-auto"
         style={{
-          position: 'relative',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
           zIndex: 1000000,
           width: isMobile ? '90vw' : '500px',
           maxWidth: '90vw',
           maxHeight: '80vh',
-          padding: isMobile ? '1rem' : '2rem'
+          padding: isMobile ? '1rem' : '2rem',
+          margin: '0'
         }}
         onClick={(e) => e.stopPropagation()}
       >
