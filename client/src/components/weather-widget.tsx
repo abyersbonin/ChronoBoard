@@ -5,9 +5,10 @@ import { type WeatherData } from "@shared/schema";
 
 interface WeatherWidgetProps {
   location: string;
+  language?: 'fr' | 'en';
 }
 
-export function WeatherWidget({ location }: WeatherWidgetProps) {
+export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps) {
   // Mobile device detection (excluding TV browsers)
   const [isMobile, setIsMobile] = useState(false);
   

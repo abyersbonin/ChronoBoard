@@ -2,12 +2,15 @@ import { MapPin } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { EventDetailsDialog } from "./event-details-dialog";
 import { useState, useEffect } from "react";
+import { useLanguage, formatTime, formatDate } from "@/hooks/useLanguage";
 
 interface UpcomingEventsProps {
   events: CalendarEvent[];
+  language?: 'fr' | 'en';
 }
 
-export function UpcomingEvents({ events }: UpcomingEventsProps) {
+export function UpcomingEvents({ events, language = 'fr' }: UpcomingEventsProps) {
+  const { t } = useLanguage();
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [showEventDetails, setShowEventDetails] = useState(false);
   
@@ -110,9 +113,9 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     if (eventDate.toDateString() === today.toDateString()) {
-      return "AUJOURD'HUI";
+      return "{t('events.today')}";
     } else if (eventDate.toDateString() === tomorrow.toDateString()) {
-      return "DEMAIN";
+      return "{t('events.tomorrow')}";
     } else {
       // Format as "DIMANCHE, AOÛT 3"
       const weekday = eventDate.toLocaleDateString('fr-FR', { weekday: 'long' }).toUpperCase();
@@ -141,7 +144,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
   if (events.length === 0) {
     return (
       <div className={`bg-gray-100 bg-opacity-60 rounded-xl ${isMobile ? 'p-4' : 'p-6'} border border-gray-300 shadow-lg`}>
-        <h2 className={`${isMobile ? 'text-lg mb-4' : 'text-xl mb-6'} font-semibold text-gray-800`}>Événements à venir</h2>
+        <h2 className={`${isMobile ? 'text-lg mb-4' : 'text-xl mb-6'} font-semibold text-gray-800`}>{t('events.upcoming')}</h2>
         <div className="text-center py-8">
           <p className="text-gray-600 mb-2">Aucun événement à venir</p>
           <p className="text-gray-500 text-sm">Les calendriers iCal se synchronisent automatiquement</p>
@@ -153,7 +156,7 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
   return (
     <>
       <div className={`bg-gray-100 bg-opacity-60 rounded-xl ${isMobile ? 'p-4' : 'p-6'} border border-gray-300 shadow-lg`}>
-        <h2 className={`${isMobile ? 'text-lg mb-4' : 'text-xl mb-6'} font-semibold text-gray-800`}>Événements à venir</h2>
+        <h2 className={`${isMobile ? 'text-lg mb-4' : 'text-xl mb-6'} font-semibold text-gray-800`}>{t('events.upcoming')}</h2>
         
         <div className="space-y-6">
           {Object.entries(groupedEvents).map(([dateKey, dayEvents]) => {
@@ -167,10 +170,11 @@ export function UpcomingEvents({ events }: UpcomingEventsProps) {
                   {formatDate(date)}
                 </h3>
                 <div className="space-y-4">
-                  {dayEvents.map((event) => (
+                  {dayEvents.map((event, index) => (
                     <div
                       key={event.id}
-                      className="flex items-start space-x-4 p-4 bg-gray-200/40 rounded-lg hover:bg-gray-200/60 transition-colors duration-200 border border-gray-300/40 cursor-pointer"
+                      className="event-item event-card flex items-start space-x-4 p-4 bg-gray-200/40 rounded-lg hover:bg-gray-200/60 transition-colors duration-200 border border-gray-300/40 cursor-pointer animate-fade-in-up"
+                      style={{ animationDelay: `${index * 0.1}s` }}
                       onClick={() => handleEventClick(event)}
                     >
                       <div className="text-center min-w-0 flex-shrink-0">

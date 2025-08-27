@@ -7,11 +7,13 @@ import { SidePanel } from "@/components/side-panel";
 import { SpaBackground } from "@/components/spa-background";
 import { FullscreenButton } from "@/components/fullscreen-button";
 import { WeatherWidget } from "@/components/weather-widget";
+import { LanguageToggle } from "@/components/language-toggle";
 import spaHeaderImage from "@assets/spa-eastman_pavillon-pricipal_levee-du-soleil_face_credit-auqueb-4-scaled-e1736788112766_1753560070028.jpg";
 import { type CalendarEvent, type Settings } from "@shared/schema";
 import { syncIcalCalendar, updateIcalUrls } from "@/lib/ical-calendar";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import { apiRequest } from "@/lib/queryClient";
 
 const DEFAULT_USER_ID = "default-user";
@@ -21,6 +23,7 @@ export default function Dashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { isLoggedIn, isLoading: authLoading } = useAuth();
+  const { t, language } = useLanguage();
   
   // Mobile device detection (excluding TV browsers)
   const [isMobile, setIsMobile] = useState(false);
@@ -285,6 +288,11 @@ export default function Dashboard() {
             </div>
           )}
 
+          {/* Language toggle positioned absolute top-right */}
+          <div className="absolute right-6 top-6 z-20">
+            <LanguageToggle />
+          </div>
+
           {/* Logo at the very top center */}
           <div className={`absolute ${isMobile ? 'top-3' : 'top-6'} left-1/2 transform -translate-x-1/2 z-10`}>
             <img 
@@ -301,7 +309,9 @@ export default function Dashboard() {
               <div className="relative">
                 {/* Text positioned above */}
                 <div className="text-white text-sm drop-shadow-md text-center mb-2">
-                  Consulter sur votre<br />appareil mobile
+                  {t('mobile.qr.title').split('\n').map((line, idx) => (
+                    <div key={idx}>{line}</div>
+                  ))}
                 </div>
                 
                 {/* QR Code centered below text */}
@@ -317,8 +327,8 @@ export default function Dashboard() {
           )}
           
           {/* Weather Widget - Positioned at bottom right corner of header */}
-          <div className={`absolute ${isMobile ? 'bottom-3 right-3' : 'bottom-6 right-6'} z-20`}>
-            <WeatherWidget location={settings?.location || "Eastman"} />
+          <div className={`absolute ${isMobile ? 'bottom-3 right-3' : 'bottom-6 right-6'} z-20 animate-slide-in-right`}>
+            <WeatherWidget location={settings?.location || "Eastman"} language={language} />
           </div>
 
         </div>
@@ -328,8 +338,12 @@ export default function Dashboard() {
       <div className={`relative z-10 w-full ${isMobile ? 'px-2 py-4' : 'px-6 py-8'}`} style={{ marginTop: isMobile ? '250px' : '350px' }}>
         <div className="grid gap-8 grid-cols-1">
           <div className="col-span-1">
-            <CurrentEvent event={currentEvent} />
-            <UpcomingEvents events={upcomingEvents} />
+            <div className="animate-fade-in-up">
+              <CurrentEvent event={currentEvent} language={language} />
+            </div>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <UpcomingEvents events={upcomingEvents} language={language} />
+            </div>
           </div>
         </div>
       </div>

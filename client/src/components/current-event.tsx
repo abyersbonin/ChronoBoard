@@ -2,16 +2,20 @@ import { MapPin, Clock } from "lucide-react";
 import { type CalendarEvent } from "@shared/schema";
 import { EventDetailsDialog } from "./event-details-dialog";
 import { useState, useEffect } from "react";
+import { useLanguage, formatTime } from "@/hooks/useLanguage";
 
 interface CurrentEventProps {
   event: CalendarEvent | null;
+  language?: 'fr' | 'en';
 }
 
-export function CurrentEvent({ event }: CurrentEventProps) {
+export function CurrentEvent({ event, language = 'fr' }: CurrentEventProps) {
+  const { t } = useLanguage();
   const [showEventDetails, setShowEventDetails] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString('fr-FR', {
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString(language === 'fr' ? 'fr-FR' : 'en-US', {
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
+    hour12: language === 'en'
   }));
   
   // Mobile device detection (excluding TV browsers)
@@ -98,9 +102,10 @@ export function CurrentEvent({ event }: CurrentEventProps) {
   // Update current time every 10 seconds - TV optimized
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString('fr-FR', {
+      setCurrentTime(new Date().toLocaleTimeString(language === 'fr' ? 'fr-FR' : 'en-US', {
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
+        hour12: language === 'en'
       }));
     }, 10000); // 10 seconds instead of 1 second for better TV performance
 
@@ -115,7 +120,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
     return (
       <div className={`bg-gray-100 bg-opacity-60 rounded-xl ${isMobile ? 'p-4 mb-6' : 'p-6 mb-8'} border border-gray-300 shadow-lg`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-semibold text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>À présent</h2>
+          <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-semibold text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>{t('events.current')}</h2>
           <div className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold text-blue-600`} style={{ fontFamily: 'Montserrat, sans-serif' }}>{currentTime}</div>
         </div>
         
@@ -146,7 +151,7 @@ export function CurrentEvent({ event }: CurrentEventProps) {
         style={{ fontFamily: 'Montserrat, sans-serif' }}
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-semibold text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>À présent</h2>
+          <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-semibold text-gray-800`} style={{ fontFamily: 'Montserrat, sans-serif' }}>{t('events.current')}</h2>
           <div className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold`} style={{ fontFamily: 'Montserrat, sans-serif', color: '#788C6B' }}>
             {currentTime}
           </div>
