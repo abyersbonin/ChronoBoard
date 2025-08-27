@@ -66,10 +66,15 @@ export class MyMemoryTranslationService {
           return basicResult;
         }
         
-        // Cache the result
-        this.cache.set(cacheKey, translatedText);
+        // Post-process common translation issues
+        const postProcessed = translatedText
+          .replace(/\bbullets\b/gi, 'balls') // "balles" should be "balls" not "bullets" in spa context
+          .replace(/\bBullets\b/gi, 'Balls'); // Same for capitalized
         
-        return translatedText;
+        // Cache the result
+        this.cache.set(cacheKey, postProcessed);
+        
+        return postProcessed;
       } else {
         console.error('MyMemory translation failed:', result);
         return this.basicPhraseReplacement(cleanText);
@@ -99,6 +104,7 @@ export class MyMemoryTranslationService {
       "Essentrics- Réveil du corps": "Essentrics - Body awakening",
       "Les pouvoirs extraordinaires du froid": "The extraordinary powers of cold",
       "Relâchement des tensions profondes avec balles": "Deep tension release with balls",
+      "Relâchement des tensions profondes avec balles (bilingual)": "Release of deep tensions with balls (bilingual)",
       "Conférence: Si peu pour tant": "Conference: So little for so much",
       "L'importance des oligo-éléments": "The importance of trace elements",
       "système immunitaire": "immune system",
