@@ -157,9 +157,9 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
         flexDirection: isMobile ? 'column' : weatherLayout === 'vertical' ? 'column' : 'row',
         gap: `${isMobile ? 12 : 8 * spacingScale}px`,
         zIndex: 30,
-        width: '100%',
-        maxWidth: isMobile ? '100%' : 'none',
-        padding: isMobile ? '16px' : '0',
+        width: isMobile ? '75%' : '100%',
+        maxWidth: isMobile ? '75%' : 'none',
+        padding: isMobile ? '12px' : '0',
         overflow: isMobile ? 'visible' : 'initial'
       }}
     >
