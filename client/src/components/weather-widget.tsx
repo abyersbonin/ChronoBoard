@@ -157,9 +157,9 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
         flexDirection: isMobile ? 'column' : weatherLayout === 'vertical' ? 'column' : 'row',
         gap: `${isMobile ? 12 : 8 * spacingScale}px`,
         zIndex: 30,
-        width: isMobile ? '75%' : '100%',
-        maxWidth: isMobile ? '75%' : 'none',
-        padding: isMobile ? '12px' : '0',
+        width: isMobile ? '100%' : '100%',
+        maxWidth: isMobile ? '100%' : 'none',
+        padding: isMobile ? '8px' : '0',
         overflow: isMobile ? 'visible' : 'initial'
       }}
     >
@@ -170,14 +170,14 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
         width: isMobile ? '100%' : 
                weatherLayout === 'vertical' ? '100%' : 
                weatherLayout === 'compact' ? '180px' : '200px',
-        height: isMobile ? '90px' : `${(weatherLayout === 'vertical' ? 80 : 110) * spacingScale}px`,
+        height: isMobile ? '60px' : `${(weatherLayout === 'vertical' ? 80 : 110) * spacingScale}px`,
         textAlign: 'center', 
         display: 'flex', 
         flexDirection: 'row',
         justifyContent: 'center', 
         alignItems: 'center',
-        padding: isMobile ? '16px' : `${12 * spacingScale}px`,
-        gap: isMobile ? '16px' : `${10 * spacingScale}px`,
+        padding: isMobile ? '8px 12px' : `${12 * spacingScale}px`,
+        gap: isMobile ? '12px' : `${10 * spacingScale}px`,
         minWidth: isMobile ? 'auto' : brand === 'Samsung' ? '280px' : 'auto'
       }}>
         <div style={{ 
@@ -223,7 +223,7 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
             width: isMobile ? '90px' : 
                    weatherLayout === 'vertical' ? `${70 * fontScale}px` : 
                    weatherLayout === 'compact' ? `${90 * fontScale}px` : '120px',
-            height: isMobile ? '100px' : `${(weatherLayout === 'vertical' ? 90 : 110) * spacingScale}px`,
+            height: isMobile ? '70px' : `${(weatherLayout === 'vertical' ? 90 : 110) * spacingScale}px`,
             textAlign: 'center',
             display: 'flex',
             flexDirection: 'column',
