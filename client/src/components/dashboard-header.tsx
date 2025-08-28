@@ -115,8 +115,15 @@ export function DashboardHeader({ title, backgroundImageUrl, location, use24Hour
             />
             <Button
               onClick={() => fileInputRef.current?.click()}
+              onTouchStart={() => {/* Ensure touch events work */}}
               disabled={isUploading}
-              className="bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm border-0 text-white"
+              className="bg-white bg-opacity-20 hover:bg-opacity-30 active:bg-opacity-40 backdrop-blur-sm border-0 text-white touch-manipulation"
+              style={{ 
+                touchAction: 'manipulation',
+                minHeight: '44px', // Apple's recommended minimum touch target size
+                minWidth: '44px',
+                fontSize: '14px'
+              }}
             >
               <Upload className="mr-2 h-4 w-4" />
               {isUploading ? 'Uploading...' : 'Change Background'}

@@ -314,6 +314,15 @@
   height: 0 !important;
 }
 
+/* Mobile optimizations */
+.mobile-weather-widget {
+  -webkit-overflow-scrolling: touch;
+}
+
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
 /* WebKit fullscreen support */
 :-webkit-full-screen,
 :-webkit-full-screen html,

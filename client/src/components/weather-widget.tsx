@@ -150,31 +150,35 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
 
   return (
     <div 
+      className={isMobile ? 'mobile-weather-widget' : ''}
       style={{
         fontFamily: 'Montserrat, sans-serif',
         display: 'flex',
-        flexDirection: weatherLayout === 'vertical' ? 'column' : 'row',
-        gap: `${8 * spacingScale}px`,
+        flexDirection: isMobile ? 'column' : weatherLayout === 'vertical' ? 'column' : 'row',
+        gap: `${isMobile ? 12 : 8 * spacingScale}px`,
         zIndex: 30,
         width: '100%',
-        maxWidth: isMobile ? '100vw' : 'none'
+        maxWidth: isMobile ? '100%' : 'none',
+        padding: isMobile ? '16px' : '0',
+        overflow: isMobile ? 'visible' : 'initial'
       }}
     >
-      {/* Current weather - device-specific sizing */}
+      {/* Current weather - mobile optimized */}
       <div style={{ 
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         borderRadius: '8px',
-        width: weatherLayout === 'vertical' ? '100%' : 
+        width: isMobile ? '100%' : 
+               weatherLayout === 'vertical' ? '100%' : 
                weatherLayout === 'compact' ? '180px' : '200px',
-        height: `${(weatherLayout === 'vertical' ? 80 : 110) * spacingScale}px`,
+        height: isMobile ? '90px' : `${(weatherLayout === 'vertical' ? 80 : 110) * spacingScale}px`,
         textAlign: 'center', 
         display: 'flex', 
         flexDirection: 'row',
         justifyContent: 'center', 
         alignItems: 'center',
-        padding: `${12 * spacingScale}px`,
-        gap: `${10 * spacingScale}px`,
-        minWidth: brand === 'Samsung' ? '280px' : 'auto'
+        padding: isMobile ? '16px' : `${12 * spacingScale}px`,
+        gap: isMobile ? '16px' : `${10 * spacingScale}px`,
+        minWidth: isMobile ? 'auto' : brand === 'Samsung' ? '280px' : 'auto'
       }}>
         <div style={{ 
           fontSize: `${(weatherLayout === 'vertical' ? 36 : 60) * fontScale}px`, 
@@ -200,31 +204,34 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
         </div>
       </div>
 
-      {/* Forecast - device-specific layout */}
+      {/* Forecast - mobile optimized layout */}
       <div style={{
         display: 'flex',
         flexDirection: 'row',
-        gap: `${4 * spacingScale}px`,
-        flexWrap: weatherLayout === 'vertical' ? 'nowrap' : 'wrap',
-        overflowX: weatherLayout === 'vertical' ? 'auto' : 'visible',
+        gap: isMobile ? '8px' : `${4 * spacingScale}px`,
+        flexWrap: 'nowrap',
+        overflowX: isMobile ? 'auto' : weatherLayout === 'vertical' ? 'auto' : 'visible',
         width: '100%',
         scrollbarWidth: 'none',
-        msOverflowStyle: 'none'
-      }} className={weatherLayout === 'vertical' ? 'scrollbar-hide' : ''}>
-        {authentiForecast.slice(0, weatherLayout === 'vertical' ? 4 : 4).map((day, index) => (
+        msOverflowStyle: 'none',
+        WebkitOverflowScrolling: 'touch'
+      }} className={isMobile || weatherLayout === 'vertical' ? 'scrollbar-hide' : ''}>
+        {authentiForecast.slice(0, 4).map((day, index) => (
           <div key={index} style={{
             backgroundColor: 'rgba(0, 0, 0, 0.4)',
             borderRadius: '8px',
-            width: weatherLayout === 'vertical' ? `${70 * fontScale}px` : 
+            width: isMobile ? '90px' : 
+                   weatherLayout === 'vertical' ? `${70 * fontScale}px` : 
                    weatherLayout === 'compact' ? `${90 * fontScale}px` : '120px',
-            height: `${(weatherLayout === 'vertical' ? 90 : 110) * spacingScale}px`,
+            height: isMobile ? '100px' : `${(weatherLayout === 'vertical' ? 90 : 110) * spacingScale}px`,
             textAlign: 'center',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            padding: `${6 * spacingScale}px ${3 * spacingScale}px`,
-            flexShrink: 0
+            padding: isMobile ? '8px 6px' : `${6 * spacingScale}px ${3 * spacingScale}px`,
+            flexShrink: 0,
+            minWidth: isMobile ? '90px' : 'auto'
           }}>
             <div style={{ 
               fontSize: `${(weatherLayout === 'vertical' ? 9 : 
