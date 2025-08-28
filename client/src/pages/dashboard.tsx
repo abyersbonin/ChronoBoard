@@ -317,7 +317,7 @@ export default function Dashboard() {
                 {/* QR Code centered below text */}
                 <div className="bg-white p-3 rounded-lg shadow-lg mx-auto w-fit">
                   <img 
-                    src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://chrono-board-tarnrsps.replit.app/" 
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://spa-eastman.org" 
                     alt="QR Code"
                     className="w-24 h-24"
                   />
