@@ -234,22 +234,22 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
             minWidth: isMobile ? '90px' : 'auto'
           }}>
             <div style={{ 
-              fontSize: `${(weatherLayout === 'vertical' ? 9 : 
+              fontSize: isMobile ? '12px' : `${(weatherLayout === 'vertical' ? 9 : 
                            getDayName(day.date, index).includes('AUJOURD') || 
                            getDayName(day.date, index).includes('DEMAIN') ? 12 : 14) * fontScale}px`, 
               fontFamily: 'Montserrat, sans-serif', 
               color: 'white', 
-              fontWeight: '500',
-              lineHeight: '1',
-              marginBottom: `${4 * spacingScale}px`
+              fontWeight: '600',
+              lineHeight: '1.1',
+              marginBottom: isMobile ? '4px' : `${4 * spacingScale}px`
             }}>
               {getDayName(day.date, index)}
             </div>
             <div style={{ 
-              fontSize: `${(weatherLayout === 'vertical' ? 20 : 32) * fontScale}px`, 
+              fontSize: isMobile ? '24px' : `${(weatherLayout === 'vertical' ? 20 : 32) * fontScale}px`, 
               lineHeight: '1',
               color: 'white',
-              marginBottom: `${4 * spacingScale}px`,
+              marginBottom: isMobile ? '4px' : `${4 * spacingScale}px`,
               fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif',
               fontVariantEmoji: 'unicode',
               textRendering: 'optimizeQuality',
@@ -258,13 +258,13 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
               {getWeatherIcon(day.condition || '', day.icon)}
             </div>
             <div style={{ 
-              fontSize: `${(weatherLayout === 'vertical' ? 10 : 13) * fontScale}px`, 
+              fontSize: isMobile ? '11px' : `${(weatherLayout === 'vertical' ? 10 : 13) * fontScale}px`, 
               fontFamily: 'Montserrat, sans-serif', 
               color: 'white',
               fontWeight: '500',
               lineHeight: '1.2'
             }}>
-              <div style={{ marginBottom: `${1 * spacingScale}px` }}>{Math.round(day.high)}°</div>
+              <div style={{ marginBottom: isMobile ? '1px' : `${1 * spacingScale}px` }}>{Math.round(day.high)}°</div>
               <div style={{ color: '#93c5fd' }}>{Math.round(day.low)}°</div>
             </div>
           </div>
