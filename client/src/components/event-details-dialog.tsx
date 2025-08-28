@@ -356,11 +356,16 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
                   e.stopPropagation();
                   handleAddToCalendar();
                 }}
-                className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+                className="w-full flex items-center justify-center gap-2 text-white font-medium py-3 px-4 rounded-lg transition-colors"
                 style={{ 
                   minHeight: '48px',
-                  touchAction: 'manipulation'
+                  touchAction: 'manipulation',
+                  backgroundColor: '#36455c'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2a3745'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#36455c'}
+                onMouseDown={(e) => e.currentTarget.style.backgroundColor = '#1e2831'}
+                onMouseUp={(e) => e.currentTarget.style.backgroundColor = '#36455c'}
               >
                 <CalendarPlus className="h-5 w-5" />
                 {language === 'fr' ? 'Ajouter à mon calendrier' : 'Add to my calendar'}
