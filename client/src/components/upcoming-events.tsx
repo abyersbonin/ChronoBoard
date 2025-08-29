@@ -189,17 +189,17 @@ export function UpcomingEvents({ events, language: propLanguage = 'fr' }: Upcomi
                       style={{ animationDelay: `${index * 0.1}s` }}
                       onClick={() => handleEventClick(event)}
                     >
-                      <div className="text-center min-w-0 flex-shrink-0 pt-1">
-                        <div className="text-xl font-bold text-gray-800 leading-tight">
+                      <div className="text-center min-w-0 flex-shrink-0">
+                        <div className="text-xl font-bold text-gray-800">
                           {formatTime(event.startTime)}
                         </div>
                       </div>
                       <div className="flex-1 min-w-0 relative">
-                        <div className="flex flex-wrap items-start gap-2 mb-2">
-                          <h4 className="text-lg font-semibold text-gray-800 leading-snug flex-1 min-w-0">
+                        <div className="flex items-start gap-2 mb-2">
+                          <h4 className="text-lg font-semibold text-gray-800 leading-tight flex-1 min-w-0">
                             <TranslatedText text={cleanHtmlText(event.title)} />
                           </h4>
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)} flex-shrink-0 mt-0.5`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)} flex-shrink-0 self-start`} style={{ fontFamily: 'Montserrat, sans-serif', marginTop: '2px' }}>
                             {getCalendarName(event.calendarSource)}
                           </span>
                         </div>
