@@ -61,34 +61,6 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
     }
   };
 
-  // Get animation class for weather icon
-  const getWeatherAnimation = (condition: string, iconCode?: string): string => {
-    if (iconCode) {
-      if (iconCode.startsWith('01')) return 'animate-weather-sun'; // Clear sky
-      if (iconCode.startsWith('09') || iconCode.startsWith('10')) return 'animate-weather-rain'; // Rain
-      if (iconCode.startsWith('02') || iconCode.startsWith('03') || iconCode.startsWith('04')) return 'animate-weather-cloud'; // Clouds
-      if (iconCode.startsWith('11')) return 'animate-weather-thunder'; // Thunderstorm
-      if (iconCode.startsWith('13')) return 'animate-weather-snow'; // Snow
-      if (iconCode.startsWith('50')) return 'animate-weather-fog'; // Fog/mist
-    }
-    
-    // Fallback based on condition text
-    const lowerCondition = condition.toLowerCase();
-    if (lowerCondition.includes('rain') || lowerCondition.includes('shower')) {
-      return 'animate-weather-rain';
-    } else if (lowerCondition.includes('cloud')) {
-      return 'animate-weather-cloud';
-    } else if (lowerCondition.includes('snow')) {
-      return 'animate-weather-snow';
-    } else if (lowerCondition.includes('thunder')) {
-      return 'animate-weather-thunder';
-    } else if (lowerCondition.includes('fog') || lowerCondition.includes('mist')) {
-      return 'animate-weather-fog';
-    } else {
-      return 'animate-weather-sun';
-    }
-  };
-
   if (isLoading) {
     return (
       <div 
@@ -221,7 +193,7 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
         }}>
           {Math.round(weather.current.temp)}°
         </div>
-        <div className={getWeatherAnimation(weather.current.condition, weather.current.icon)} style={{ 
+        <div style={{ 
           fontSize: `${(weatherLayout === 'vertical' ? 28 : 48) * fontScale}px`, 
           lineHeight: '1',
           color: 'white',
@@ -278,7 +250,7 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
             }}>
               {getDayName(day.date, index)}
             </div>
-            <div className={getWeatherAnimation(day.condition || '', day.icon)} style={{ 
+            <div style={{ 
               fontSize: isMobile ? '24px' : `${(weatherLayout === 'vertical' ? 20 : 32) * fontScale}px`, 
               lineHeight: '1',
               color: 'white',
