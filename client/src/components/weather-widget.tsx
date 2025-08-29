@@ -168,10 +168,11 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         borderRadius: '8px',
         width: isMobile ? '100%' : 
+               isTablet ? '240px' : 
                weatherLayout === 'vertical' ? '100%' : 
                weatherLayout === 'compact' ? '180px' : '200px',
         height: isMobile ? '60px' : 
-               isTablet ? '90px' : 
+               isTablet ? '75px' : 
                `${(weatherLayout === 'vertical' ? 80 : 110) * spacingScale}px`,
         textAlign: 'center', 
         display: 'flex', 
