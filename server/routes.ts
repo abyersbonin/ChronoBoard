@@ -155,10 +155,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const startDate = start ? new Date(start as string) : undefined;
       const endDate = end ? new Date(end as string) : undefined;
       
+      console.log(`Fetching events for user ${userId}, found events in storage...`);
       const events = await storage.getCalendarEvents(userId, startDate, endDate);
+      console.log(`Successfully fetched ${events.length} events for user ${userId}`);
+      
+      // If no events found, trigger an automatic sync and return empty array immediately
+      if (events.length === 0) {
+        console.log('No events found in storage, triggering background sync...');
+        // Don't await - let it happen in background
+        setTimeout(async () => {
+          try {
+            const settings = await storage.getSettings(userId);
+            if (settings?.icalUrls && settings.icalUrls.length > 0) {
+              // Trigger background sync by making internal request
+              const syncUrl = `http://localhost:${process.env.PORT || 5000}/api/sync-ical-calendar/${userId}`;
+              await fetch(syncUrl, { method: 'POST' });
+              console.log('Background sync completed successfully');
+            }
+          } catch (syncError) {
+            console.error('Background sync failed:', syncError);
+          }
+        }, 100);
+      }
+      
       res.json(events);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch calendar events" });
+      console.error('Failed to fetch calendar events:', error);
+      res.status(500).json({ error: "Failed to fetch calendar events", details: error instanceof Error ? error.message : String(error) });
     }
   });
 

@@ -20,6 +20,9 @@ const DEFAULT_USER_ID = "default-user";
 
 export default function Dashboard() {
   const [currentEvent, setCurrentEvent] = useState<CalendarEvent | null>(null);
+  const [networkStatus, setNetworkStatus] = useState<'online' | 'offline' | 'unstable'>('online');
+  const [retryAttempts, setRetryAttempts] = useState(0);
+  const [lastSuccessfulConnection, setLastSuccessfulConnection] = useState<number | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { isLoggedIn, isLoading: authLoading } = useAuth();
@@ -77,19 +80,91 @@ export default function Dashboard() {
     },
   });
 
-  // Fetch calendar events with retry logic
+  // Fetch calendar events with retry logic and local cache fallback
   const { data: events = [], isLoading: eventsLoading, refetch: refetchEvents } = useQuery({
     queryKey: ['/api/calendar-events', DEFAULT_USER_ID],
     queryFn: async () => {
-      // Fetch all events without date filtering to get current and upcoming events
-      const response = await fetch(`/api/calendar-events/${DEFAULT_USER_ID}`);
-      if (!response.ok) {
-        console.error(`Failed to fetch events: ${response.status} ${response.statusText}`);
-        throw new Error('Failed to fetch events');
+      const cacheKey = `spa-events-${DEFAULT_USER_ID}`;
+      
+      try {
+        // Fetch all events with timeout using AbortController
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
+        const response = await fetch(`/api/calendar-events/${DEFAULT_USER_ID}`, {
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          console.error(`Failed to fetch events: ${response.status} ${response.statusText}`);
+          throw new Error('Failed to fetch events');
+        }
+        
+        const data = await response.json() as CalendarEvent[];
+        console.log(`Successfully loaded ${data.length} events from server`);
+        
+        // Update network status and connection tracking
+        setNetworkStatus('online');
+        setLastSuccessfulConnection(Date.now());
+        setRetryAttempts(0);
+        
+        // Cache successful response
+        if (data.length > 0) {
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify({
+              events: data,
+              timestamp: Date.now()
+            }));
+            console.log(`Cached ${data.length} events locally`);
+          } catch (cacheError) {
+            console.warn('Failed to cache events locally:', cacheError);
+          }
+        }
+        
+        return data;
+      } catch (error) {
+        console.error('API request failed, trying local cache...', error);
+        
+        // Update network status
+        const currentRetries = retryAttempts + 1;
+        setRetryAttempts(currentRetries);
+        
+        if (currentRetries >= 3) {
+          setNetworkStatus('unstable');
+        } else if (navigator.onLine === false) {
+          setNetworkStatus('offline');
+        }
+        
+        // Try to load from local cache
+        try {
+          const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            const cachedData = JSON.parse(cached);
+            const isRecent = (Date.now() - cachedData.timestamp) < 60 * 60 * 1000; // Less than 1 hour old
+            
+            if (isRecent && cachedData.events.length > 0) {
+              console.log(`Loaded ${cachedData.events.length} events from local cache`);
+              
+              const statusMessage = networkStatus === 'offline' 
+                ? "Réseau indisponible - Affichage des activités en cache"
+                : "Problème de connexion - Utilisation des activités en cache";
+              
+              toast({
+                title: "Mode hors ligne",
+                description: statusMessage,
+                variant: "default",
+              });
+              return cachedData.events;
+            }
+          }
+        } catch (cacheError) {
+          console.error('Failed to load from cache:', cacheError);
+        }
+        
+        throw error;
       }
-      const data = await response.json() as CalendarEvent[];
-      console.log(`Successfully loaded ${data.length} events`);
-      return data;
     },
     retry: 5, // Retry failed requests up to 5 times for tablets
     retryDelay: attemptIndex => Math.min(2000 * 2 ** attemptIndex, 15000), // Faster exponential backoff
@@ -205,7 +280,7 @@ export default function Dashboard() {
     const now = new Date();
     
     // Check ALL events for ongoing status
-    const ongoing = events.find(event => {
+    const ongoing = events.find((event: CalendarEvent) => {
       const start = new Date(event.startTime);
       const end = new Date(event.endTime);
       return start <= now && end > now;
@@ -276,7 +351,7 @@ export default function Dashboard() {
   }, [eventsLoading, events.length, refetchEvents]);
 
   // Get upcoming events for the next 3 full days (not including current)
-  const upcomingEvents = events.filter(event => {
+  const upcomingEvents = events.filter((event: CalendarEvent) => {
     const start = new Date(event.startTime);
     const now = new Date();
     const threeDaysFromNow = new Date(now);
@@ -284,7 +359,7 @@ export default function Dashboard() {
     threeDaysFromNow.setHours(23, 59, 59, 999); // End of the third day
     
     return start > now && start <= threeDaysFromNow;
-  }).sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+  }).sort((a: CalendarEvent, b: CalendarEvent) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
   const handleSyncCalendar = async () => {
     if (!settings?.icalUrls || settings.icalUrls.length === 0) {
