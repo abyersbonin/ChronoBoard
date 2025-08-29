@@ -71,18 +71,22 @@
   }
 }
 
-@keyframes rainEmojiShake {
-  0%, 100% {
-    transform: translateY(0px) skewY(0deg);
+@keyframes rainFallDrop {
+  0% {
+    transform: translateY(0px) scaleY(0.5);
+    opacity: 0.3;
   }
-  25% {
-    transform: translateY(0.5px) skewY(-0.5deg);
+  20% {
+    opacity: 0.8;
+    transform: translateY(2px) scaleY(1);
   }
-  50% {
-    transform: translateY(1px) skewY(0deg);
+  80% {
+    opacity: 0.8;
+    transform: translateY(15px) scaleY(1.2);
   }
-  75% {
-    transform: translateY(0.5px) skewY(0.5deg);
+  100% {
+    transform: translateY(25px) scaleY(0.8);
+    opacity: 0;
   }
 }
 
@@ -170,7 +174,34 @@
 }
 
 .animate-weather-rain {
-  animation: rainEmojiShake 1.5s ease-in-out infinite;
+  position: relative;
+  overflow: visible;
+}
+
+.animate-weather-rain::before {
+  content: '';
+  position: absolute;
+  width: 1px;
+  height: 8px;
+  background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.8), transparent);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: rainFallDrop 1.2s ease-in infinite;
+  left: 35%;
+  top: 70%;
+  animation-delay: 0s;
+}
+
+.animate-weather-rain::after {
+  content: '';
+  position: absolute;
+  width: 1px;
+  height: 6px;
+  background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.7), transparent);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: rainFallDrop 1.5s ease-in infinite;
+  left: 55%;
+  top: 75%;
+  animation-delay: 0.4s;
 }
 
 .animate-weather-cloud {
