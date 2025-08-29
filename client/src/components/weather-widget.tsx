@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Thermometer } from "lucide-react";
+import { Thermometer, Sun, Moon, Cloud, CloudRain, CloudSnow, Zap, CloudFog } from "lucide-react";
 import { type WeatherData } from "@shared/schema";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useDeviceDetection } from "@/utils/deviceDetection";
@@ -30,34 +30,45 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
   });
 
   const getWeatherIcon = (condition: string, iconCode?: string) => {
-    // Convert OpenWeatherMap icon codes to emoji with TV-optimized rendering
+    // Convert OpenWeatherMap icon codes to consistent SVG icons
+    const iconSize = isMobile ? 24 : isTablet ? 28 : 32;
+    
     if (iconCode) {
-      const iconMap: { [key: string]: string } = {
-        '01d': '☀️', '01n': '🌙',
-        '02d': '⛅', '02n': '☁️',
-        '03d': '☁️', '03n': '☁️',
-        '04d': '☁️', '04n': '☁️',
-        '09d': '🌧️', '09n': '🌧️',
-        '10d': '🌦️', '10n': '🌧️',
-        '11d': '⛈️', '11n': '⛈️',
-        '13d': '❄️', '13n': '❄️',
-        '50d': '🌫️', '50n': '🌫️'
+      const iconMap: { [key: string]: JSX.Element } = {
+        '01d': <Sun size={iconSize} color="white" />, 
+        '01n': <Moon size={iconSize} color="white" />,
+        '02d': <Cloud size={iconSize} color="white" />, 
+        '02n': <Cloud size={iconSize} color="white" />,
+        '03d': <Cloud size={iconSize} color="white" />, 
+        '03n': <Cloud size={iconSize} color="white" />,
+        '04d': <Cloud size={iconSize} color="white" />, 
+        '04n': <Cloud size={iconSize} color="white" />,
+        '09d': <CloudRain size={iconSize} color="white" />, 
+        '09n': <CloudRain size={iconSize} color="white" />,
+        '10d': <CloudRain size={iconSize} color="white" />, 
+        '10n': <CloudRain size={iconSize} color="white" />,
+        '11d': <Zap size={iconSize} color="white" />, 
+        '11n': <Zap size={iconSize} color="white" />,
+        '13d': <CloudSnow size={iconSize} color="white" />, 
+        '13n': <CloudSnow size={iconSize} color="white" />,
+        '50d': <CloudFog size={iconSize} color="white" />, 
+        '50n': <CloudFog size={iconSize} color="white" />
       };
-      return iconMap[iconCode] || '☀️';
+      return iconMap[iconCode] || <Sun size={iconSize} color="white" />;
     }
     
     // Fallback based on condition text
     const lowerCondition = condition.toLowerCase();
     if (lowerCondition.includes('rain') || lowerCondition.includes('shower')) {
-      return '🌧️';
+      return <CloudRain size={iconSize} color="white" />;
     } else if (lowerCondition.includes('cloud')) {
-      return '☁️';
+      return <Cloud size={iconSize} color="white" />;
     } else if (lowerCondition.includes('snow')) {
-      return '❄️';
+      return <CloudSnow size={iconSize} color="white" />;
     } else if (lowerCondition.includes('thunder')) {
-      return '⛈️';
+      return <Zap size={iconSize} color="white" />;
     } else {
-      return '☀️';
+      return <Sun size={iconSize} color="white" />;
     }
   };
 
@@ -194,15 +205,12 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
           {Math.round(weather.current.temp)}°
         </div>
         <div style={{ 
-          fontSize: `${(weatherLayout === 'vertical' ? 28 : 48) * fontScale}px`, 
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           lineHeight: '1',
-          color: 'white',
-          fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif',
-          fontVariantEmoji: 'unicode',
-          textRendering: 'optimizeQuality',
-          WebkitFontSmoothing: 'antialiased',
-          transform: `translateY(${-(weatherLayout === 'vertical' ? 1 : 2) * fontScale}px)`
-        } as any}>
+          color: 'white'
+        }}>
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
       </div>
