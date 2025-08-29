@@ -168,9 +168,9 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         borderRadius: '8px',
         width: isMobile ? '100%' : 
-               isTablet ? '240px' : 
+               isTablet ? '280px' : 
                weatherLayout === 'vertical' ? '100%' : 
-               weatherLayout === 'compact' ? '180px' : '200px',
+               weatherLayout === 'compact' ? '220px' : '240px',
         height: isMobile ? '60px' : 
                isTablet ? '95px' : 
                `${(weatherLayout === 'vertical' ? 100 : 130) * spacingScale}px`,
