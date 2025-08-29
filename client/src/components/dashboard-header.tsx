@@ -1,24 +1,16 @@
-import { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getWeatherData, getWeatherIconClass } from "@/lib/weather";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface DashboardHeaderProps {
   title: string;
-  backgroundImageUrl?: string;
   location: string;
   use24Hour: boolean;
-  onImageUpload: (imageUrl: string) => void;
 }
 
-export function DashboardHeader({ title, backgroundImageUrl, location, use24Hour, onImageUpload }: DashboardHeaderProps) {
-  const [isUploading, setIsUploading] = useState(false);
+export function DashboardHeader({ title, location, use24Hour }: DashboardHeaderProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { toast } = useToast();
 
   // Update time every second
   useEffect(() => {
@@ -35,40 +27,6 @@ export function DashboardHeader({ title, backgroundImageUrl, location, use24Hour
     refetchInterval: 10 * 60 * 1000, // Refetch every 10 minutes
   });
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    setIsUploading(true);
-    const formData = new FormData();
-    formData.append('image', file);
-
-    try {
-      const response = await fetch('/api/upload-header-image', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to upload image');
-      }
-
-      const { imageUrl } = await response.json();
-      onImageUpload(imageUrl);
-      toast({
-        title: "Image uploaded successfully",
-        description: "Your header background has been updated.",
-      });
-    } catch (error) {
-      toast({
-        title: "Upload failed",
-        description: "Failed to upload image. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsUploading(false);
-    }
-  };
 
   const getCurrentDate = () => {
     // Format as "DIMANCHE, AOÛT 3"
@@ -88,46 +46,25 @@ export function DashboardHeader({ title, backgroundImageUrl, location, use24Hour
 
   return (
     <header className="relative h-48 bg-gradient-to-r from-blue-900 to-purple-900 overflow-hidden">
-      {backgroundImageUrl && (
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-70"
-          style={{ backgroundImage: `url(${backgroundImageUrl})` }}
-        />
-      )}
+      {/* YouTube Video Background */}
+      <iframe
+        className="absolute inset-0 w-full h-full object-cover opacity-70"
+        src="https://www.youtube.com/embed/erwoxqrS3rk?autoplay=1&mute=1&loop=1&playlist=erwoxqrS3rk&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&start=0"
+        title="Background Video"
+        frameBorder="0"
+        allow="autoplay; encrypted-media"
+        allowFullScreen
+      />
       <div className="absolute inset-0 bg-black bg-opacity-30"></div>
       
       <div className="relative z-10 container mx-auto px-6 h-full">
-        {/* Top row with title and upload button */}
+        {/* Top row with title */}
         <div className="flex items-start justify-between pt-4 mb-4">
           <div>
             <h1 className="text-3xl font-bold text-white" style={{ fontFamily: 'Montserrat, sans-serif' }}>{title}</h1>
             <p className="text-lg text-gray-200 mt-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
               {getCurrentDate()}
             </p>
-          </div>
-          <div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="hidden"
-            />
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              onTouchStart={() => {/* Ensure touch events work */}}
-              disabled={isUploading}
-              className="bg-white bg-opacity-20 hover:bg-opacity-30 active:bg-opacity-40 backdrop-blur-sm border-0 text-white touch-manipulation"
-              style={{ 
-                touchAction: 'manipulation',
-                minHeight: '44px', // Apple's recommended minimum touch target size
-                minWidth: '44px',
-                fontSize: '14px'
-              }}
-            >
-              <Upload className="mr-2 h-4 w-4" />
-              {isUploading ? 'Uploading...' : 'Change Background'}
-            </Button>
           </div>
         </div>
 
