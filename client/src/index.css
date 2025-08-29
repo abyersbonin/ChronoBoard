@@ -47,6 +47,98 @@
   }
 }
 
+/* Weather icon animations */
+@keyframes sunRotate {
+  0% {
+    transform: rotate(0deg) scale(1);
+    filter: drop-shadow(0 0 8px rgba(255, 223, 0, 0.4));
+  }
+  50% {
+    transform: rotate(180deg) scale(1.05);
+    filter: drop-shadow(0 0 12px rgba(255, 223, 0, 0.6));
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    filter: drop-shadow(0 0 8px rgba(255, 223, 0, 0.4));
+  }
+}
+
+@keyframes rainFall {
+  0% {
+    transform: translateY(-2px);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(1px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-2px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes cloudFloat {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  33% {
+    transform: translateY(-1px) translateX(1px);
+  }
+  66% {
+    transform: translateY(1px) translateX(-1px);
+  }
+}
+
+@keyframes snowFloat {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(2px) rotate(180deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0px) rotate(360deg);
+    opacity: 0.9;
+  }
+}
+
+@keyframes thunderShake {
+  0%, 100% {
+    transform: translateX(0);
+    filter: drop-shadow(0 0 6px rgba(147, 51, 234, 0.3));
+  }
+  10% {
+    transform: translateX(-1px);
+    filter: drop-shadow(0 0 10px rgba(147, 51, 234, 0.5));
+  }
+  20% {
+    transform: translateX(1px);
+    filter: drop-shadow(0 0 8px rgba(147, 51, 234, 0.4));
+  }
+  30% {
+    transform: translateX(-1px);
+    filter: drop-shadow(0 0 12px rgba(147, 51, 234, 0.6));
+  }
+  40% {
+    transform: translateX(1px);
+    filter: drop-shadow(0 0 6px rgba(147, 51, 234, 0.3));
+  }
+}
+
+@keyframes fogPulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+}
+
 /* Animation classes */
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out forwards;
@@ -62,6 +154,31 @@
 
 .animate-pulse-glow {
   animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* Weather icon animation classes */
+.animate-weather-sun {
+  animation: sunRotate 8s ease-in-out infinite;
+}
+
+.animate-weather-rain {
+  animation: rainFall 1.5s ease-in-out infinite;
+}
+
+.animate-weather-cloud {
+  animation: cloudFloat 4s ease-in-out infinite;
+}
+
+.animate-weather-snow {
+  animation: snowFloat 3s ease-in-out infinite;
+}
+
+.animate-weather-thunder {
+  animation: thunderShake 2s ease-in-out infinite;
+}
+
+.animate-weather-fog {
+  animation: fogPulse 3s ease-in-out infinite;
 }
 
 /* Enhanced animation classes for smooth transitions */
