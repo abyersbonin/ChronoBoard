@@ -416,13 +416,11 @@ export default function Dashboard() {
             allow="autoplay; encrypted-media"
             style={{ 
               pointerEvents: 'none',
-              width: '100vw',
-              height: '100vh',
+              width: '100%',
+              height: '100%',
               objectFit: 'cover',
-              transform: 'scale(1.8)',
-              transformOrigin: 'center center',
-              minWidth: '100%',
-              minHeight: '100%'
+              transform: 'scale(1.3)',
+              transformOrigin: 'center center'
             }}
           />
           {/* Simplified overlay for TV performance */}
