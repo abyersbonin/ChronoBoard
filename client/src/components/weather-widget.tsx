@@ -170,7 +170,9 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
         width: isMobile ? '100%' : 
                weatherLayout === 'vertical' ? '100%' : 
                weatherLayout === 'compact' ? '180px' : '200px',
-        height: isMobile ? '60px' : `${(weatherLayout === 'vertical' ? 80 : 110) * spacingScale}px`,
+        height: isMobile ? '60px' : 
+               isTablet ? '75px' : 
+               `${(weatherLayout === 'vertical' ? 80 : 110) * spacingScale}px`,
         textAlign: 'center', 
         display: 'flex', 
         flexDirection: 'row',
@@ -223,7 +225,9 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
             width: isMobile ? '90px' : 
                    weatherLayout === 'vertical' ? `${70 * fontScale}px` : 
                    weatherLayout === 'compact' ? `${90 * fontScale}px` : '120px',
-            height: isMobile ? '70px' : `${(weatherLayout === 'vertical' ? 90 : 110) * spacingScale}px`,
+            height: isMobile ? '70px' : 
+                   isTablet ? '85px' : 
+                   `${(weatherLayout === 'vertical' ? 90 : 110) * spacingScale}px`,
             textAlign: 'center',
             display: 'flex',
             flexDirection: 'column',
