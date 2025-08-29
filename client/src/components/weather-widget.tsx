@@ -172,8 +172,8 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
                weatherLayout === 'vertical' ? '100%' : 
                weatherLayout === 'compact' ? '260px' : '280px',
         height: isMobile ? '60px' : 
-               isTablet ? '95px' : 
-               `${(weatherLayout === 'vertical' ? 100 : 130) * spacingScale}px`,
+               isTablet ? '80px' : 
+               `${(weatherLayout === 'vertical' ? 90 : 110) * spacingScale}px`,
         textAlign: 'center', 
         display: 'flex', 
         flexDirection: 'row',
