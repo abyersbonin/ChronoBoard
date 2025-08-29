@@ -409,12 +409,21 @@ export default function Dashboard() {
         >
           {/* YouTube Video Background */}
           <iframe
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0"
             src="https://www.youtube.com/embed/erwoxqrS3rk?autoplay=1&mute=1&loop=1&playlist=erwoxqrS3rk&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&disablekb=1&fs=0&start=0"
             title="Spa Background Video"
             frameBorder="0"
             allow="autoplay; encrypted-media"
-            style={{ pointerEvents: 'none' }}
+            style={{ 
+              pointerEvents: 'none',
+              width: '100vw',
+              height: '100vh',
+              objectFit: 'cover',
+              transform: 'scale(1.8)',
+              transformOrigin: 'center center',
+              minWidth: '100%',
+              minHeight: '100%'
+            }}
           />
           {/* Simplified overlay for TV performance */}
           <div className="absolute inset-0 bg-black opacity-25"></div>
