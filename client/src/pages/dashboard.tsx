@@ -91,8 +91,8 @@ export default function Dashboard() {
       console.log(`Successfully loaded ${data.length} events`);
       return data;
     },
-    retry: 3, // Retry failed requests up to 3 times
-    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
+    retry: 5, // Retry failed requests up to 5 times for tablets
+    retryDelay: attemptIndex => Math.min(2000 * 2 ** attemptIndex, 15000), // Faster exponential backoff
     refetchInterval: 15 * 60 * 1000, // Refresh every 15 minutes - minimal interference
     staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
     refetchOnWindowFocus: true, // Refetch when window regains focus
@@ -225,15 +225,53 @@ export default function Dashboard() {
     return () => clearInterval(timer);
   }, [events]); // Recreate timer when events change
 
-  // Auto-retry if no events are loaded after 10 seconds (unless still loading)
+  // Force refresh when page becomes visible (tablet wake-up fix)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && events.length === 0) {
+        console.log('Page became visible with no events, forcing refresh...');
+        setTimeout(() => refetchEvents(), 1000);
+      }
+    };
+    
+    const handleFocus = () => {
+      if (events.length === 0) {
+        console.log('Window focused with no events, forcing refresh...');
+        setTimeout(() => refetchEvents(), 1000);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [events.length, refetchEvents]);
+
+  // Auto-retry if no events are loaded (more aggressive for tablets)
   useEffect(() => {
     if (!eventsLoading && events.length === 0) {
-      const retryTimer = setTimeout(() => {
-        console.log('No events found after 10s, retrying...');
-        refetchEvents();
-      }, 10000);
+      let retryCount = 0;
+      const maxRetries = 5;
       
-      return () => clearTimeout(retryTimer);
+      const performRetry = () => {
+        retryCount++;
+        console.log(`No events found, retry attempt ${retryCount}/${maxRetries}`);
+        refetchEvents();
+        
+        if (retryCount < maxRetries) {
+          // Exponential backoff: 3s, 6s, 12s, 24s, 48s
+          const delay = 3000 * Math.pow(2, retryCount - 1);
+          setTimeout(performRetry, delay);
+        }
+      };
+      
+      // Start first retry after 3 seconds
+      const initialTimer = setTimeout(performRetry, 3000);
+      
+      return () => clearTimeout(initialTimer);
     }
   }, [eventsLoading, events.length, refetchEvents]);
 
@@ -348,6 +386,22 @@ export default function Dashboard() {
             </div>
           )}
           
+          {/* Manual Refresh Button - Show if no events loaded */}
+          {!eventsLoading && events.length === 0 && (
+            <div className={`absolute ${isMobile ? 'bottom-20 left-1/2' : 'bottom-24 left-1/2'} transform -translate-x-1/2 z-20`}>
+              <button
+                onClick={() => {
+                  console.log('Manual refresh triggered');
+                  refetchEvents();
+                }}
+                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2 rounded-lg text-white text-sm font-medium transition-all duration-200 shadow-lg"
+                data-testid="button-manual-refresh"
+              >
+                🔄 {t('refresh.manual') || 'Actualiser'}
+              </button>
+            </div>
+          )}
+
           {/* Weather Widget - Positioned at bottom right corner of header */}
           <div className={`absolute ${isMobile ? 'bottom-3 right-3' : 'bottom-6 right-6'} z-20 animate-slide-in-right`}>
             <WeatherWidget location={settings?.location || "Eastman"} language={language} />
@@ -360,12 +414,38 @@ export default function Dashboard() {
       <div className={`relative z-10 w-full ${isMobile ? 'px-2 py-4' : 'px-6 py-8'}`} style={{ marginTop: isMobile ? '250px' : '350px' }}>
         <div className="grid gap-8 grid-cols-1">
           <div className="col-span-1">
-            <div className="animate-fade-in-up">
-              <CurrentEvent event={currentEvent} language={language} />
-            </div>
-            <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-              <UpcomingEvents events={upcomingEvents} language={language} />
-            </div>
+            {/* Show loading or error state for events */}
+            {eventsLoading && events.length === 0 && (
+              <div className="text-center text-white/70 py-8">
+                <div className="animate-pulse">
+                  🔄 {t('events.loading') || 'Chargement des activités...'}
+                </div>
+              </div>
+            )}
+            
+            {/* Show retry indicator if events failed to load */}
+            {!eventsLoading && events.length === 0 && (
+              <div className="text-center text-white/70 py-8">
+                <div className="mb-4">
+                  ⚠️ {t('events.no_data') || 'Aucune activité trouvée'}
+                </div>
+                <div className="text-sm opacity-75">
+                  {t('events.retry_info') || 'Tentatives de rechargement en cours...'}
+                </div>
+              </div>
+            )}
+            
+            {/* Show events if loaded */}
+            {events.length > 0 && (
+              <>
+                <div className="animate-fade-in-up">
+                  <CurrentEvent event={currentEvent} language={language} />
+                </div>
+                <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                  <UpcomingEvents events={upcomingEvents} language={language} />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
