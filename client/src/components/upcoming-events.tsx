@@ -195,24 +195,18 @@ export function UpcomingEvents({ events, language: propLanguage = 'fr' }: Upcomi
                         </div>
                       </div>
                       <div className="flex-1 min-w-0 relative">
-                        <div className="flex items-start gap-2 mb-2">
-                          <h4 className="text-lg font-semibold text-gray-800 leading-tight flex-1 min-w-0">
+                        <div className="mb-2" style={{ paddingRight: !isMobile && event.description ? '120px' : '0' }}>
+                          <h4 className="text-lg font-semibold text-gray-800 leading-tight inline">
                             <TranslatedText text={cleanHtmlText(event.title)} />
-                          </h4>
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)} flex-shrink-0 self-start`} style={{ fontFamily: 'Montserrat, sans-serif', marginTop: '2px' }}>
+                          </h4>{' '}
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getBadgeColor(event.calendarSource)} align-top`} style={{ fontFamily: 'Montserrat, sans-serif' }}>
                             {getCalendarName(event.calendarSource)}
                           </span>
                         </div>
-                        {event.location && (
-                          <div className="flex items-center text-gray-500 text-sm">
-                            <MapPin className="mr-1 h-3 w-3" />
-                            <span><TranslatedText text={cleanHtmlText(event.location)} /></span>
-                          </div>
-                        )}
                         
-                        {/* Description button - hide on mobile since the whole container is clickable */}
+                        {/* Description button - positioned absolutely but with proper spacing */}
                         {!isMobile && event.description && (
-                          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                          <div className="absolute right-0 top-0">
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -229,6 +223,13 @@ export function UpcomingEvents({ events, language: propLanguage = 'fr' }: Upcomi
                             >
                               {t('events.description')}
                             </button>
+                          </div>
+                        )}
+                        
+                        {event.location && (
+                          <div className="flex items-center text-gray-500 text-sm">
+                            <MapPin className="mr-1 h-3 w-3" />
+                            <span><TranslatedText text={cleanHtmlText(event.location)} /></span>
                           </div>
                         )}
                       </div>
