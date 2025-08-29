@@ -77,16 +77,25 @@ export default function Dashboard() {
     },
   });
 
-  // Fetch calendar events
+  // Fetch calendar events with retry logic
   const { data: events = [], isLoading: eventsLoading, refetch: refetchEvents } = useQuery({
     queryKey: ['/api/calendar-events', DEFAULT_USER_ID],
     queryFn: async () => {
       // Fetch all events without date filtering to get current and upcoming events
       const response = await fetch(`/api/calendar-events/${DEFAULT_USER_ID}`);
-      if (!response.ok) throw new Error('Failed to fetch events');
-      return response.json() as Promise<CalendarEvent[]>;
+      if (!response.ok) {
+        console.error(`Failed to fetch events: ${response.status} ${response.statusText}`);
+        throw new Error('Failed to fetch events');
+      }
+      const data = await response.json() as CalendarEvent[];
+      console.log(`Successfully loaded ${data.length} events`);
+      return data;
     },
+    retry: 3, // Retry failed requests up to 3 times
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
     refetchInterval: 15 * 60 * 1000, // Refresh every 15 minutes - minimal interference
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+    refetchOnWindowFocus: true, // Refetch when window regains focus
   });
 
   // Update settings mutation - only if admin is logged in
@@ -174,8 +183,8 @@ export default function Dashboard() {
       }
     };
 
-    // Initial sync after component loads (wait 10 seconds)
-    const initialSyncTimer = setTimeout(performAutoSync, 10000);
+    // Initial sync after component loads (wait 20 seconds to allow manual loading first)
+    const initialSyncTimer = setTimeout(performAutoSync, 20000);
 
     // Set up recurring sync every 30 minutes (much less aggressive)
     const autoSyncInterval = setInterval(performAutoSync, 30 * 60 * 1000);
@@ -216,6 +225,18 @@ export default function Dashboard() {
     return () => clearInterval(timer);
   }, [events]); // Recreate timer when events change
 
+  // Auto-retry if no events are loaded after 10 seconds (unless still loading)
+  useEffect(() => {
+    if (!eventsLoading && events.length === 0) {
+      const retryTimer = setTimeout(() => {
+        console.log('No events found after 10s, retrying...');
+        refetchEvents();
+      }, 10000);
+      
+      return () => clearTimeout(retryTimer);
+    }
+  }, [eventsLoading, events.length, refetchEvents]);
+
   // Get upcoming events for the next 3 full days (not including current)
   const upcomingEvents = events.filter(event => {
     const start = new Date(event.startTime);
@@ -255,7 +276,8 @@ export default function Dashboard() {
     await updateSettingsMutation.mutateAsync({ use24Hour: enabled });
   };
 
-  if (settingsLoading) {
+  // Only show loading if both settings and events are loading initially
+  if (settingsLoading && eventsLoading && !events.length) {
     return (
       <div className="min-h-screen bg-dashboard-dark flex items-center justify-center">
         <div className="text-white">{t ? t('loading') : 'Chargement...'}</div>
