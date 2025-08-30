@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export function FullscreenButton() {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const inactivityTimer = useRef<NodeJS.Timeout | null>(null);
-  const lastInteractionTime = useRef<number>(Date.now());
+  const autoFullscreenTimer = useRef<NodeJS.Timeout | null>(null);
 
   // Function to enter fullscreen
   const enterFullscreen = async () => {
@@ -24,62 +23,6 @@ export function FullscreenButton() {
     }
   };
 
-  // Function to start inactivity timer
-  const startInactivityTimer = () => {
-    if (inactivityTimer.current) {
-      clearTimeout(inactivityTimer.current);
-    }
-    
-    console.log('Starting 30-second inactivity timer...');
-    lastInteractionTime.current = Date.now();
-    
-    inactivityTimer.current = setTimeout(() => {
-      const timeSinceLastInteraction = Date.now() - lastInteractionTime.current;
-      console.log(`Timer fired. Time since last interaction: ${timeSinceLastInteraction}ms`);
-      
-      // Only re-enter fullscreen if user is still inactive (with small buffer)
-      if (timeSinceLastInteraction >= 29000) {
-        console.log('Re-entering fullscreen due to inactivity...');
-        enterFullscreen();
-      } else {
-        console.log('User was active recently, not re-entering fullscreen');
-      }
-    }, 30000); // 30 seconds
-  };
-
-  // Function to reset inactivity timer
-  const resetInactivityTimer = () => {
-    lastInteractionTime.current = Date.now();
-    if (inactivityTimer.current) {
-      console.log('User interaction detected, clearing timer');
-      clearTimeout(inactivityTimer.current);
-      inactivityTimer.current = null;
-    }
-  };
-
-  // Track user interactions to reset timer - only deliberate actions
-  useEffect(() => {
-    const handleUserInteraction = (event: Event) => {
-      console.log('Deliberate user interaction detected:', event.type);
-      resetInactivityTimer();
-    };
-
-    // Only track deliberate user interactions (no mouse movements)
-    document.addEventListener('mousedown', handleUserInteraction);
-    document.addEventListener('keydown', handleUserInteraction);
-    document.addEventListener('scroll', handleUserInteraction);
-    document.addEventListener('touchstart', handleUserInteraction);
-    document.addEventListener('click', handleUserInteraction);
-
-    return () => {
-      document.removeEventListener('mousedown', handleUserInteraction);
-      document.removeEventListener('keydown', handleUserInteraction);
-      document.removeEventListener('scroll', handleUserInteraction);
-      document.removeEventListener('touchstart', handleUserInteraction);
-      document.removeEventListener('click', handleUserInteraction);
-    };
-  }, []);
-
   // Check fullscreen status on mount and when it changes
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -87,14 +30,27 @@ export function FullscreenButton() {
       console.log('Fullscreen status changed:', newIsFullscreen);
       setIsFullscreen(newIsFullscreen);
 
-      // If fullscreen was exited, start the inactivity timer
+      // If fullscreen was exited, start the 30-second timer
       if (!newIsFullscreen) {
-        console.log('Fullscreen exited, starting 30-second timer...');
-        startInactivityTimer();
+        console.log('Fullscreen exited, starting 30-second auto-return timer...');
+        
+        // Clear any existing timer
+        if (autoFullscreenTimer.current) {
+          clearTimeout(autoFullscreenTimer.current);
+        }
+        
+        // Start new timer to re-enter fullscreen after 30 seconds
+        autoFullscreenTimer.current = setTimeout(() => {
+          console.log('30 seconds passed, automatically re-entering fullscreen...');
+          enterFullscreen();
+        }, 30000);
       } else {
-        // If entering fullscreen, clear any existing timer
-        console.log('Fullscreen entered, clearing timer');
-        resetInactivityTimer();
+        // If entering fullscreen, clear the timer
+        console.log('Fullscreen entered, clearing auto-return timer');
+        if (autoFullscreenTimer.current) {
+          clearTimeout(autoFullscreenTimer.current);
+          autoFullscreenTimer.current = null;
+        }
       }
     };
 
@@ -113,8 +69,8 @@ export function FullscreenButton() {
       document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
       
       // Clean up timer
-      if (inactivityTimer.current) {
-        clearTimeout(inactivityTimer.current);
+      if (autoFullscreenTimer.current) {
+        clearTimeout(autoFullscreenTimer.current);
       }
     };
   }, []);
@@ -125,9 +81,7 @@ export function FullscreenButton() {
         // Enter fullscreen
         await enterFullscreen();
       } else {
-        // Exit fullscreen - reset timer since this is a manual action
-        resetInactivityTimer();
-        
+        // Exit fullscreen
         if (document.exitFullscreen) {
           await document.exitFullscreen();
         } else if ((document as any).webkitExitFullscreen) {
