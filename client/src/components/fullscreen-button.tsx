@@ -77,18 +77,18 @@ export function FullscreenButton() {
 
       // If fullscreen was exited, start the 30-second timer
       if (!newIsFullscreen) {
-        console.log('Fullscreen exited, starting 5-second auto-return timer...');
+        console.log('Fullscreen exited, starting 30-second auto-return timer...');
         
         // Clear any existing timer
         if (autoFullscreenTimer.current) {
           clearTimeout(autoFullscreenTimer.current);
         }
         
-        // Start new timer to re-enter fullscreen after 5 seconds (testing)
+        // Start new timer to re-enter fullscreen after 30 seconds
         autoFullscreenTimer.current = setTimeout(() => {
-          console.log('5 seconds passed, automatically re-entering fullscreen...');
+          console.log('30 seconds passed, automatically re-entering fullscreen...');
           enterFullscreen();
-        }, 5000);
+        }, 30000);
       } else {
         // If entering fullscreen, clear the timer
         console.log('Fullscreen entered, clearing auto-return timer');
