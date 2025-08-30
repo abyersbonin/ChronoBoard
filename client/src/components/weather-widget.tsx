@@ -29,46 +29,44 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
     refetchInterval: 30 * 1000, // Refetch every 30 seconds to see changes
   });
 
-  const getWeatherIcon = (condition: string, iconCode?: string) => {
-    // Convert OpenWeatherMap icon codes to consistent SVG icons
-    const iconSize = isMobile ? 24 : isTablet ? 28 : 32;
-    
+  const getWeatherIcon = (condition: string, iconCode?: string): string => {
+    // Convert OpenWeatherMap icon codes to emoji
     if (iconCode) {
-      const iconMap: { [key: string]: JSX.Element } = {
-        '01d': <Sun size={iconSize} color="white" />, 
-        '01n': <Moon size={iconSize} color="white" />,
-        '02d': <Cloud size={iconSize} color="white" />, 
-        '02n': <Cloud size={iconSize} color="white" />,
-        '03d': <Cloud size={iconSize} color="white" />, 
-        '03n': <Cloud size={iconSize} color="white" />,
-        '04d': <Cloud size={iconSize} color="white" />, 
-        '04n': <Cloud size={iconSize} color="white" />,
-        '09d': <CloudRain size={iconSize} color="white" />, 
-        '09n': <CloudRain size={iconSize} color="white" />,
-        '10d': <CloudRain size={iconSize} color="white" />, 
-        '10n': <CloudRain size={iconSize} color="white" />,
-        '11d': <Zap size={iconSize} color="white" />, 
-        '11n': <Zap size={iconSize} color="white" />,
-        '13d': <CloudSnow size={iconSize} color="white" />, 
-        '13n': <CloudSnow size={iconSize} color="white" />,
-        '50d': <CloudFog size={iconSize} color="white" />, 
-        '50n': <CloudFog size={iconSize} color="white" />
+      const iconMap: { [key: string]: string } = {
+        '01d': '☀️', // clear sky day
+        '01n': '🌙', // clear sky night
+        '02d': '⛅', // few clouds day
+        '02n': '☁️', // few clouds night
+        '03d': '☁️', // scattered clouds day
+        '03n': '☁️', // scattered clouds night
+        '04d': '☁️', // broken clouds day
+        '04n': '☁️', // broken clouds night
+        '09d': '🌧️', // shower rain day
+        '09n': '🌧️', // shower rain night
+        '10d': '🌦️', // rain day
+        '10n': '🌧️', // rain night
+        '11d': '⛈️', // thunderstorm day
+        '11n': '⛈️', // thunderstorm night
+        '13d': '❄️', // snow day
+        '13n': '❄️', // snow night
+        '50d': '🌫️', // mist day
+        '50n': '🌫️'  // mist night
       };
-      return iconMap[iconCode] || <Sun size={iconSize} color="white" />;
+      return iconMap[iconCode] || '☀️';
     }
     
     // Fallback based on condition text
     const lowerCondition = condition.toLowerCase();
     if (lowerCondition.includes('rain') || lowerCondition.includes('shower')) {
-      return <CloudRain size={iconSize} color="white" />;
+      return '🌧️';
     } else if (lowerCondition.includes('cloud')) {
-      return <Cloud size={iconSize} color="white" />;
+      return '☁️';
     } else if (lowerCondition.includes('snow')) {
-      return <CloudSnow size={iconSize} color="white" />;
+      return '❄️';
     } else if (lowerCondition.includes('thunder')) {
-      return <Zap size={iconSize} color="white" />;
+      return '⛈️';
     } else {
-      return <Sun size={iconSize} color="white" />;
+      return '☀️';
     }
   };
 
