@@ -57,29 +57,14 @@ export function FullscreenButton() {
     }
   };
 
-  // Track user interactions to reset timer
+  // Track user interactions to reset timer - only deliberate actions
   useEffect(() => {
-    let mouseMoveThrottle: NodeJS.Timeout | null = null;
-    
     const handleUserInteraction = (event: Event) => {
-      console.log('User interaction detected:', event.type);
+      console.log('Deliberate user interaction detected:', event.type);
       resetInactivityTimer();
     };
 
-    const handleMouseMove = (event: MouseEvent) => {
-      // Throttle mouse move events to avoid excessive resets
-      if (mouseMoveThrottle) return;
-      
-      console.log('Mouse move detected');
-      resetInactivityTimer();
-      
-      mouseMoveThrottle = setTimeout(() => {
-        mouseMoveThrottle = null;
-      }, 1000); // Throttle to max once per second
-    };
-
-    // Add event listeners for deliberate user interactions
-    document.addEventListener('mousemove', handleMouseMove);
+    // Only track deliberate user interactions (no mouse movements)
     document.addEventListener('mousedown', handleUserInteraction);
     document.addEventListener('keydown', handleUserInteraction);
     document.addEventListener('scroll', handleUserInteraction);
@@ -87,16 +72,11 @@ export function FullscreenButton() {
     document.addEventListener('click', handleUserInteraction);
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mousedown', handleUserInteraction);
       document.removeEventListener('keydown', handleUserInteraction);
       document.removeEventListener('scroll', handleUserInteraction);
       document.removeEventListener('touchstart', handleUserInteraction);
       document.removeEventListener('click', handleUserInteraction);
-      
-      if (mouseMoveThrottle) {
-        clearTimeout(mouseMoveThrottle);
-      }
     };
   }, []);
 
