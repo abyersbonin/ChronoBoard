@@ -9,17 +9,62 @@ export function FullscreenButton() {
   // Function to enter fullscreen
   const enterFullscreen = async () => {
     try {
-      if (document.documentElement.requestFullscreen) {
-        await document.documentElement.requestFullscreen();
-      } else if ((document.documentElement as any).webkitRequestFullscreen) {
-        await (document.documentElement as any).webkitRequestFullscreen();
-      } else if ((document.documentElement as any).mozRequestFullScreen) {
-        await (document.documentElement as any).mozRequestFullScreen();
-      } else if ((document.documentElement as any).msRequestFullscreen) {
-        await (document.documentElement as any).msRequestFullscreen();
+      // For automatic entry, we need to simulate a user gesture
+      const elem = document.documentElement;
+      
+      if (elem.requestFullscreen) {
+        await elem.requestFullscreen({ navigationUI: "hide" });
+      } else if ((elem as any).webkitRequestFullscreen) {
+        await (elem as any).webkitRequestFullscreen();
+      } else if ((elem as any).mozRequestFullScreen) {
+        await (elem as any).mozRequestFullScreen();
+      } else if ((elem as any).msRequestFullscreen) {
+        await (elem as any).msRequestFullscreen();
       }
+      
+      console.log('Fullscreen entry successful');
     } catch (error) {
       console.error('Fullscreen entry failed:', error);
+      
+      // If automatic fullscreen fails, create a visual prompt
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        z-index: 10000;
+        font-family: Montserrat, sans-serif;
+        text-align: center;
+        border: 2px solid white;
+      `;
+      notification.innerHTML = `
+        <div>Click anywhere to return to fullscreen</div>
+        <div style="font-size: 12px; margin-top: 10px; opacity: 0.7;">Or press F11</div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Remove notification and enter fullscreen on any click
+      const handleClick = async () => {
+        document.body.removeChild(notification);
+        document.removeEventListener('click', handleClick);
+        await enterFullscreen();
+      };
+      
+      document.addEventListener('click', handleClick);
+      
+      // Auto-remove notification after 10 seconds
+      setTimeout(() => {
+        if (document.body.contains(notification)) {
+          document.body.removeChild(notification);
+          document.removeEventListener('click', handleClick);
+        }
+      }, 10000);
     }
   };
 
@@ -32,18 +77,18 @@ export function FullscreenButton() {
 
       // If fullscreen was exited, start the 30-second timer
       if (!newIsFullscreen) {
-        console.log('Fullscreen exited, starting 30-second auto-return timer...');
+        console.log('Fullscreen exited, starting 5-second auto-return timer...');
         
         // Clear any existing timer
         if (autoFullscreenTimer.current) {
           clearTimeout(autoFullscreenTimer.current);
         }
         
-        // Start new timer to re-enter fullscreen after 30 seconds
+        // Start new timer to re-enter fullscreen after 5 seconds (testing)
         autoFullscreenTimer.current = setTimeout(() => {
-          console.log('30 seconds passed, automatically re-entering fullscreen...');
+          console.log('5 seconds passed, automatically re-entering fullscreen...');
           enterFullscreen();
-        }, 30000);
+        }, 5000);
       } else {
         // If entering fullscreen, clear the timer
         console.log('Fullscreen entered, clearing auto-return timer');
