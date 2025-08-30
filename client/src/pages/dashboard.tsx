@@ -46,6 +46,14 @@ export default function Dashboard() {
     return window.scrollY > 100; // Consider scrolled if more than 100px from top
   };
 
+  // Function to check if any event description dialog is open
+  const isEventDialogOpen = () => {
+    // Check for modal backdrop or dialog containers in the DOM
+    const modalBackdrop = document.querySelector('[style*="z-index: 1000000"]');
+    const dialogContainer = document.querySelector('[data-modal-content="true"]');
+    return modalBackdrop !== null || dialogContainer !== null;
+  };
+
   // Function to start scroll-to-top timer
   const startScrollToTopTimer = () => {
     if (scrollToTopTimer.current) {
@@ -57,11 +65,16 @@ export default function Dashboard() {
     
     scrollToTopTimer.current = setTimeout(() => {
       const timeSinceLastInteraction = Date.now() - lastInteractionTime.current;
-      console.log(`Scroll timer fired. Time since last interaction: ${timeSinceLastInteraction}ms, Page scrolled: ${isPageScrolledDown()}`);
+      const dialogOpen = isEventDialogOpen();
+      console.log(`Scroll timer fired. Time since last interaction: ${timeSinceLastInteraction}ms, Page scrolled: ${isPageScrolledDown()}, Dialog open: ${dialogOpen}`);
       
-      // Only scroll to top if page is scrolled down and user is inactive
-      if (timeSinceLastInteraction >= 149000 && isPageScrolledDown()) {
+      // Only scroll to top if: page is scrolled down AND user is inactive AND no dialog is open
+      if (timeSinceLastInteraction >= 149000 && isPageScrolledDown() && !dialogOpen) {
         scrollToTop();
+      } else if (dialogOpen) {
+        console.log('Auto-scroll prevented: Event description dialog is open');
+        // Restart timer since we prevented scroll due to open dialog
+        startScrollToTopTimer();
       }
     }, 150000); // 2 minutes 30 seconds = 150,000ms
   };
