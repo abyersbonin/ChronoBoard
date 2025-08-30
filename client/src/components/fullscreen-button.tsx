@@ -30,10 +30,19 @@ export function FullscreenButton() {
       clearTimeout(inactivityTimer.current);
     }
     
+    console.log('Starting 30-second inactivity timer...');
+    lastInteractionTime.current = Date.now();
+    
     inactivityTimer.current = setTimeout(() => {
-      // Only re-enter fullscreen if user is still inactive
-      if (Date.now() - lastInteractionTime.current >= 30000) {
+      const timeSinceLastInteraction = Date.now() - lastInteractionTime.current;
+      console.log(`Timer fired. Time since last interaction: ${timeSinceLastInteraction}ms`);
+      
+      // Only re-enter fullscreen if user is still inactive (with small buffer)
+      if (timeSinceLastInteraction >= 29000) {
+        console.log('Re-entering fullscreen due to inactivity...');
         enterFullscreen();
+      } else {
+        console.log('User was active recently, not re-entering fullscreen');
       }
     }, 30000); // 30 seconds
   };
@@ -42,6 +51,7 @@ export function FullscreenButton() {
   const resetInactivityTimer = () => {
     lastInteractionTime.current = Date.now();
     if (inactivityTimer.current) {
+      console.log('User interaction detected, clearing timer');
       clearTimeout(inactivityTimer.current);
       inactivityTimer.current = null;
     }
@@ -49,23 +59,44 @@ export function FullscreenButton() {
 
   // Track user interactions to reset timer
   useEffect(() => {
-    const handleUserInteraction = () => {
+    let mouseMoveThrottle: NodeJS.Timeout | null = null;
+    
+    const handleUserInteraction = (event: Event) => {
+      console.log('User interaction detected:', event.type);
       resetInactivityTimer();
     };
 
-    // Add event listeners for various user interactions
-    document.addEventListener('mousemove', handleUserInteraction);
+    const handleMouseMove = (event: MouseEvent) => {
+      // Throttle mouse move events to avoid excessive resets
+      if (mouseMoveThrottle) return;
+      
+      console.log('Mouse move detected');
+      resetInactivityTimer();
+      
+      mouseMoveThrottle = setTimeout(() => {
+        mouseMoveThrottle = null;
+      }, 1000); // Throttle to max once per second
+    };
+
+    // Add event listeners for deliberate user interactions
+    document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mousedown', handleUserInteraction);
     document.addEventListener('keydown', handleUserInteraction);
     document.addEventListener('scroll', handleUserInteraction);
     document.addEventListener('touchstart', handleUserInteraction);
+    document.addEventListener('click', handleUserInteraction);
 
     return () => {
-      document.removeEventListener('mousemove', handleUserInteraction);
+      document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mousedown', handleUserInteraction);
       document.removeEventListener('keydown', handleUserInteraction);
       document.removeEventListener('scroll', handleUserInteraction);
       document.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener('click', handleUserInteraction);
+      
+      if (mouseMoveThrottle) {
+        clearTimeout(mouseMoveThrottle);
+      }
     };
   }, []);
 
@@ -73,13 +104,16 @@ export function FullscreenButton() {
   useEffect(() => {
     const handleFullscreenChange = () => {
       const newIsFullscreen = !!document.fullscreenElement;
+      console.log('Fullscreen status changed:', newIsFullscreen);
       setIsFullscreen(newIsFullscreen);
 
-      // If fullscreen was exited (and not manually), start the inactivity timer
+      // If fullscreen was exited, start the inactivity timer
       if (!newIsFullscreen) {
+        console.log('Fullscreen exited, starting 30-second timer...');
         startInactivityTimer();
       } else {
         // If entering fullscreen, clear any existing timer
+        console.log('Fullscreen entered, clearing timer');
         resetInactivityTimer();
       }
     };
