@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { CurrentEvent } from "@/components/current-event";
 import { UpcomingEvents } from "@/components/upcoming-events";
@@ -31,6 +31,50 @@ export default function Dashboard() {
   // Mobile device detection (excluding TV browsers)
   const [isMobile, setIsMobile] = useState(false);
   
+  // Auto-scroll-to-top functionality
+  const scrollToTopTimer = useRef<NodeJS.Timeout | null>(null);
+  const lastInteractionTime = useRef<number>(Date.now());
+
+  // Function to scroll to top smoothly
+  const scrollToTop = () => {
+    console.log('Auto-scrolling to top due to inactivity...');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Function to check if page is scrolled down
+  const isPageScrolledDown = () => {
+    return window.scrollY > 100; // Consider scrolled if more than 100px from top
+  };
+
+  // Function to start scroll-to-top timer
+  const startScrollToTopTimer = () => {
+    if (scrollToTopTimer.current) {
+      clearTimeout(scrollToTopTimer.current);
+    }
+    
+    console.log('Starting 2.5-minute scroll-to-top timer...');
+    lastInteractionTime.current = Date.now();
+    
+    scrollToTopTimer.current = setTimeout(() => {
+      const timeSinceLastInteraction = Date.now() - lastInteractionTime.current;
+      console.log(`Scroll timer fired. Time since last interaction: ${timeSinceLastInteraction}ms, Page scrolled: ${isPageScrolledDown()}`);
+      
+      // Only scroll to top if page is scrolled down and user is inactive
+      if (timeSinceLastInteraction >= 149000 && isPageScrolledDown()) {
+        scrollToTop();
+      }
+    }, 150000); // 2 minutes 30 seconds = 150,000ms
+  };
+
+  // Function to reset scroll-to-top timer
+  const resetScrollToTopTimer = () => {
+    lastInteractionTime.current = Date.now();
+    if (scrollToTopTimer.current) {
+      clearTimeout(scrollToTopTimer.current);
+    }
+    startScrollToTopTimer(); // Restart the timer
+  };
+
   useEffect(() => {
     const detectMobile = () => {
       const userAgent = navigator.userAgent.toLowerCase();
@@ -53,6 +97,37 @@ export default function Dashboard() {
     window.addEventListener('resize', detectMobile);
     
     return () => window.removeEventListener('resize', detectMobile);
+  }, []);
+
+  // Auto-scroll-to-top interaction tracking
+  useEffect(() => {
+    const handleUserInteraction = (event: Event) => {
+      console.log('User interaction for scroll timer:', event.type);
+      resetScrollToTopTimer();
+    };
+
+    // Track deliberate user interactions
+    document.addEventListener('mousedown', handleUserInteraction);
+    document.addEventListener('keydown', handleUserInteraction);
+    document.addEventListener('scroll', handleUserInteraction);
+    document.addEventListener('touchstart', handleUserInteraction);
+    document.addEventListener('click', handleUserInteraction);
+
+    // Start the initial timer
+    startScrollToTopTimer();
+
+    return () => {
+      document.removeEventListener('mousedown', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+      document.removeEventListener('scroll', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener('click', handleUserInteraction);
+      
+      // Clean up timer
+      if (scrollToTopTimer.current) {
+        clearTimeout(scrollToTopTimer.current);
+      }
+    };
   }, []);
 
   // Fetch settings - only if admin is logged in
