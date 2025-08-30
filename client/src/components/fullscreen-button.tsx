@@ -1,10 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Maximize, Minimize } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function FullscreenButton() {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const autoFullscreenTimer = useRef<NodeJS.Timeout | null>(null);
 
   // Function to enter fullscreen
   const enterFullscreen = async () => {
@@ -74,29 +73,6 @@ export function FullscreenButton() {
       const newIsFullscreen = !!document.fullscreenElement;
       console.log('Fullscreen status changed:', newIsFullscreen);
       setIsFullscreen(newIsFullscreen);
-
-      // If fullscreen was exited, start the 30-second timer
-      if (!newIsFullscreen) {
-        console.log('Fullscreen exited, starting 30-second auto-return timer...');
-        
-        // Clear any existing timer
-        if (autoFullscreenTimer.current) {
-          clearTimeout(autoFullscreenTimer.current);
-        }
-        
-        // Start new timer to re-enter fullscreen after 30 seconds
-        autoFullscreenTimer.current = setTimeout(() => {
-          console.log('30 seconds passed, automatically re-entering fullscreen...');
-          enterFullscreen();
-        }, 30000);
-      } else {
-        // If entering fullscreen, clear the timer
-        console.log('Fullscreen entered, clearing auto-return timer');
-        if (autoFullscreenTimer.current) {
-          clearTimeout(autoFullscreenTimer.current);
-          autoFullscreenTimer.current = null;
-        }
-      }
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -112,11 +88,6 @@ export function FullscreenButton() {
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
       document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
       document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
-      
-      // Clean up timer
-      if (autoFullscreenTimer.current) {
-        clearTimeout(autoFullscreenTimer.current);
-      }
     };
   }, []);
 
