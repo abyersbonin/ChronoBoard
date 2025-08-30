@@ -207,7 +207,9 @@ export function WeatherWidget({ location, language = 'fr' }: WeatherWidgetProps)
           alignItems: 'center',
           justifyContent: 'center',
           lineHeight: '1',
-          color: 'white'
+          color: 'white',
+          fontSize: isMobile ? '32px' : `${(weatherLayout === 'vertical' ? 36 : 48) * fontScale}px`,
+          fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", "EmojiSymbols", sans-serif'
         }}>
           {getWeatherIcon(weather.current.condition, weather.current.icon)}
         </div>
