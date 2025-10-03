@@ -64,6 +64,21 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
     return textarea.value.trim();
   };
 
+  // Split description into paragraphs by periods (only regular dots, not : or ;)
+  const splitIntoParagraphs = (text: string): string[] => {
+    if (!text) return [];
+    
+    // Split by period followed by space or end of string
+    // This keeps the period with the sentence
+    const sentences = text
+      .split(/\.(?=\s|$)/)
+      .map(sentence => sentence.trim())
+      .filter(sentence => sentence.length > 0)
+      .map(sentence => sentence.endsWith('.') ? sentence : sentence + '.');
+    
+    return sentences;
+  };
+
   // Handle escape key and body scroll - runs even when dialog is closed
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -336,8 +351,12 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
               <h4 className="font-medium text-gray-800 mb-2">
                 <TranslatedText text="Description" />
               </h4>
-              <div className="text-gray-600 leading-relaxed text-sm">
-                <TranslatedText text={cleanHtmlText(event.description)} />
+              <div className="text-gray-600 leading-relaxed text-sm space-y-3">
+                {splitIntoParagraphs(cleanHtmlText(event.description)).map((paragraph, index) => (
+                  <p key={index} className="mb-2 last:mb-0">
+                    <TranslatedText text={paragraph} />
+                  </p>
+                ))}
               </div>
             </div>
           )}
