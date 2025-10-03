@@ -68,13 +68,19 @@ export function EventDetailsDialog({ event, open, onOpenChange }: EventDetailsDi
   const splitIntoParagraphs = (text: string): string[] => {
     if (!text) return [];
     
-    // Split by period followed by space or end of string
-    // This keeps the period with the sentence
-    const sentences = text
-      .split(/\.(?=\s|$)/)
-      .map(sentence => sentence.trim())
-      .filter(sentence => sentence.length > 0)
-      .map(sentence => sentence.endsWith('.') ? sentence : sentence + '.');
+    // Split by every period, keeping the period with the sentence
+    const parts = text.split('.');
+    
+    // Add period back to each part except the last if it was empty
+    const sentences = parts
+      .map((part, index) => {
+        // Add period back to all parts except the very last one if it's empty
+        if (index === parts.length - 1 && part.trim() === '') {
+          return '';
+        }
+        return part.trim() + '.';
+      })
+      .filter(sentence => sentence.trim().length > 1); // Filter out just "." or empty
     
     return sentences;
   };
