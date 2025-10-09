@@ -1,0 +1,247 @@
+You are a senior DevOps engineer. Produce a complete, production-quality Word (.docx) procedure for running this Replit project on a local Windows Server machine (on-prem), including both quick test and hardened production options.
+
+Scope & Deliverable
+
+Deliverable: a single .docx file named Run_App_on_Windows_Server_Procedure.docx.
+
+Format: Professional IT runbook with:
+
+Title page (project name, date, version, author “Replit Agent”).
+
+Automatically generated Table of Contents.
+
+Numbered sections, callouts, and checklists.
+
+Monospace formatting for commands/paths.
+
+Screenshots placeholders like: [Screenshot: Windows Features > Turn Windows features on or off].
+
+Appendices for scripts, commands, and troubleshooting.
+
+Assumptions: Auto-detect stack from repo (Node/Express/Next, Python Flask/FastAPI/Django, .NET, Java/Spring, React/Vite, etc.). If ambiguous, make the most reasonable assumption, state it clearly, and provide branching instructions per framework.
+
+Content Requirements (include all sections)
+
+Overview
+
+Purpose of this document.
+
+Supported Windows versions (Windows Server 2019/2022) and required privileges (Local Admin).
+
+High-level architecture options:
+
+Direct app host (dev/test).
+
+Production with reverse proxy: IIS + ARR (recommended), or Caddy as alternative.
+
+Windows Service manager options: PM2 (Node), NSSM (generic), sc.exe.
+
+Prerequisites
+
+Hardware and OS prerequisites.
+
+Package managers: Winget and Chocolatey (include install commands).
+
+Install steps for each runtime (only include those relevant after detection):
+
+Node.js LTS + npm
+
+Python 3.x + venv + pip
+
+.NET Hosting Bundle
+
+Java JDK 17+ (if needed)
+
+Git
+
+Docker Desktop for Windows (optional path)
+
+Enable IIS and install Application Request Routing (ARR) and URL Rewrite.
+
+Open required firewall ports.
+
+Source Retrieval
+
+Options:
+
+git clone from the project repo (include generic SSH/HTTPS examples).
+
+Download ZIP from Replit export and extract to C:\apps\<project>.
+
+Directory layout examples.
+
+Configuration & Secrets
+
+.env handling on Windows, where to store (e.g., C:\apps\<project>\.env), example key-value pairs.
+
+Environment variable setup via System Properties > Environment Variables and via PowerShell.
+
+Typical variables: PORT, database URLs, API keys.
+
+Build & Run (per framework)
+
+Node/Express/Next/React/Vite
+
+npm ci or npm install
+
+npm run build (if applicable)
+
+npm start / node server.js / npx serve -s build (specify which based on detection)
+
+Static assets path, production port
+
+PM2 quick setup: install, start, save, startup on boot.
+
+Python (Flask/FastAPI/Django)
+
+Create and activate venv
+
+pip install -r requirements.txt
+
+Windows production server: waitress examples (avoid gunicorn on Windows)
+
+Static files (Django collectstatic)
+
+Create NSSM service for persistent run
+
+.NET
+
+dotnet publish -c Release -o out
+
+Run dotnet .\out\<app>.dll
+
+Create Windows service (sc.exe create or NSSM) with working directory and environment
+
+Java/Spring
+
+Build (Maven/Gradle) and run JAR
+
+Wrap with NSSM service
+
+Reverse Proxy with IIS (Production)
+
+Install/enable IIS roles.
+
+Install URL Rewrite + ARR.
+
+Create site binding on port 80/443 (host header).
+
+Configure reverse proxy rule to upstream http://localhost:<PORT>.
+
+Compression, request limits, timeouts.
+
+Logging and log file locations.
+
+TLS/HTTPS
+
+Options:
+
+Self-signed certificate for testing (MMC steps).
+
+Let’s Encrypt (win-acme) for public domains; include exact commands and renewal.
+
+Bind certificate in IIS to the site.
+
+Windows Firewall & Networking
+
+Open inbound ports (80/443/custom app port).
+
+Validate listening ports with netstat / Get-NetTCPConnection.
+
+Database Setup (if present)
+
+For SQLite: confirm file paths and permissions.
+
+For PostgreSQL/MySQL:
+
+Local install steps (or Docker alternative).
+
+Create DB/user, grant privileges; include example SQL.
+
+Connection string configuration.
+
+Logging, Monitoring & Backups
+
+App logs: file locations and rotation strategy.
+
+IIS logs location and retention.
+
+Windows Event Viewer tips.
+
+Backup checklist (app folder, .env, DB).
+
+Verification Checklist
+
+Service status (PM2/NSSM/sc.exe).
+
+Health checks (curl/Invoke-WebRequest).
+
+IIS site browse test (HTTP/HTTPS).
+
+Common 4xx/5xx checks.
+
+Troubleshooting
+
+Port already in use.
+
+Blank page behind reverse proxy.
+
+502/504 from IIS reverse proxy.
+
+Permission issues (NTFS, service account).
+
+Environment variables not loading.
+
+SSL binding errors.
+
+Include diagnostic commands and remedies.
+
+Appendix A: PowerShell Command Blocks
+
+One-shot scripts for:
+
+Installing runtimes (Node, Python, .NET).
+
+Creating folders/permissions.
+
+Setting environment variables system-wide.
+
+Firewall rules.
+
+PM2 install/startup and ecosystem file (for Node).
+
+NSSM service create for Python/.NET/Java.
+
+IIS site + reverse proxy setup via appcmd (optional).
+
+Appendix B: Templates
+
+Example .env templates.
+
+Example pm2.config.js.
+
+Example nssm commands for various stacks.
+
+Example IIS URL Rewrite rules XML snippet.
+
+Appendix C: Rollback Plan
+
+How to stop services and revert to a known-good version.
+
+Restoring from backup.
+
+Quality Bar
+
+The Word document must be fully self-contained, precise, and executable by a Windows sysadmin.
+
+All commands tested/valid for Windows (PowerShell/cmd).
+
+Use clear headings, numbered steps, and callouts for risks/notes.
+
+Include both the quick path (dev run) and the hardened production path (IIS reverse proxy + service).
+
+Provide exact commands for each detected stack. Where detection is uncertain, provide clearly labeled alternatives.
+
+Output
+
+Generate and return the .docx file (Run_App_on_Windows_Server_Procedure.docx) ready for download.
