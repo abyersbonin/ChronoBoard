@@ -335,8 +335,8 @@ export default function Dashboard() {
 
         if (response.ok) {
           const data = await response.json();
-          // Don't invalidate cache automatically to prevent jarring reloads
-          // queryClient.invalidateQueries({ queryKey: ['/api/calendar-events', DEFAULT_USER_ID] });
+          // Invalidate cache to remove deleted events and add new ones
+          queryClient.invalidateQueries({ queryKey: ['/api/calendar-events', DEFAULT_USER_ID] });
           console.log(`Calendar automatically synchronized: ${data.eventCount} events`);
         } else {
           console.error('Auto-sync failed:', response.status, response.statusText);
