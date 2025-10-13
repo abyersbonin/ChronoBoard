@@ -209,6 +209,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Clear existing events to ensure fresh data starting from today
       await storage.clearCalendarEvents(userId);
       
+      // Blacklist for specific deleted event instances that Google hasn't removed from iCal yet
+      // Format: event-uid-timestamp (blocks only specific instances, not the whole series)
+      const deletedEventIds = ['nsemh3j6r8g6njl8bdrrrc09n5@google.com-1760382000000'];
+      
       const allEvents: any[] = [];
       const now = new Date();
       const threeDaysFromNow = new Date(now);
@@ -306,7 +310,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 eventType: 'single'
               };
               
-              allEvents.push(singleEvent);
+              // Skip blacklisted deleted event instances
+              if (!deletedEventIds.includes(singleEvent.id)) {
+                allEvents.push(singleEvent);
+              }
             }
           }
           
@@ -373,7 +380,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
                       eventType: 'override'
                     };
                     
-                    allEvents.push(overrideEvent);
+                    // Skip blacklisted deleted event instances
+                    if (!deletedEventIds.includes(overrideEvent.id)) {
+                      allEvents.push(overrideEvent);
+                    }
                     
                     // Exclude the original recurrence date, not the override date
                     excludedDates.add(new Date(recDate).getTime());
@@ -416,7 +426,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   eventType: 'recurring'
                 };
                 
-                allEvents.push(eventInstance);
+                // Skip blacklisted deleted event instances
+                if (!deletedEventIds.includes(eventInstance.id)) {
+                  allEvents.push(eventInstance);
+                }
               }
             } catch (rruleError) {
               console.error('Error processing recurring event:', rruleError);
