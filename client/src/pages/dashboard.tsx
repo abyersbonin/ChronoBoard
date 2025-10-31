@@ -465,6 +465,19 @@ export default function Dashboard() {
     return isUpcoming;
   }).sort((a: CalendarEvent, b: CalendarEvent) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
+  // Debug: Log how many events we're passing to the component
+  useEffect(() => {
+    console.log(`[DISPLAY DEBUG] Total events loaded: ${events.length}`);
+    console.log(`[DISPLAY DEBUG] Upcoming events filtered: ${upcomingEvents.length}`);
+    if (upcomingEvents.length > 0) {
+      console.log(`[DISPLAY DEBUG] First 5 upcoming events:`, upcomingEvents.slice(0, 5).map(e => ({
+        title: e.title,
+        start: e.startTime,
+        id: e.id
+      })));
+    }
+  }, [events.length, upcomingEvents.length]);
+
   const handleSyncCalendar = async () => {
     if (!settings?.icalUrls || settings.icalUrls.length === 0) {
       // Initialize with the provided iCal URLs
