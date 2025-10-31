@@ -446,37 +446,8 @@ export default function Dashboard() {
     threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
     threeDaysFromNow.setHours(23, 59, 59, 999); // End of the third day
     
-    const isUpcoming = start > now && start <= threeDaysFromNow;
-    
-    // Debug Pilates events at 10:15 AM
-    if (event.title === 'Pilates' && event.startTime.includes('2025-10-31T14:15')) {
-      console.log(`[FILTER DEBUG] Pilates at 10:15 AM:`, {
-        title: event.title,
-        startTime: event.startTime,
-        startDate: start.toISOString(),
-        now: now.toISOString(),
-        isAfterNow: start > now,
-        isBeforeThreeDays: start <= threeDaysFromNow,
-        isUpcoming,
-        minutesUntilStart: (start.getTime() - now.getTime()) / 60000
-      });
-    }
-    
-    return isUpcoming;
+    return start > now && start <= threeDaysFromNow;
   }).sort((a: CalendarEvent, b: CalendarEvent) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-
-  // Debug: Log how many events we're passing to the component
-  useEffect(() => {
-    console.log(`[DISPLAY DEBUG] Total events loaded: ${events.length}`);
-    console.log(`[DISPLAY DEBUG] Upcoming events filtered: ${upcomingEvents.length}`);
-    if (upcomingEvents.length > 0) {
-      console.log(`[DISPLAY DEBUG] First 5 upcoming events:`, upcomingEvents.slice(0, 5).map(e => ({
-        title: e.title,
-        start: e.startTime,
-        id: e.id
-      })));
-    }
-  }, [events.length, upcomingEvents.length]);
 
   const handleSyncCalendar = async () => {
     if (!settings?.icalUrls || settings.icalUrls.length === 0) {
