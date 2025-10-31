@@ -214,13 +214,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const deletedEventIds = ['nsemh3j6r8g6njl8bdrrrc09n5@google.com-1760382000000'];
       
       const allEvents: any[] = [];
-      const now = new Date();
+      // Get start of today in Quebec timezone (America/Toronto) to preserve all of today's events
+      const quebecNow = new Date().toLocaleString('en-US', { timeZone: 'America/Toronto' });
+      const startOfToday = new Date(quebecNow);
+      startOfToday.setHours(0, 0, 0, 0);
+      
+      const now = startOfToday; // Use start of today instead of current time
       const threeDaysFromNow = new Date(now);
       threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
       const threeMonthsFromNow = new Date(now);
       threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3);
       
-      console.log(`Syncing events from ${now.toISOString()} to ${threeMonthsFromNow.toISOString()}`);
+      console.log(`Syncing events from ${now.toISOString()} (start of today Quebec time) to ${threeMonthsFromNow.toISOString()}`);
 
 
       // Fetch and parse each iCal URL
