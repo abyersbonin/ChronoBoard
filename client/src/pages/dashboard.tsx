@@ -446,7 +446,23 @@ export default function Dashboard() {
     threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
     threeDaysFromNow.setHours(23, 59, 59, 999); // End of the third day
     
-    return start > now && start <= threeDaysFromNow;
+    const isUpcoming = start > now && start <= threeDaysFromNow;
+    
+    // Debug Pilates events at 10:15 AM
+    if (event.title === 'Pilates' && event.startTime.includes('2025-10-31T14:15')) {
+      console.log(`[FILTER DEBUG] Pilates at 10:15 AM:`, {
+        title: event.title,
+        startTime: event.startTime,
+        startDate: start.toISOString(),
+        now: now.toISOString(),
+        isAfterNow: start > now,
+        isBeforeThreeDays: start <= threeDaysFromNow,
+        isUpcoming,
+        minutesUntilStart: (start.getTime() - now.getTime()) / 60000
+      });
+    }
+    
+    return isUpcoming;
   }).sort((a: CalendarEvent, b: CalendarEvent) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
   const handleSyncCalendar = async () => {
