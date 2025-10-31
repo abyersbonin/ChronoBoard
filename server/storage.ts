@@ -248,7 +248,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async clearCalendarEvents(userId: string): Promise<void> {
-    await db.delete(calendarEvents);
+    // Only delete events that came from iCal sync, preserve manually-added events
+    const { sql: rawSql } = await import('drizzle-orm');
+    await db.delete(calendarEvents).where(
+      rawSql`${calendarEvents.icalEventId} IS NOT NULL AND ${calendarEvents.icalEventId} NOT LIKE 'manual-%'`
+    );
   }
 
   async syncCalendarEvents(userId: string, events: InsertCalendarEvent[]): Promise<CalendarEvent[]> {
