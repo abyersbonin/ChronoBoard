@@ -264,6 +264,20 @@ export class DatabaseStorage implements IStorage {
     
     for (const eventData of events) {
       try {
+        // Check if this ID belongs to a manual event - if so, skip syncing
+        const [existing] = await db
+          .select()
+          .from(calendarEvents)
+          .where(eq(calendarEvents.id, eventData.id))
+          .limit(1);
+        
+        if (existing && existing.icalEventId?.startsWith('manual-')) {
+          // This is a manually-added event, don't overwrite it
+          console.log(`Preserving manual event: ${existing.title} (${existing.id})`);
+          syncedEvents.push(existing);
+          continue;
+        }
+        
         // Try to insert the event with proper field mapping
         const [event] = await db
           .insert(calendarEvents)
