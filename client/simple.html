@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Spa Eastman Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+    
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .time-display {
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+    
+    .weather-widget {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .weather-current {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+    
+    .weather-temp {
+      font-size: 3em;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .weather-condition {
+      font-size: 1.2em;
+      color: #666;
+    }
+    
+    .events-section {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section-title {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      color: #333;
+      border-bottom: 2px solid #788C6B;
+      padding-bottom: 10px;
+    }
+    
+    .event-card {
+      background: rgba(243, 244, 246, 0.6);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid #788C6B;
+    }
+    
+    .event-time {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+    }
+    
+    .event-title {
+      font-size: 1.1em;
+      color: #333;
+      margin-bottom: 5px;
+    }
+    
+    .event-location {
+      color: #666;
+      font-size: 0.9em;
+    }
+    
+    .date-group {
+      margin-bottom: 25px;
+    }
+    
+    .date-header {
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-size: 1.2em;
+    }
+    
+    .error {
+      background: #fee;
+      border: 1px solid #fcc;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 20px 0;
+      color: #c33;
+    }
+    
+    .refresh-info {
+      text-align: center;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9em;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🌿 Spa Eastman</h1>
+      <div class="time-display" id="currentTime"></div>
+    </div>
+    
+    <div class="weather-widget" id="weatherWidget">
+      <div class="loading">Chargement de la météo...</div>
+    </div>
+    
+    <div class="events-section">
+      <h2 class="section-title">📅 Événements à venir</h2>
+      <div id="eventsContainer">
+        <div class="loading">Chargement des événements...</div>
+      </div>
+    </div>
+    
+    <div class="refresh-info">
+      Actualisation automatique toutes les 5 minutes
+    </div>
+  </div>
+
+  <script>
+    // Compatible iOS 12 JavaScript (ES5)
+    (function() {
+      'use strict';
+      
+      var API_BASE = '';
+      var REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+      
+      // Utility: Fetch JSON (compatible with old browsers)
+      function fetchJSON(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              try {
+                var data = JSON.parse(xhr.responseText);
+                callback(null, data);
+              } catch (e) {
+                callback(e, null);
+              }
+            } else {
+              callback(new Error('HTTP ' + xhr.status), null);
+            }
+          }
+        };
+        xhr.send();
+      }
+      
+      // Format time
+      function formatTime(dateStr) {
+        var date = new Date(dateStr);
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        return (hours < 10 ? '0' : '') + hours + 'h' + (minutes < 10 ? '0' : '') + minutes;
+      }
+      
+      // Format date
+      function formatDate(dateStr) {
+        var date = new Date(dateStr);
+        var today = new Date();
+        var tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        if (date.toDateString() === today.toDateString()) {
+          return 'AUJOURD\'HUI';
+        } else if (date.toDateString() === tomorrow.toDateString()) {
+          return 'DEMAIN';
+        }
+        
+        var days = ['DIMANCHE', 'LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI'];
+        var months = ['JANVIER', 'FÉVRIER', 'MARS', 'AVRIL', 'MAI', 'JUIN', 
+                      'JUILLET', 'AOÛT', 'SEPTEMBRE', 'OCTOBRE', 'NOVEMBRE', 'DÉCEMBRE'];
+        
+        return days[date.getDay()] + ', ' + months[date.getMonth()] + ' ' + date.getDate();
+      }
+      
+      // Clean HTML
+      function cleanHTML(text) {
+        if (!text) return '';
+        var div = document.createElement('div');
+        div.innerHTML = text.replace(/<[^>]*>/g, '');
+        return div.textContent || div.innerText || '';
+      }
+      
+      // Update current time
+      function updateTime() {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var timeStr = (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
+        
+        var days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+        var months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 
+                      'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+        
+        var dateStr = days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+        
+        document.getElementById('currentTime').textContent = timeStr + ' • ' + dateStr;
+      }
+      
+      // Load weather
+      function loadWeather() {
+        fetchJSON('/api/weather/Eastman', function(err, data) {
+          var container = document.getElementById('weatherWidget');
+          
+          if (err || !data) {
+            container.innerHTML = '<div class="error">Erreur de chargement de la météo</div>';
+            return;
+          }
+          
+          var html = '<div class="weather-current">' +
+            '<div>' +
+              '<div class="weather-temp">' + Math.round(data.current.temp) + '°C</div>' +
+              '<div class="weather-condition">' + data.current.condition + '</div>' +
+            '</div>' +
+          '</div>';
+          
+          container.innerHTML = html;
+        });
+      }
+      
+      // Load events
+      function loadEvents() {
+        fetchJSON('/api/calendar-events/default-user', function(err, events) {
+          var container = document.getElementById('eventsContainer');
+          
+          if (err || !events) {
+            container.innerHTML = '<div class="error">Erreur de chargement des événements</div>';
+            return;
+          }
+          
+          // Filter upcoming events (next 3 days)
+          var now = new Date();
+          var threeDays = new Date(now);
+          threeDays.setDate(threeDays.getDate() + 3);
+          threeDays.setHours(23, 59, 59, 999);
+          
+          var upcoming = [];
+          for (var i = 0; i < events.length; i++) {
+            var eventStart = new Date(events[i].startTime);
+            if (eventStart > now && eventStart <= threeDays) {
+              upcoming.push(events[i]);
+            }
+          }
+          
+          // Sort by date
+          upcoming.sort(function(a, b) {
+            return new Date(a.startTime) - new Date(b.startTime);
+          });
+          
+          if (upcoming.length === 0) {
+            container.innerHTML = '<div class="loading">Aucun événement à venir dans les 3 prochains jours</div>';
+            return;
+          }
+          
+          // Group by date
+          var grouped = {};
+          for (var j = 0; j < upcoming.length; j++) {
+            var event = upcoming[j];
+            var dateKey = new Date(event.startTime).toDateString();
+            
+            if (!grouped[dateKey]) {
+              grouped[dateKey] = [];
+            }
+            grouped[dateKey].push(event);
+          }
+          
+          // Render
+          var html = '';
+          for (var dateKey in grouped) {
+            if (grouped.hasOwnProperty(dateKey)) {
+              var dateEvents = grouped[dateKey];
+              html += '<div class="date-group">';
+              html += '<div class="date-header">' + formatDate(dateEvents[0].startTime) + '</div>';
+              
+              for (var k = 0; k < dateEvents.length; k++) {
+                var evt = dateEvents[k];
+                html += '<div class="event-card">' +
+                  '<div class="event-time">' + formatTime(evt.startTime) + '</div>' +
+                  '<div class="event-title">' + cleanHTML(evt.title) + '</div>';
+                
+                if (evt.location) {
+                  html += '<div class="event-location">📍 ' + cleanHTML(evt.location) + '</div>';
+                }
+                
+                html += '</div>';
+              }
+              
+              html += '</div>';
+            }
+          }
+          
+          container.innerHTML = html;
+        });
+      }
+      
+      // Initialize
+      function init() {
+        updateTime();
+        setInterval(updateTime, 60000); // Update time every minute
+        
+        loadWeather();
+        loadEvents();
+        
+        // Auto-refresh
+        setInterval(function() {
+          loadWeather();
+          loadEvents();
+        }, REFRESH_INTERVAL);
+      }
+      
+      // Start when page loads
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -661,6 +661,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Serve simple dashboard for older browsers (iOS 12 compatible)
+  app.get("/simple", (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'client', 'simple.html'));
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
