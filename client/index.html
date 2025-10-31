@@ -19,26 +19,33 @@
       try {
         eval("const test = { a: null }; test?.a");
       } catch (e) {
-        document.getElementById("root").innerHTML = `
-          <div style="padding: 40px; text-align: center; font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #d32f2f; margin-bottom: 20px;">Browser Not Supported</h2>
-            <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 20px;">
-              This application requires a modern web browser with JavaScript ES2020 support.
-            </p>
-            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
-              Your current browser (${navigator.userAgent.match(/(iPad|iPhone|Safari|Chrome|Firefox|Edge)/i)?.[0] || 'Unknown'}) does not support the required features.
-            </p>
-            <p style="font-size: 14px; color: #666;">
-              Please update your browser or device, or try accessing this site from:
-            </p>
-            <ul style="text-align: left; display: inline-block; margin-top: 10px; font-size: 14px; color: #666;">
-              <li>Safari 14+ (iOS 14+)</li>
-              <li>Chrome 80+</li>
-              <li>Firefox 74+</li>
-              <li>Edge 80+</li>
-            </ul>
-          </div>
-        `;
+        var browserMatch = navigator.userAgent.match(/(iPad|iPhone|Safari|Chrome|Firefox|Edge)/i);
+        var browserName = browserMatch ? browserMatch[0] : 'Unknown';
+        document.getElementById("root").innerHTML = 
+          '<div style="padding: 40px; text-align: center; font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">' +
+            '<h2 style="color: #d32f2f; margin-bottom: 20px;">Navigateur Non Supporté / Browser Not Supported</h2>' +
+            '<p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 20px;">' +
+              'Cette application nécessite un navigateur web moderne avec support JavaScript ES2020.' +
+              '<br><br>' +
+              'This application requires a modern web browser with JavaScript ES2020 support.' +
+            '</p>' +
+            '<p style="font-size: 14px; color: #666; margin-bottom: 20px;">' +
+              'Votre navigateur actuel (' + browserName + ') ne supporte pas les fonctionnalités requises.' +
+              '<br>' +
+              'Your current browser (' + browserName + ') does not support the required features.' +
+            '</p>' +
+            '<p style="font-size: 14px; color: #666;">' +
+              'Veuillez mettre à jour votre navigateur ou appareil, ou essayez d\'accéder depuis :' +
+              '<br>' +
+              'Please update your browser or device, or try accessing from:' +
+            '</p>' +
+            '<ul style="text-align: left; display: inline-block; margin-top: 10px; font-size: 14px; color: #666;">' +
+              '<li>Safari 14+ (iOS 14+)</li>' +
+              '<li>Chrome 80+</li>' +
+              '<li>Firefox 74+</li>' +
+              '<li>Edge 80+</li>' +
+            '</ul>' +
+          '</div>';
         throw e;
       }
     </script>
