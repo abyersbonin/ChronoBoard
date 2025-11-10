@@ -10,7 +10,6 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import ical from "node-ical";
-import { RRule } from "rrule";
 import session from "express-session";
 
 const upload = multer({ 
@@ -397,7 +396,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
               }
               
               // Then generate regular recurring instances
-              const instances = event.rrule.between(now, threeMonthsFromNow, true);
+              // RRULE UNTIL bypass: Extend UNTIL date by 3 months to catch events past the original UNTIL
+              let rruleToUse = event.rrule;
+              const until = event.rrule.options?.until || event.rrule.origOptions?.until;
+              if (until) {
+                // Extend the UNTIL date by 3 months to catch events that Google Calendar shows past UNTIL
+                const extendedUntil = new Date(threeMonthsFromNow);
+                extendedUntil.setMonth(extendedUntil.getMonth() + 3);
+                
+                console.log(`Extending RRULE UNTIL for "${event.summary}" from ${until.toISOString()} to ${extendedUntil.toISOString()}`);
+                
+                // Clone the rrule using the constructor from the existing object
+                const RRuleConstructor = event.rrule.constructor;
+                const baseOptions = event.rrule.origOptions || event.rrule.options;
+                const extendedOptions = {
+                  ...baseOptions,
+                  until: extendedUntil,
+                  count: undefined  // Clear count when UNTIL is replaced
+                };
+                rruleToUse = new RRuleConstructor(extendedOptions);
+              }
+              
+              const instances = rruleToUse.between(now, threeMonthsFromNow, true);
               console.log(`Generated ${instances.length} instances for "${event.summary}"`);
               
               for (const instanceStart of instances) {
